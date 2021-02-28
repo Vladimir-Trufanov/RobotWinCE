@@ -1,0 +1,19 @@
+[FORMS.PP] ExceptionOccurred 
+  Sender=EAccessViolation
+  Exception=Access violation
+  Stack trace:
+  $00043384
+  $000436C8
+  $00043EE0
+  $0003FBE0
+  $00175BF8
+  $0002CDC8
+  $0017BBC8
+  $001798DC
+  $00179730
+  $00166D78
+  $001806C0
+  $000307B8
+  $0002E2C8
+  $00035F58
+  $0003D588
