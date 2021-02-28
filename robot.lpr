@@ -9,7 +9,7 @@ uses
   uMainForm;
 
 begin
-  Application.Title:='Robot';
+  Application.Title:='RobotWinCE';
   Application.Initialize;
   Application.CreateForm(TMainForm, MainForm);
   Application.Run;
