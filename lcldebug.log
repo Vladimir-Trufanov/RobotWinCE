@@ -17,3 +17,5 @@
   $0002E2C8
   $00035F58
   $0003D588
+WARNING: TButton.Destroy with LCLRefCount>0. Hint: Maybe the component is processing an event?
+WARNING: TButton.Destroy with LCLRefCount>0. Hint: Maybe the component is processing an event?

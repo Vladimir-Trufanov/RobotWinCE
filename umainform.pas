@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  Buttons, GraphType, StrUtils, StdCtrls, ComCtrls, Menus                        // Crt,
+  Buttons, GraphType, Crt, StrUtils, StdCtrls, ComCtrls, Menus
 {$IFDEF win32}
   ,MMSystem
 {$ENDIF}
@@ -24,14 +24,12 @@ const
   PLAYER_PICS: array[1..3] of string
                = ('figur.bmp', 'robot*.bmp', 'konig.bmp');
   ERROR_PIC = 'error.bmp'; // used for error-displaying
-  // ћир, в котором действуют персонажи
-  WORLD_WIDTH = 5;           // 5 комнат = ширина мира
-  WORLD_HEIGHT = 4;          // 4 комнаты = высота мира
-  // Ќаибольшие размеры комнат
-  ROOM_WIDTH = 20;           // 20 мест по ширине комнаты
-  ROOM_HEIGHT = 10;          // 20 мест по высоте комнаты
-  //
-  KNAPSACK_WIDTH = 10;       // place count in the knapsack
+  
+  WORLD_WIDTH = 5; // room count
+  WORLD_HEIGHT = 4;
+  ROOM_WIDTH = 20; // place count in a room
+  ROOM_HEIGHT = 20;
+  KNAPSACK_WIDTH = 10; // place count in the knapsack
   KNAPSACK_HEIGHT = 5;
   KNAPSACK_MAX = 27; // compatibility with Robot1 (9*3)
   
@@ -85,7 +83,6 @@ type
   { TMainForm }
 
   TMainForm = class(TForm)
-    Button1: TButton;
     GamePanel: TPanel;
     KnapsackPanel: TPanel;
     InfoPanel: TPanel;
@@ -115,10 +112,8 @@ type
     DiamondsLabel: TLabel;
     ComputerPlayer: TTimer;
     // event handlers
-    procedure Button1Click(Sender: TObject);
     procedure ComputerPlayerTimer(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure FormDblClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormPaint(Sender: TObject);
@@ -149,10 +144,10 @@ type
     MyWorld: TWorld; // the world
     MyWorldPlayers: TWorldPlayers; // all players
     MyRoomNum: TRoomNum; // selected room of my world
-    MyRoomPic: record    // user view
-      Room: TRoom;       // room actually viewed
-      Picture: TBitmap;  // paint cache
-    end;
+    MyRoomPic: record // user view
+                 Room: TRoom; // room actually viewed
+                 Picture: TBitmap; // paint cache
+               end;
     MyKnapsack: TKnapsack; // the knapsack
     MyEditorKnapsack: TKnapsack; // the knapsack used in editor mode
     MyKnapsackPic: record // user view
@@ -244,34 +239,6 @@ var
   MainForm: TMainForm;
 
 implementation
-// -----------------------------------
-// ѕроинициализировать текущую комнату
-// -----------------------------------
-procedure TMainForm.ResetRoomPic();
-var
-  i: Integer;
-  w,h: Integer;
-begin
-  // ѕоказываем размеры комнаты
-  Caption:=IntToStr(ROOM_WIDTH)+'*'+IntToStr(ROOM_HEIGHT)+'='+IntToStr(ROOM_WIDTH*ROOM_HEIGHT);
-  // »нициируем комнату
-  for i := 1 to ROOM_WIDTH*ROOM_HEIGHT do
-  begin
-    MyRoomPic.Room[i].PicIndex := -1;
-  end;
-  // ѕоказываем размеры игрового пол€
-  Caption:=Caption +' '+IntToStr(GamePanel.ClientWidth)+'*'+IntToStr(GamePanel.ClientHeight)+
-    '='+IntToStr(GamePanel.ClientWidth*GamePanel.ClientHeight);
-  w := GamePanel.ClientWidth div ROOM_WIDTH;
-  h := GamePanel.ClientHeight div ROOM_HEIGHT;
-  if MyRoomPic.Picture <> nil then MyRoomPic.Picture.Free();
-  MyRoomPic.Picture := TBitmap.Create();
-  MyRoomPic.Picture.Width := w*ROOM_WIDTH;
-  MyRoomPic.Picture.Height := h*ROOM_HEIGHT;
-  Caption:=Caption +' w='+IntToStr(w)+' h='+IntToStr(h)+': '+
-    IntToStr(MyRoomPic.Picture.Width)+'*'+IntToStr(MyRoomPic.Picture.Height);
-end;
-
 
 function RoomNum(X,Y: Integer): TRoomNum;
 begin
@@ -321,26 +288,10 @@ end;
 
 { TMainForm }
 
-procedure TMainForm.FormDblClick(Sender: TObject);
-begin
-
-end;
-
-procedure TMainForm.ComputerPlayerTimer(Sender: TObject);
-begin
-  ControlComputerPlayers();
-end;
-
-procedure TMainForm.Button1Click(Sender: TObject);
-begin
-  // ѕоказываем размеры мира
-  // Caption:=IntToStr(WORLD_WIDTH)+'*'+IntToStr(WORLD_HEIGHT);
-end;
-
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
   InitGame();
-  {
+  
   // some hacks to make it better
   LifeLabel.Font := MainForm.Font;
   ScoresLabel.Font := MainForm.Font;
@@ -348,23 +299,26 @@ begin
   GamePanel.OnPaint := @FormPaint;
   KnapsackPanel.OnPaint := @FormPaint;
   FormResize(MainForm);
-  }
+end;
+
+procedure TMainForm.ComputerPlayerTimer(Sender: TObject);
+begin
+  ControlComputerPlayers();
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
-  //UnInitGame();
+  UnInitGame();
 end;
 
 procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-
   if Key = Ord('P') then
     SetPauseState(not MyPauseState)
   else
     SetPauseState(false);
-  {  
+    
   if not (ssCtrl in Shift) then // TODO: change to: nothing in Shift
   case Key of
   37: // left
@@ -422,20 +376,19 @@ begin
       MoveToRoom(mdDown);
     end;
   end;
-  }
 end;
 
 procedure TMainForm.FormPaint(Sender: TObject);
 begin
-  //DrawRoom();
-  //DrawKnapsack();
+  DrawRoom();
+  DrawKnapsack();
 end;
 
 procedure TMainForm.FormResize(Sender: TObject);
 begin
-  //ResetRoomPic();
-  //ResetPictureResizedCache();
-  //DrawRoom();
+  ResetRoomPic();
+  ResetPictureResizedCache();
+  DrawRoom();
 end;
 
 procedure TMainForm.GamePanelClick(Sender: TObject);
@@ -1401,13 +1354,12 @@ var
   i: Integer;
 begin
   Randomize(); // init randomizer
+
   MySoundState := false;
-  //
   ResetRoomPic();
-  {
   ResetKnapsackPic();
+  
   RestartGame();
-  }
 end;
 
 procedure TMainForm.RestartGame();
@@ -1453,6 +1405,24 @@ begin
 
   MyRoomPic.Picture.Free();
   MyKnapsackPic.Picture.Free();
+end;
+
+procedure TMainForm.ResetRoomPic();
+var
+  i: Integer;
+  w,h: Integer;
+begin
+  for i := 1 to ROOM_WIDTH*ROOM_HEIGHT do
+  begin
+    MyRoomPic.Room[i].PicIndex := -1;
+  end;
+  
+  w := GamePanel.ClientWidth div ROOM_WIDTH;
+  h := GamePanel.ClientHeight div ROOM_HEIGHT;
+  if MyRoomPic.Picture <> nil then MyRoomPic.Picture.Free();
+  MyRoomPic.Picture := TBitmap.Create();
+  MyRoomPic.Picture.Width := w*ROOM_WIDTH;
+  MyRoomPic.Picture.Height := h*ROOM_HEIGHT;
 end;
 
 procedure TMainForm.ResetKnapsackPic();

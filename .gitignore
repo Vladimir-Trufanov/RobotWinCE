@@ -1,2 +1,7 @@
 /RobotWinCE.exe
 /backup
+/KwinLab/Proba/backup
+/KwinLab/Proba/lib/arm-wince
+/KwinLab/Proba/lib/i386-win32
+/KwinLab/TouchRecord/lib/arm-wince
+/KwinLab/TouchRecord/lib/i386-win32
