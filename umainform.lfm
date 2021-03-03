@@ -1,12 +1,12 @@
 object MainForm: TMainForm
-  Left = 971
-  Height = 618
-  Top = 30
+  Left = 636
+  Height = 612
+  Top = 146
   Width = 485
   HorzScrollBar.Page = 387
   VertScrollBar.Page = 474
   Caption = 'Robot 1.7'
-  ClientHeight = 593
+  ClientHeight = 587
   ClientWidth = 485
   Color = clWhite
   DesignTimePPI = 120
@@ -28,7 +28,7 @@ object MainForm: TMainForm
   object MessageBar: TLabel
     Left = 1
     Height = 19
-    Top = 574
+    Top = 568
     Width = 484
     Anchors = [akLeft, akRight, akBottom]
     AutoSize = False
@@ -42,7 +42,7 @@ object MainForm: TMainForm
   end
   object GamePanel: TPanel
     Left = 0
-    Height = 431
+    Height = 425
     Top = 0
     Width = 485
     Anchors = [akTop, akLeft, akRight, akBottom]
@@ -62,7 +62,7 @@ object MainForm: TMainForm
   object KnapsackPanel: TPanel
     Left = 221
     Height = 126
-    Top = 441
+    Top = 435
     Width = 256
     Anchors = [akRight, akBottom]
     BevelOuter = bvNone
@@ -80,7 +80,7 @@ object MainForm: TMainForm
   object InfoPanel: TPanel
     Left = 0
     Height = 126
-    Top = 441
+    Top = 435
     Width = 211
     Anchors = [akLeft, akRight, akBottom]
     BevelOuter = bvNone
@@ -222,9 +222,9 @@ object MainForm: TMainForm
     Top = 270
   end
   object OpenGameDialog: TOpenDialog
-    Title = 'Spielstand öffnen'
+    Title = 'Spielstand Ñ†ffnen'
     DefaultExt = '.spi'
-    Filter = 'Robot Spielstände (*.spi)|*.spi|alle Dateien (*)|*'
+    Filter = 'Robot SpielstÐ´nde (*.spi)|*.spi|alle Dateien (*)|*'
     FilterIndex = 0
     Options = [ofFileMustExist, ofEnableSizing, ofViewDetail]
     Left = 440
@@ -233,7 +233,7 @@ object MainForm: TMainForm
   object SaveGameDialog: TSaveDialog
     Title = 'Spielstand speichern'
     DefaultExt = '.spi'
-    Filter = 'Robot Spielstände (*.spi)|*.spi|alle Dateien (*)|*'
+    Filter = 'Robot SpielstÐ´nde (*.spi)|*.spi|alle Dateien (*)|*'
     FilterIndex = 0
     Left = 440
     Top = 350

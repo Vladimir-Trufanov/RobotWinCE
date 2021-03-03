@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <Compiler Value="C:\LazarusWinCE\fpc\3.2.0\bin\i386-win32\fpc.exe" Date="1381338394"/>
-  <Params Value=" -MObjFPC -Scgi -O1 -g -gl -gh -WG -l -vewnhixbq -FuC:\LazarusWinCE\lcl\units\i386-win32\win32 -FuC:\LazarusWinCE\lcl\units\i386-win32 -FuC:\LazarusWinCE\components\lazutils\lib\i386-win32 -FuC:\LazarusWinCE\packager\units\i386-win32 &quot;-FuC:\ForWinCE\WinCE Emulator\SDFlash\RobotWinCE\&quot; &quot;-oC:\ForWinCE\WinCE Emulator\SDFlash\RobotWinCE\robot.exe&quot; -dLCL -dLCLwin32 robot.lpr"/>
+  <Params Value=" -MObjFPC -Scgi -O1 -g -gl -WG -l -vewnhixbq -FuC:\LazarusWinCE\lcl\units\i386-win32\win32 -FuC:\LazarusWinCE\lcl\units\i386-win32 -FuC:\LazarusWinCE\components\lazutils\lib\i386-win32 -FuC:\LazarusWinCE\packager\units\i386-win32 &quot;-FuC:\ForWinCE\WinCE Emulator\SDFlash\RobotWinCE\&quot; &quot;-oC:\ForWinCE\WinCE Emulator\SDFlash\RobotWinCE\robot.exe&quot; -dLCL -dLCLwin32 robot.lpr"/>
 </CONFIG>

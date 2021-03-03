@@ -36,11 +36,12 @@ const
   COMPUTERCONTROL_INTERVAL = 750; // timer-interval for computer player control
 
 type
+  // Координаты игрока в мире игры
   TRoomNum = record // world coord
     X: 1..WORLD_WIDTH;
     Y: 1..WORLD_HEIGHT;
   end;
-
+  // Координаты игрока в комнате
   TPlaceNum = record // room coord
     X: 1..ROOM_WIDTH;
     Y: 1..ROOM_HEIGHT;
@@ -65,6 +66,7 @@ type
 
   TKnapsack = array[TKnapsackAbsNum] of TPlace; // a knapsack
 
+  //
   TPictureCacheItem = record
     FileName: string;
     Picture: TBitmap; // picture cache
@@ -140,6 +142,7 @@ type
   private
     { private declarations }
   public
+    nEntry: integer;
 
     MyWorld: TWorld; // the world
     MyWorldPlayers: TWorldPlayers; // all players
@@ -161,9 +164,10 @@ type
     MyLife: Integer; // lifes
     MyScores: Integer; // scores
     MyDiamonds: array of TDiamondSet; // set diamoonds
-    MyPauseState: boolean; // true -> pause
+
+    MyPauseState: boolean; // true -> pause: игра поставлена на паузу
     MySoundState: boolean; // false -> mute
-    MyEditorMode: boolean; // true -> editmodus on
+    MyEditorMode: boolean; // true -> editmodus on: игра в режиме редактирования
 
     // gameplay
     function MoveToRoom(dir: TMoveDirection): boolean; // goto next room; return true, if succ
@@ -290,8 +294,19 @@ end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
+  nEntry:=0;
+  // Выполняем настройки формы
+  // ! Anchors=[akTop,akLeft] - привязываемся к левому-верхнему углу экрана
+  // ! BiDiMode=bdLeftToRight - обычное чтение слева-направо
+  BorderStyle:=bsSizeable; // установили обычное окно Windows
+  // ! DesignTimePPI:=120; // через DPI изменили размер элементов???
+  Height:=618;             // высота формы от строки заголовка до нижней границы
+  KeyPreview:=true;        // обеспечили приход на форму всех событий от клавиш
+  Left:=636;               // расстояние от левой границы рабочего стола
+  Position:=poDefaultPosOnly;  // Windows определяет начальную позицию формы, ее размеры не изменяются
+  Width:=485;
+  // Иициируем игру
   InitGame();
-  
   // some hacks to make it better
   LifeLabel.Font := MainForm.Font;
   ScoresLabel.Font := MainForm.Font;
@@ -570,28 +585,28 @@ begin
               'Updates und weitere Informationen zu mir:' + LineEnding +
               'www.az2000.de/projects/robot2' + LineEnding +
               LineEnding +
-              'F�r weitere Informationen besucht meine Homepage: www.az2000.de'
+              'Fьr weitere Informationen besucht meine Homepage: www.az2000.de'
               );
 end;
 
 procedure TMainForm.mnuHelpControlClick(Sender: TObject);
 begin
   ShowMessage(
-              'Mit den Pfeiltasten gibst du deinem K�rper die Anweisung, ' +
+              'Mit den Pfeiltasten gibst du deinem Kцrper die Anweisung, ' +
               'in die entsprechende Richtung zu gehen. Dieser sammelt dabei ' +
-              'automatisch aufsammelbare Gegenst�nde auf (vorausgesetzt, es ' +
-              'ist gen�gend Platz im Rucksack). Mit Leertaste oder Tab ' +
-              'l�sst sich eine Auswahl im Rucksack treffen und mit Enter ' +
-              'wird der entsprechend ausgew�hlte Gegenstand benutzt. ' +
+              'automatisch aufsammelbare Gegenstдnde auf (vorausgesetzt, es ' +
+              'ist genьgend Platz im Rucksack). Mit Leertaste oder Tab ' +
+              'lдsst sich eine Auswahl im Rucksack treffen und mit Enter ' +
+              'wird der entsprechend ausgewдhlte Gegenstand benutzt. ' +
               'Mit P gelangst du in den Pause-Modus, in dem die Zeit ' +
               'stillsteht. Wenn du das Verlangen hast, in eine andere Welt ' +
               'abzutauchen, empfiehlt es sich, den Status dieser Robot-Welt ' +
               'zu speichern, indem du ein eingesammeltes Speicherelement ' +
-              '(Uhr-Symbol) benutzt, um sp�ter an dieser Stelle fortfahren ' +
-              'zu k�nnen.' + LineEnding +
+              '(Uhr-Symbol) benutzt, um spдter an dieser Stelle fortfahren ' +
+              'zu kцnnen.' + LineEnding +
               LineEnding +
               'Den Rest kriegst du schon selbst raus. In deinen anderen ' +
-              'Welten ist das schlie�lich auch nicht anders.'
+              'Welten ist das schlieЯlich auch nicht anders.'
               );
 end;
 
@@ -599,22 +614,22 @@ procedure TMainForm.mnuHelpDescriptionClick(Sender: TObject);
 begin
   ShowMessage(
               'In diesem Spiel geht es darum, das Spiel durchzuspielen und ' +
-              'am Ende zum b�sen K�nig zu gelangen, der um dich daran zu ' +
+              'am Ende zum bцsen Kцnig zu gelangen, der um dich daran zu ' +
               'hindern, seine nervigen Roboter ausgesandt hat.' + LineEnding +
               LineEnding +
-              'Der K�nig ist normalerweise unbesiegbar, g�be es nicht die 3 ' +
+              'Der Kцnig ist normalerweise unbesiegbar, gдbe es nicht die 3 ' +
               'magischen Diamantenstellen, die nachdem die passenden ' +
               'Diamanten eingesetzt wurden, den Bann der Unbesiegbarkeit ' +
               'brechen und ihn verwundbar machen. Dies war der Preis des ' +
-              'K�nigs f�r seine Unbesiegbarkeit. Um es dir schwer zu machen, ' +
-              'wurden diese Diamanten allerdings in den R�umen verstr�ut. ' +
-              'Teilweise hat er nachtr�glich auch manche Wege zugemauert, ' +
+              'Kцnigs fьr seine Unbesiegbarkeit. Um es dir schwer zu machen, ' +
+              'wurden diese Diamanten allerdings in den Rдumen verstrдut. ' +
+              'Teilweise hat er nachtrдglich auch manche Wege zugemauert, ' +
               'war dabei allerdings sparsam im Material, so dass sich diese ' +
-              'W�nde mit aggresiver �tzfl�ssigkeit weg machen lassen.' +
-              'F�r die vielen T�ren lassen sich �berall in den R�umen ' +
-              'Schl�ssel finden, die den Zugang erm�glichen.' + LineEnding +
+              'Wдnde mit aggresiver Дtzflьssigkeit weg machen lassen.' +
+              'Fьr die vielen Tьren lassen sich ьberall in den Rдumen ' +
+              'Schlьssel finden, die den Zugang ermцglichen.' + LineEnding +
               LineEnding +
-              'Mit der Devise "Es gibt immer einen Weg" l�sst sich der Weg ' +
+              'Mit der Devise "Es gibt immer einen Weg" lдsst sich der Weg ' +
               'zum Sieg bahnen!'
               );
 end;
@@ -807,14 +822,14 @@ begin
   begin
     ShowMsg([
              'Ich muss hier den richtigen Diamanten benutzen.',
-             'Hierf�r braucht man die Diamanten.',
+             'Hierfьr braucht man die Diamanten.',
              'Der Diamantenstellplatz...'
              ]);
     PlaySound('fl.wav');
     exit;
   end;
   
-  if GetPlacePicName(newpos) = 'wand3.bmp' // electric-wall
+  if GetPlacePicName(newpos) = 'wandEl.bmp' // electric-wall
   then
   begin
     ShowMsg([
@@ -822,7 +837,7 @@ begin
              'Bzzzz',
              'Deshalb solltet ihr nie in Steckdosen fassen.',
              'Das tut weh!',
-             'Da sollte ich n�chstes Mal nicht mehr reinlaufen.'
+             'Da sollte ich nдchstes Mal nicht mehr reinlaufen.'
              ]);
     PlaySound('strom.wav');
     RemoveLife();
@@ -836,10 +851,10 @@ begin
     if not IsInKnapsack(AnsiReplaceStr(GetPlacePicName(newpos), 'tuer', 'schl')) then
     begin
       ShowMsg([
-               'Mir fehlt der Schl�ssel.',
-               'Der richtige Schl�ssel fehlt.',
-               'Den Schl�ssel hierf�r habe ich noch nicht.',
-               'Ich brauche den Schl�ssel.'
+               'Mir fehlt der Schlьssel.',
+               'Der richtige Schlьssel fehlt.',
+               'Den Schlьssel hierfьr habe ich noch nicht.',
+               'Ich brauche den Schlьssel.'
                ]);
       exit;
     end;
@@ -850,10 +865,10 @@ begin
   begin
     ShowMsg([
              'Au, der tut mir weh!',
-             'Der ist b�se!',
+             'Der ist bцse!',
              'Sehr nervig diese Roboter.',
-             'Ich sollte mich demn�chst in Acht nehmen.',
-             'Man bin ich bl�d, dem Roboter direkt in die Arme gelaufen.'
+             'Ich sollte mich demnдchst in Acht nehmen.',
+             'Man bin ich blцd, dem Roboter direkt in die Arme gelaufen.'
              ]);
     PlaySound('robot.bmp');
     RemoveLife();
@@ -864,9 +879,9 @@ begin
   then
   begin
     ShowMsg([
-             'Man bin ich bl�d, dem K�nig direkt in die Arme gelaufen.',
-             'Der ist st�rker als ich.',
-             'N�chstes Mal besser aufpassen.',
+             'Man bin ich blцd, dem Kцnig direkt in die Arme gelaufen.',
+             'Der ist stдrker als ich.',
+             'Nдchstes Mal besser aufpassen.',
              'Da muss ich mir etwas besseres ausdenken.',
              'Ich jage ihn wohl besser in einen Elektrozaun.'
              ]);
@@ -881,18 +896,18 @@ begin
   then
   begin
     ShowMsg([
-             'Ah, sch�n.',
+             'Ah, schцn.',
              'Nett!',
              'Wie das funkelt.',
              'Das ist bestimmt viel wert.',
              'Das sieht schick aus!',
              'Oh wie toll!',
              'Guck mal, was ich tolles gefunden habe!',
-             'Daf�r kriegt man bestimmt viel Geld.',
+             'Dafьr kriegt man bestimmt viel Geld.',
              'Ich will mehr!',
              'Von wem das wohl stammt?',
-             'Ob ich das zum Fundb�ro bringen sollte?',
-             'Ich bin ein Gl�ckspilz.'
+             'Ob ich das zum Fundbьro bringen sollte?',
+             'Ich bin ein Glьckspilz.'
              ]);
     PlaySound('punkt.wav');
     AddScores(1000);
@@ -925,7 +940,7 @@ begin
     begin
       ShowMsg([
                'Damit kann man sicher tolle Sachen machen.',
-               'Das muss ich mir sp�ter mal genauer ansehen.',
+               'Das muss ich mir spдter mal genauer ansehen.',
                'Ich nehm das mal mit.'
                ]);
       AddScores(500);
@@ -934,7 +949,7 @@ begin
     else
     begin
       ShowMsg([
-               'Wenn mein Rucksack nicht voll w�re, h�tte ich das mitgenommen.',
+               'Wenn mein Rucksack nicht voll wдre, hдtte ich das mitgenommen.',
                'Leider ist mein Rucksack voll.',
                'Ich glaube, ich sollte etwas Platz in meinem Rucksack machen.',
                'Besser ist wohl, ich mache Platz im Rucksack.'
@@ -960,9 +975,9 @@ begin
     else
     begin
       ShowMsg([
-               'Hierf�r sollte ich auf jeden Fall Platz im Rucksack machen!',
+               'Hierfьr sollte ich auf jeden Fall Platz im Rucksack machen!',
                'Der Platz im Rucksack ist es wert!',
-               'Mir fehlt Platz f�r den Diamanten.'
+               'Mir fehlt Platz fьr den Diamanten.'
                ]);
     end;
   end;
@@ -1001,7 +1016,7 @@ begin
   if s = BACKGROUND_PIC then
   begin
     ShowMsg([
-             'Ich muss erst etwas ausw�hlen.',
+             'Ich muss erst etwas auswдhlen.',
              'Was soll ich benutzen?',
              'Ich kann nicht zaubern.'
              ]);
@@ -1010,9 +1025,9 @@ begin
   if IsWild(s, 'schl*.bmp', false) then
   begin
     ShowMsg([
-             'Den brauche ich, um durch T�ren gehen zu k�nnen.',
+             'Den brauche ich, um durch Tьren gehen zu kцnnen.',
              'Den muss ich nicht direkt benutzen.',
-             'Ich kann damit nichts Besonderes machen - au�er durch T�ren zu gehen.',
+             'Ich kann damit nichts Besonderes machen - auЯer durch Tьren zu gehen.',
              'Das geht gerade nicht.'
              ]);
     exit; // cannot use key
@@ -1036,7 +1051,7 @@ begin
     ShowMsg([
              'Ah, das tat gut.',
              'Lecker!',
-             'Man f�hlt sich fast wie neugeboren.'
+             'Man fьhlt sich fast wie neugeboren.'
              ]);
   end;
   
@@ -1070,7 +1085,7 @@ begin
       ShowMsg([
                'Den Diamanten kann ich nur an der richtigen Stelle einsetzen.',
                'Wo ist die Diamantenstelle?',
-               'Ich ben�tige eine Diamantenstelle',
+               'Ich benцtige eine Diamantenstelle',
                'Was soll ich damit hier tun?'
                ]);
       exit;
@@ -1125,19 +1140,19 @@ begin
     if not did then
     begin
       ShowMsg([
-               'Ich kann hier nichts weg�tzen.',
+               'Ich kann hier nichts wegдtzen.',
                'Das geht hier nicht.',
                'Was soll ich damit hier tun?',
                'Ist alles schon weg hier.',
                'Hallo?',
-               'W�re blo� eine Verschwendung hier'
+               'Wдre bloЯ eine Verschwendung hier'
                ]);
       exit;
     end;
 
     ShowMsg([
              'Das geht weg wie nix.',
-             'Sehr umweltsch�dlich!',
+             'Sehr umweltschдdlich!',
              'Trickreich...',
              'Ha, bin ich geschickt :)'
              ]);
@@ -1223,7 +1238,7 @@ begin
           PlaySound('konig.wav');
           ShowMsg([
                    'Vor dem sollte ich aufpassen.',
-                   'Der K�nig hat mich bekommen!',
+                   'Der Kцnig hat mich bekommen!',
                    'Ich muss ihn irgendwie austricksen.'
                    ]);
           MyWorldPlayers[GetAbs(MyRoomNum)][f].Pos := PlaceNum(2,2);
@@ -1232,7 +1247,7 @@ begin
         begin
           PlaySound('robot.wav');
           ShowMsg([
-                   'Ein Roboter hat mich erwischt. N�chstes Mal besser wegrennen.',
+                   'Ein Roboter hat mich erwischt. Nдchstes Mal besser wegrennen.',
                    'Das war ungeschickt.',
                    'Der hat mich erwischt.',
                    'Sehr nervig diese Teile!'
@@ -1244,7 +1259,7 @@ begin
         exit;
       end;
       
-      if GetPlacePicName(newpos) = 'wand3.bmp' then
+      if GetPlacePicName(newpos) = 'wandEl.bmp' then
       begin
         if s = 'konig.bmp' then
         begin
@@ -1253,24 +1268,24 @@ begin
           begin
             RemovePlayer(GetAbs(MyRoomNum), i);
             ShowMsg([
-                     'Hurra, der K�nig ist tot!',
+                     'Hurra, der Kцnig ist tot!',
                      'Das Spiel ist gewonnen!',
                      'Toll, ich habe es geschafft!'
                      ]);
             ShowMessage(
                         'Super, du hast es wirklich geschafft, das Ziel des ' +
                         'Spieles, d.h. der dir vorgegebenen Regeln, ist ' +
-                        'geschafft! Der K�nig dieser Robot-Welt wurde ' +
+                        'geschafft! Der Kцnig dieser Robot-Welt wurde ' +
                         'besiegt.' + LineEnding +
                         LineEnding +
                         'Und was sagt uns das? Es gibt immer einen Weg! ' + LineEnding +
-                        '(�ber den Sinn dieses Spieles inklusive seinem Ziel ' +
-                        'l�sst sich jetzt streiten, aber du kannst von dir ' +
+                        '(Ьber den Sinn dieses Spieles inklusive seinem Ziel ' +
+                        'lдsst sich jetzt streiten, aber du kannst von dir ' +
                         'behaupten, das Ziel trotzdem erreicht zu haben.)' + LineEnding +
                         LineEnding +
                         'Was kommt nun?' + LineEnding +
-                        'Tja, das Leben geht weiter; was als n�chstes kommt, ' +
-                        'bleibt rein dir �berlassen.' + LineEnding +
+                        'Tja, das Leben geht weiter; was als nдchstes kommt, ' +
+                        'bleibt rein dir ьberlassen.' + LineEnding +
                         'Vielleicht tauchst du jetzt mal wieder in deine ' +
                         'von dir als normal angesehene Welt ab, um dort andere ' +
                         'von dir selbst gestellten Ziele zu erreichen.' + LineEnding +
@@ -1624,6 +1639,10 @@ var
   ps: string;
   x,y: Integer;
 begin
+
+  nEntry:=nEntry+1;
+  Caption:='nEntry='+IntToStr(nEntry);
+
   w := GamePanel.ClientWidth div ROOM_WIDTH;
   h := GamePanel.ClientHeight div ROOM_HEIGHT;
 
@@ -2037,8 +2056,8 @@ begin
              'Das letzte Leben verabschiedet sich.'
              ]);
     ShowMessage(
-                'Ich bin sicher, in anderen Welten w�re jetzt wirklich Ende, ' +
-                'geschweige dessen, dass du �berhaupt mehrere Leben hast!'
+                'Ich bin sicher, in anderen Welten wдre jetzt wirklich Ende, ' +
+                'geschweige dessen, dass du ьberhaupt mehrere Leben hast!'
                 );
     RemoveLife := false;
   end
