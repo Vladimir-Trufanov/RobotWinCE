@@ -24,14 +24,16 @@ const
   PLAYER_PICS: array[1..3] of string
                = ('figur.bmp', 'robot*.bmp', 'konig.bmp');
   ERROR_PIC = 'error.bmp'; // used for error-displaying
-  
-  WORLD_WIDTH = 5; // room count
+  // Размер мира игры: 4*5 = 20 комнат
+  WORLD_WIDTH = 5;
   WORLD_HEIGHT = 4;
-  ROOM_WIDTH = 20; // place count in a room
+  // Размер каждой комнаты: 20*20=400 пунктов
+  ROOM_WIDTH = 20;
   ROOM_HEIGHT = 20;
-  KNAPSACK_WIDTH = 10; // place count in the knapsack
+  // Число мест в рюкзаке: 10*5=50
+  KNAPSACK_WIDTH = 10;
   KNAPSACK_HEIGHT = 5;
-  KNAPSACK_MAX = 27; // compatibility with Robot1 (9*3)
+  KNAPSACK_MAX = 27; // для совместимости с Robot1 (9*3)
   
   COMPUTERCONTROL_INTERVAL = 750; // timer-interval for computer player control
 
@@ -165,9 +167,9 @@ type
     MyScores: Integer; // scores
     MyDiamonds: array of TDiamondSet; // set diamoonds
 
-    MyPauseState: boolean; // true -> pause: игра поставлена на паузу
-    MySoundState: boolean; // false -> mute
-    MyEditorMode: boolean; // true -> editmodus on: игра в режиме редактирования
+    MyPauseState: boolean; // true -> игра поставлена на паузу
+    MySoundState: boolean; // false -> звук выключен
+    MyEditorMode: boolean; // true -> игра в режиме редактирования
 
     // gameplay
     function MoveToRoom(dir: TMoveDirection): boolean; // goto next room; return true, if succ
@@ -307,12 +309,14 @@ begin
   Width:=485;
   // Иициируем игру
   InitGame();
-  // some hacks to make it better
+  // Устанавливаем фонты сообщений по жизням, игровым очкам, найденным алмазам
   LifeLabel.Font := MainForm.Font;
   ScoresLabel.Font := MainForm.Font;
   DiamondsLabel.Font := MainForm.Font;
+  //
   GamePanel.OnPaint := @FormPaint;
   KnapsackPanel.OnPaint := @FormPaint;
+  // Инициируем начальное построение элементов формы
   FormResize(MainForm);
 end;
 
@@ -1368,12 +1372,15 @@ var
   tmp: TBitmap;
   i: Integer;
 begin
-  Randomize(); // init randomizer
-
+  // Запускаем генерацию псевдослучайностей
+  Randomize();
+  // Указываем, что звук должен быть выключенным
   MySoundState := false;
+  // Зачищаем изображение текущей комнаты
   ResetRoomPic();
+  // Зачищаем содержимое рюкзака
   ResetKnapsackPic();
-  
+  // Загружаем изображения комнат и запускаем игру
   RestartGame();
 end;
 
@@ -1641,7 +1648,7 @@ var
 begin
 
   nEntry:=nEntry+1;
-  Caption:='nEntry='+IntToStr(nEntry);
+  Caption:='Вход='+IntToStr(nEntry);
 
   w := GamePanel.ClientWidth div ROOM_WIDTH;
   h := GamePanel.ClientHeight div ROOM_HEIGHT;
