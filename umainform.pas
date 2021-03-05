@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  Buttons, GraphType, Crt, StrUtils, StdCtrls, ComCtrls, Menus
+  Buttons, GraphType, Crt, StrUtils, StdCtrls, ComCtrls, Menus, LCLType
 {$IFDEF win32}
   ,MMSystem
 {$ENDIF}
@@ -38,26 +38,28 @@ const
   COMPUTERCONTROL_INTERVAL = 750; // timer-interval for computer player control
 
 type
-  // Координаты игрока в мире игры
-  TRoomNum = record // world coord
+  // Координаты текущей игры ("уровень") в игровом мире
+  TRoomNum = record                                      // world coord
     X: 1..WORLD_WIDTH;
     Y: 1..WORLD_HEIGHT;
   end;
   // Координаты игрока в комнате
-  TPlaceNum = record // room coord
+  TPlaceNum = record                                     // room coord
     X: 1..ROOM_WIDTH;
     Y: 1..ROOM_HEIGHT;
   end;
-
-  TPlaceAbsNum = 1..(ROOM_WIDTH*ROOM_HEIGHT); // abs room-index
-  TRoomAbsNum = 1..(WORLD_WIDTH*WORLD_HEIGHT); // abs place-index
+  // Пространство позиций в комнате
+  TPlaceAbsNum = 1..(ROOM_WIDTH*ROOM_HEIGHT);            // abs room-index
+  // Пространство комнат в игровом мире
+  TRoomAbsNum = 1..(WORLD_WIDTH*WORLD_HEIGHT);           // abs place-index
+  // Пространство предметов в рюкзаке
   TKnapsackAbsNum = 1..(KNAPSACK_WIDTH*KNAPSACK_HEIGHT); // abs knapsack-index
   
   TPlace = record
     PicIndex: Integer; // index of TPictureCache
   end;
   TRoom = array[TPlaceAbsNum] of TPlace; // a hole room
-  TWorld = array[TRoomAbsNum] of TRoom; // a hole world
+  TWorld = array[TRoomAbsNum] of TRoom;  // a hole world
 
   TPlayer = record
     Pos: TPlaceNum;
@@ -130,6 +132,7 @@ type
     procedure KnapsackPanelClick(Sender: TObject);
     procedure KnapsackPanelMouseDown(Sender: TOBject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+		procedure MessageBarClick(Sender: TObject);
     procedure mnuEditorLoadClick(Sender: TObject);
     procedure mnuEditorModeClick(Sender: TObject);
     procedure mnuEditorSaveClick(Sender: TObject);
@@ -145,14 +148,20 @@ type
     { private declarations }
   public
     nEntry: integer;
-
+    // Игровой мир
     MyWorld: TWorld; // the world
+    //
     MyWorldPlayers: TWorldPlayers; // all players
+    //
     MyRoomNum: TRoomNum; // selected room of my world
-    MyRoomPic: record // user view
-                 Room: TRoom; // room actually viewed
-                 Picture: TBitmap; // paint cache
-               end;
+    // Текущее состояние игровой комнаты: Room - позиционный список графических
+    // элементы на карте игровой комнаты, Picture - изображение комнаты
+    // максимально возможный размера в пикселах
+    MyRoomPic: record    // user view
+      Room: TRoom;       // room actually viewed
+      Picture: TBitmap;  // paint cache
+    end;
+    //
     MyKnapsack: TKnapsack; // the knapsack
     MyEditorKnapsack: TKnapsack; // the knapsack used in editor mode
     MyKnapsackPic: record // user view
@@ -499,6 +508,11 @@ begin
     MyKnapsackSelection := (ky-1)*KNAPSACK_WIDTH + kx;
     DrawKnapsack();
   end;
+end;
+
+procedure TMainForm.MessageBarClick(Sender: TObject);
+begin
+
 end;
 
 procedure TMainForm.mnuEditorLoadClick(Sender: TObject);
@@ -1428,23 +1442,42 @@ begin
   MyRoomPic.Picture.Free();
   MyKnapsackPic.Picture.Free();
 end;
-
+// ****************************************************************************
+// *                   Зачистить изображение текущей комнаты                  *
+// ****************************************************************************
 procedure TMainForm.ResetRoomPic();
 var
   i: Integer;
   w,h: Integer;
 begin
+  // Очищаем позиционный список графических элементы с карты игровой комнаты
   for i := 1 to ROOM_WIDTH*ROOM_HEIGHT do
   begin
     MyRoomPic.Room[i].PicIndex := -1;
   end;
-  
+
+  if MyRoomPic.Picture <> nil then
+  begin
+    MyRoomPic.Picture.Free();
+    // ShowMessage('Освободили картину игровой комнаты!');
+    // 05.03.2021 для версии FPC 3.2.0 фрагмент кода:
+    // "if MyRoomPic.Picture <> nil then MyRoomPic.Picture.Free();"
+    // при отсутствии объекта MyRoomPic.Picture (когда объект не создавался
+    // вместе с формой) даст исключение, но если он был создан вместе с формой
+    // (выделена память), то проверка сработает !!!
+	end;
+
+  // Расчитываем по пикселам максимально возможный размер изображения комнаты
+  // и задаем растровый объект для размещения изображения
   w := GamePanel.ClientWidth div ROOM_WIDTH;
   h := GamePanel.ClientHeight div ROOM_HEIGHT;
-  if MyRoomPic.Picture <> nil then MyRoomPic.Picture.Free();
   MyRoomPic.Picture := TBitmap.Create();
   MyRoomPic.Picture.Width := w*ROOM_WIDTH;
   MyRoomPic.Picture.Height := h*ROOM_HEIGHT;
+  //Caption:=
+  //  IntToStr(GamePanel.ClientWidth)+'>'+
+  //  IntToStr(w)+'*'+IntToStr(ROOM_WIDTH)+'='+
+  //  IntToStr(w*ROOM_WIDTH);
 end;
 
 procedure TMainForm.ResetKnapsackPic();
@@ -1648,7 +1681,7 @@ var
 begin
 
   nEntry:=nEntry+1;
-  Caption:='Вход='+IntToStr(nEntry);
+  //Caption:='Вход='+IntToStr(nEntry);
 
   w := GamePanel.ClientWidth div ROOM_WIDTH;
   h := GamePanel.ClientHeight div ROOM_HEIGHT;
