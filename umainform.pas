@@ -19,11 +19,11 @@ const
 {$ELSE}
     30; // i think, it's a good value...
 {$ENDIF}
-
-  BACKGROUND_PIC = 'hinter.bmp'; // used for resetting
-  PLAYER_PICS: array[1..3] of string
-               = ('figur.bmp', 'robot*.bmp', 'konig.bmp');
-  ERROR_PIC = 'error.bmp'; // used for error-displaying
+  // Спецификации (пути+имена) файлов основных графических элементов
+  BACKGROUND_PIC = 'hinter.bmp';            // заполнитель фона
+  ERROR_PIC = 'error.bmp';                  // ошибочный (отсутствующий) элемент
+  PLAYER_PICS: array[1..3] of string =
+    ('figur.bmp','robot*.bmp','konig.bmp'); // игроки в комнате
   // Размер мира игры: 4*5 = 20 комнат
   WORLD_WIDTH = 5;
   WORLD_HEIGHT = 4;
@@ -68,13 +68,13 @@ type
   end;
   TPlayerList = array of TPlayer; // dyn array of players in the room
   TWorldPlayers = array[TRoomAbsNum] of TPlayerList; // all players in the world
-  //
+  // Пространство графических элементов игры
   TPictureCacheItem = record
-    FileName: string;
-    Picture: TBitmap; // picture cache
-    ResizedPicture: TBitmap; // resized picture cache
+    FileName: string;             // Спецификация файла элемента
+    Picture: TBitmap;             // Растр элемента
+    ResizedPicture: TBitmap;      // Растр элемента с измененным размером
   end;
-  TPictureCache = array of TPictureCacheItem;
+  TPictureCache = array of TPictureCacheItem; // Пространство элементов
 
   TMoveDirection = (mdLeft, mdRight, mdUp, mdDown);
 
@@ -170,7 +170,9 @@ type
     end;
     MyKnapsackSelection: TKnapsackAbsNum; // selected item in the knapsack
     MyFocus: TFocus;
+    // Массив загруженных графических элементов игры
     MyPictureCache: TPictureCache; // cache of all graphics in the game
+    //
     MyLife: Integer; // lifes
     MyScores: Integer; // scores
     MyDiamonds: array of TDiamondSet; // set diamoonds
@@ -1891,15 +1893,19 @@ begin
 
   GetPictureName := MyPictureCache[index].FileName;
 end;
-
+// ****************************************************************************
+// *  По спецификации файла определить индекс элемента в массиве загруженных  *
+// *      графических элементов игры (при отсутствии элемента, попытаться     *
+// *              загрузить его и присвоить новый индекс)                     *
+// ****************************************************************************
 function TMainForm.GetPictureCacheIndex(fname: string): Integer;
 var
   i: Integer;
   tmp, tmp2: TBitmap;
 begin
+  // Если файл не указан, то считаем, что это фоновый эемент
   if fname = '' then fname := BACKGROUND_PIC;
-
-  // look in my cache, if the file is there
+  // Ищем элемент в массиве, возвращаем его номер и завершаем функцию
   for i := Low(MyPictureCache) to High(MyPictureCache) do
   begin
     if(MyPictureCache[i].FileName = fname) then // found it!
@@ -1908,8 +1914,7 @@ begin
       exit;
     end;
   end;
-
-  // load the file
+  // Если элемента в масиве еще нет, то попытаемся загрузить его из файла
   tmp := TBitmap.Create();
   tmp.TransparentColor := TColor(1); // it's a hack (needed for mac os x version); i hope, i never used this color
   tmp.Transparent := false; // this doesn't seems to work very well
