@@ -48,28 +48,26 @@ type
     X: 1..ROOM_WIDTH;
     Y: 1..ROOM_HEIGHT;
   end;
-  // Пространство позиций в комнате
-  TPlaceAbsNum = 1..(ROOM_WIDTH*ROOM_HEIGHT);            // abs room-index
-  // Пространство комнат в игровом мире
-  TRoomAbsNum = 1..(WORLD_WIDTH*WORLD_HEIGHT);           // abs place-index
-  // Пространство предметов в рюкзаке
-  TKnapsackAbsNum = 1..(KNAPSACK_WIDTH*KNAPSACK_HEIGHT); // abs knapsack-index
-  
+  // Позиция размещения элемента в массиве
   TPlace = record
     PicIndex: Integer; // index of TPictureCache
   end;
-  TRoom = array[TPlaceAbsNum] of TPlace; // a hole room
-  TWorld = array[TRoomAbsNum] of TRoom;  // a hole world
-
+  // Пространство мест в комнате
+  TPlaceAbsNum = 1..(ROOM_WIDTH*ROOM_HEIGHT);      // диапазон мест
+  TRoom = array[TPlaceAbsNum] of TPlace;           // пространство мест в комнате
+  // Пространство комнат в игровом мире
+  TRoomAbsNum = 1..(WORLD_WIDTH*WORLD_HEIGHT);     // диапазон номеров комнат
+  TWorld = array[TRoomAbsNum] of TRoom;            // пространство комнат в мире
+  // Пространство предметов в рюкзаке
+  TKnapsackAbsNum = 1..(KNAPSACK_WIDTH*KNAPSACK_HEIGHT); // диапазон
+  TKnapsack = array[TKnapsackAbsNum] of TPlace;          // пространство мест
+  //
   TPlayer = record
     Pos: TPlaceNum;
     PicIndex: Integer; // index of TPictureCache
   end;
   TPlayerList = array of TPlayer; // dyn array of players in the room
   TWorldPlayers = array[TRoomAbsNum] of TPlayerList; // all players in the world
-
-  TKnapsack = array[TKnapsackAbsNum] of TPlace; // a knapsack
-
   //
   TPictureCacheItem = record
     FileName: string;
@@ -164,11 +162,12 @@ type
     //
     MyKnapsack: TKnapsack; // the knapsack
     MyEditorKnapsack: TKnapsack; // the knapsack used in editor mode
+    // Текущее содержимое рюкзака игрока
     MyKnapsackPic: record // user view
-                     Knapsack: TKnapsack; // knapsack actually viewed
-                     Selection: TKnapsackAbsNum; // selection act viewed
-                     Picture: TBitmap; // paint cache
-                   end;
+      Knapsack: TKnapsack; // knapsack actually viewed
+      Selection: TKnapsackAbsNum; // selection act viewed
+      Picture: TBitmap; // paint cache
+    end;
     MyKnapsackSelection: TKnapsackAbsNum; // selected item in the knapsack
     MyFocus: TFocus;
     MyPictureCache: TPictureCache; // cache of all graphics in the game
@@ -193,11 +192,11 @@ type
     procedure InitGame();
     procedure RestartGame();
     procedure UnInitGame();
-    procedure ResetRoomPic();
-    procedure ResetKnapsackPic();
+    procedure ResetRoomPic();     // зачистить изображение текущей комнаты
+    procedure ResetKnapsackPic(); // зачистить содержимое рюкзака
     procedure ResetWorld();
     procedure ResetKnapsack();
-    procedure DrawRoom(); // updates MyRoomPic and GamePanel
+    procedure DrawRoom();         // updates MyRoomPic and GamePanel
     procedure DrawKnapsack(); // updates MyKnapsackPic and KnapsackPanel
     procedure DrawInfo(); // updates InfoPanel
     procedure ShowMsg(msg: string); // printed on MessageBar
@@ -1376,11 +1375,9 @@ begin
     end;
   end;
 end;
-
-
-// ------------------------------------------------
-// stuff in background to make it work well
-
+// ****************************************************************************
+// *                             Инициировать игру                            *
+// ****************************************************************************
 procedure TMainForm.InitGame(); // start here
 var
   tmp: TBitmap;
@@ -1397,7 +1394,9 @@ begin
   // Загружаем изображения комнат и запускаем игру
   RestartGame();
 end;
-
+// ****************************************************************************
+// *                 Загрузить изображения комнат и запустить игру            *
+// ****************************************************************************
 procedure TMainForm.RestartGame();
 begin
   ResetKnapsack();
@@ -1479,7 +1478,9 @@ begin
   //  IntToStr(w)+'*'+IntToStr(ROOM_WIDTH)+'='+
   //  IntToStr(w*ROOM_WIDTH);
 end;
-
+// ****************************************************************************
+// *                        Зачистить содержимое рюкзака                      *
+// ****************************************************************************
 procedure TMainForm.ResetKnapsackPic();
 var
   i: Integer;
