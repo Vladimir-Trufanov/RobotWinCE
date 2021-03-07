@@ -62,13 +62,14 @@ type
   // Пространство для предметов в рюкзаке
   TKnapsackAbsNum = 1..(KNAPSACK_WIDTH*KNAPSACK_HEIGHT); // диапазон
   TKnapsack = array[TKnapsackAbsNum] of TPlace;          // пространство мест
-  //
+  // Позиция игрока в комнате и его индекс в кэш-массиве графических элементов
   TPlayer = record
     Pos: TPlaceNum;
     PicIndex: Integer; // index of TPictureCache
   end;
-  TPlayerList = array of TPlayer; // dyn array of players in the room
-  TWorldPlayers = array[TRoomAbsNum] of TPlayerList; // all players in the world
+  // Пространство игроков
+  TPlayerList = array of TPlayer;                    // дин.массив игроков в комнатеm
+  TWorldPlayers = array[TRoomAbsNum] of TPlayerList; // массив всех игроков мирп
   // Пространство графических элементов игры
   TPictureCacheItem = record
     FileName: string;             // Спецификация файла элемента
@@ -147,9 +148,9 @@ type
     { private declarations }
   public
     nEntry: integer;
-    // Игровой мир
-    MyWorld: TWorld; // the world
-    // Все игроки мира
+    // Текущее состояние игрового мира из всех комнат
+    MyWorld: TWorld;
+    // Текущее наличие игроков во всех комнатах мира
     MyWorldPlayers: TWorldPlayers; // all players
     // Текущая комната
     MyRoomNum: TRoomNum;           // selected room of my world
@@ -1576,7 +1577,10 @@ procedure TMainForm.ResetPlace(pos: TPlaceNum);
 begin
   SetPlacePicName(pos, BACKGROUND_PIC);
 end;
-
+// ****************************************************************************
+// *        Дополнить пространство игроков новым загружаемым элементом        *
+// ****************************************************************************
+// Занести позицию и индекс нового игрока
 function TMainForm.AddPlayer(room: TRoomAbsNum; pos: TPlaceNum; picindex: Integer): Integer;
 var
   i: Integer;
@@ -1588,7 +1592,7 @@ begin
   MyWorldPlayers[room][i].Pos := pos;
   AddPlayer := i;
 end;
-
+// Вытащить индекс загружаемого игрока
 function TMainForm.AddPlayer(room: TRoomAbsNum; pos: TPlaceNum; picname: string): Integer;
 begin
   AddPlayer := AddPlayer(room, pos, GetPictureCacheIndex(picname));
@@ -2154,7 +2158,8 @@ begin
 {$ENDIF}
 end;
 // ****************************************************************************
-// *                  Загрузить графические элементы мира игры                *
+// *                 Загрузить графические элементы мира игры и               *
+// *         дополнить пространство игроков новым загружаемым элементом       *
 // ****************************************************************************
 procedure TMainForm.LoadWorld(fname: string);
 var
@@ -2214,7 +2219,6 @@ begin
         end;
       end;
     end;
-
   finally
     CloseFile(f);
   end;
