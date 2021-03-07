@@ -13,11 +13,12 @@ uses
   ;
   
 const
+  // Ширина, высота картинок(элементов), из которых строится изображение комнат
   PICTURE_SIZE = // picture cache size
 {$IFDEF win32}
-    65; // windows needs more
+  65; // windows needs more
 {$ELSE}
-    30; // i think, it's a good value...
+  30; // i think, it's a good value...
 {$ENDIF}
   // Спецификации (пути+имена) файлов основных графических элементов
   BACKGROUND_PIC = 'hinter.bmp';            // заполнитель фона
@@ -58,7 +59,7 @@ type
   // Пространство комнат в игровом мире
   TRoomAbsNum = 1..(WORLD_WIDTH*WORLD_HEIGHT);     // диапазон номеров комнат
   TWorld = array[TRoomAbsNum] of TRoom;            // пространство комнат в мире
-  // Пространство предметов в рюкзаке
+  // Пространство для предметов в рюкзаке
   TKnapsackAbsNum = 1..(KNAPSACK_WIDTH*KNAPSACK_HEIGHT); // диапазон
   TKnapsack = array[TKnapsackAbsNum] of TPlace;          // пространство мест
   //
@@ -148,25 +149,25 @@ type
     nEntry: integer;
     // Игровой мир
     MyWorld: TWorld; // the world
-    //
+    // Все игроки мира
     MyWorldPlayers: TWorldPlayers; // all players
-    //
-    MyRoomNum: TRoomNum; // selected room of my world
+    // Текущая комната
+    MyRoomNum: TRoomNum;           // selected room of my world
     // Текущее состояние игровой комнаты: Room - позиционный список графических
     // элементы на карте игровой комнаты, Picture - изображение комнаты
     // максимально возможный размера в пикселах
-    MyRoomPic: record    // user view
-      Room: TRoom;       // room actually viewed
-      Picture: TBitmap;  // paint cache
+    MyRoomPic: record              // user view
+      Room: TRoom;                 // room actually viewed
+      Picture: TBitmap;            // paint cache
     end;
-    //
-    MyKnapsack: TKnapsack; // the knapsack
-    MyEditorKnapsack: TKnapsack; // the knapsack used in editor mode
+    // !!!Текущее состояние (содержимое) рюкзака
+    MyKnapsack: TKnapsack;         // содержимое рюкзака в игре
+    MyEditorKnapsack: TKnapsack;   // содержимое рюкзака в редакторе
     // Текущее содержимое рюкзака игрока
-    MyKnapsackPic: record // user view
-      Knapsack: TKnapsack; // knapsack actually viewed
-      Selection: TKnapsackAbsNum; // selection act viewed
-      Picture: TBitmap; // paint cache
+    MyKnapsackPic: record          // user view
+      Knapsack: TKnapsack;         // knapsack actually viewed
+      Selection: TKnapsackAbsNum;  // selection act viewed
+      Picture: TBitmap;            // paint cache
     end;
     MyKnapsackSelection: TKnapsackAbsNum; // selected item in the knapsack
     MyFocus: TFocus;
@@ -1508,7 +1509,10 @@ begin
     end;
   end;
 end;
-
+// ****************************************************************************
+// *        Опустошить рюкзак (заполнить элементы массива рюкзака ссылками    *
+// *          на изображения фона, то есть индексами картинки фона в кэше)    *                   *
+// ****************************************************************************
 procedure TMainForm.ResetKnapsack();
 var
   i: Integer;
@@ -1914,17 +1918,20 @@ begin
       exit;
     end;
   end;
-  // Если элемента в масиве еще нет, то попытаемся загрузить его из файла
+  // Если элемента в масиве еще нет, то попытаемся загрузить его из файла.
   tmp := TBitmap.Create();
   tmp.TransparentColor := TColor(1); // it's a hack (needed for mac os x version); i hope, i never used this color
-  tmp.Transparent := false; // this doesn't seems to work very well
+  tmp.Transparent := false;          // this doesn't seems to work very well
   try
     tmp.LoadFromFile(fname);
   except
     on error: Exception do
+    // Загрузить изображеие элемента не удалось. В этом случае загружаем
+    // изображение ошибки и возвращаем позицию (индекс) ошибки.
+    // Ну, а если и ошибку не удалось загрузить, возвращаем индекс=0.
     begin
       WriteLn('ERROR: GetPictureCacheIndex: could not load ' +
-              fname + ': ' + error.Message);
+        fname + ': ' + error.Message);
       GetPictureCacheIndex := 0;
       if (fname <> ERROR_PIC) then
       begin
@@ -1934,20 +1941,19 @@ begin
       exit;
     end;
   end;
-  
-  // resize it
+  // Картинку загрузили, изменяем изображение под формат экрана
   tmp2 := TBitmap.Create();
   tmp2.Width := PICTURE_SIZE;
   tmp2.Height := PICTURE_SIZE;
   CopyRect(
-           tmp2.Canvas,
-           Rect(0,0,PICTURE_SIZE,PICTURE_SIZE),
-           tmp.Canvas,
-           Rect(0,0,tmp.Width,tmp.Height)
-           );
-  tmp.Free(); // we don't need it anymore
-
-  // put it in the cache
+    tmp2.Canvas,
+    Rect(0,0,PICTURE_SIZE,PICTURE_SIZE),
+    tmp.Canvas,
+    Rect(0,0,tmp.Width,tmp.Height)
+  );
+  tmp.Free();
+  // Увеличиваем размерность кэш-массива, включаем загруженное и
+  // измененное изображение и возвращаем новый индекс
   SetLength(MyPictureCache, Length(MyPictureCache) + 1);
   i := High(MyPictureCache);
   MyPictureCache[i].FileName := fname;
@@ -2147,7 +2153,9 @@ begin
   // TODO: play the file
 {$ENDIF}
 end;
-
+// ****************************************************************************
+// *                  Загрузить графические элементы мира игры                *
+// ****************************************************************************
 procedure TMainForm.LoadWorld(fname: string);
 var
   f: TextFile;
@@ -2156,7 +2164,9 @@ var
   placenum: TPlaceAbsNum;
   i: Integer;
 begin
-  { file content:
+  // Содержимое файла загрузки, где :RAUM1 - начало последовательного списка
+  // графических элементов первой комнаты, далее имена файлов самих элементов
+  {
   :RAUM1
   bild1.bmp
   bild2.bmp
@@ -2166,29 +2176,31 @@ begin
   :RAUM20
     ...
   }
-
   AssignFile(f, fname); // open file
   try
     Reset(f); // go to the beginning
-
     ResetPlayerList();
-
     while not EOF(f) do
     begin
       ReadLn(f, tmp);
       tmp := Trim(tmp);
       if tmp <> '' then
       begin
+        // Если вышли на очередную комнату в файле, то задаем roomnum как
+        // номер комнаты и placenum=1, как первую позицию в комнате
         if AnsiStartsStr(':RAUM', UpperCase(tmp)) then // new room
         begin
           roomnum := StrToInt(AnsiRightStr(tmp, Length(tmp) - 5));
           placenum := 1;
         end
+        // Иначе загружаем очередной графический элемент игрового мира
         else
-        begin // next place
+        begin
           MyWorld[roomnum][placenum].PicIndex := GetPictureCacheIndex(tmp);
-
-          // look for players
+          // По ходу загрузки графических элементов выявляем игроков и
+          // заполняем пространство игроков, а соответствующую позицию в мире
+          // заполняем фоном (свободной землей, для того, чтобы контроллировать
+          // движение игроков)
           for i := Low(PLAYER_PICS) to High(PLAYER_PICS) do
           begin
             if IsWild(tmp, PLAYER_PICS[i], true) then
@@ -2197,7 +2209,7 @@ begin
               MyWorld[roomnum][placenum].PicIndex := GetPictureCacheIndex(BACKGROUND_PIC);
             end;
           end;
-
+          // Переходим на заполнение следующего места в загружаемом мире
           if placenum < ROOM_WIDTH*ROOM_HEIGHT then placenum := placenum + 1;
         end;
       end;
