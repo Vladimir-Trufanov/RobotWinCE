@@ -10,6 +10,7 @@ uses
 {$IFDEF win32}
   ,MMSystem
 {$ENDIF}
+  ,RobotUtils
   ;
   
 const
@@ -673,8 +674,6 @@ end;
 
 function TMainForm.MoveToRoom(rnum: TRoomNum): boolean;
 begin
-  // TODO: same reaction like other MoveToRoom
-  // (it only works now, because this function is not used in main context)
   MyRoomNum := rnum;
   MoveToRoom := true;
   if MoveToRoom then DrawRoom();
@@ -1650,32 +1649,16 @@ begin
   for room := 1 to WORLD_WIDTH*WORLD_HEIGHT do
     SetLength(MyWorldPlayers[room], 0);
 end;
-
-procedure TMainForm.CopyRect(DstCanvas: TCanvas; const Dest: TRect; SrcCanvas: TCanvas; const Source: TRect);
-
-  procedure OwnCopyRect();
-  var
-    x,y: Integer;
-    w,h: Integer;
-    sw, sh: Integer;
-  begin
-    w := Dest.Right - Dest.Left;
-    h := Dest.Bottom - Dest.Top;
-    sw := Source.Right - Source.Left;
-    sh := Source.Bottom - Source.Top;
-    for x := 0 to w do
-    for y := 0 to h do
-    begin
-      DstCanvas.Pixels[Dest.Left + x, Dest.Top + y] :=
-        SrcCanvas.Pixels[Source.Left + (x * sw) div w,
-                         Source.Top + (y * sh) div h];
-    end;
-  end;
-
+// ****************************************************************************
+// *          Скопировать графический прямоугольник с холста на холст с       *
+// *                              изменением размера                          *
+// ****************************************************************************
+procedure TMainForm.CopyRect(DstCanvas:TCanvas; const Dest:TRect;
+  SrcCanvas:TCanvas; const Source:TRect);
 begin
 {$IFDEF win32}
-  // WIN API StretchBlt is shit !
-  OwnCopyRect();
+  //SmudgeRect(DstCanvas,Dest,SrcCanvas,Source);
+  DstCanvas.CopyRect(Dest,SrcCanvas,Source);
 {$ELSE}
   // on something else, we have already a good copyrect ...
   DstCanvas.CopyRect(Dest, SrcCanvas, Source);
@@ -1690,10 +1673,11 @@ var
   ps: string;
   x,y: Integer;
 begin
-
+  // При знакомстве смотрим входы в перерисовку комнаты
   nEntry:=nEntry+1;
   //Caption:='Вход='+IntToStr(nEntry);
-
+  // Определяем максимально-возможную размерность графического
+  // элемента изображения комнаты
   w := GamePanel.ClientWidth div ROOM_WIDTH;
   h := GamePanel.ClientHeight div ROOM_HEIGHT;
 
