@@ -50,7 +50,7 @@ type
     X: 1..ROOM_WIDTH;
     Y: 1..ROOM_HEIGHT;
   end;
-  // Позиция размещения элемента в массиве
+  // Позиция размещения элемента в массиве (кэше) всех элементов игры
   TPlace = record
     PicIndex: Integer; // index of TPictureCache
   end;
@@ -149,15 +149,16 @@ type
     { private declarations }
   public
     nEntry: integer;
-    // Текущее состояние игрового мира из всех комнат
+    // Текущая картина мира (то есть расстановка графических элементов по всем
+    // комнатам) после только что выполненного действия игроками в этом мире
     MyWorld: TWorld;
-    // Текущее наличие игроков во всех комнатах мира
-    MyWorldPlayers: TWorldPlayers; // all players
+    // Текущее положение игроков во всех комнатах мира
+    MyWorldPlayers: TWorldPlayers;
     // Текущая комната
     MyRoomNum: TRoomNum;           // selected room of my world
-    // Текущее состояние игровой комнаты: Room - позиционный список графических
-    // элементы на карте игровой комнаты, Picture - изображение комнаты
-    // максимально возможный размера в пикселах
+    // Предыдущее (показываемое на экране перед сменой изображения) состояние игровой комнаты:
+    //   Room - позиционный список графических элементы на карте игровой комнаты,
+    //   Picture - изображение комнаты максимально возможного размера в пикселах
     MyRoomPic: record              // user view
       Room: TRoom;                 // room actually viewed
       Picture: TBitmap;            // paint cache
@@ -1522,14 +1523,23 @@ begin
     MyKnapsack[i].PicIndex := GetPictureCacheIndex(BACKGROUND_PIC);
   end;
 end;
-
-function TMainForm.GetPlace(room: TRoomAbsNum; pos: TPlaceNum): TPlace;
+// ****************************************************************************
+// *     Определить индекс элемента изображения в кэше по заданной позиции    *
+// *           элемента в мире (для последующего отображения на экране)       *                     *
+// ****************************************************************************
+function TMainForm.GetPlace(room:TRoomAbsNum; pos:TPlaceNum): TPlace;
 var
   i: Integer;
+  c: String;
 begin
+  // Определяем позицию элемента в кэше по заданной позиции в мире
   GetPlace.PicIndex := MyWorld[room][GetAbs(pos)].PicIndex;
-
-  // look for players
+  {
+  c:=Caption+'е'+IntToStr(GetPlace.PicIndex);
+  Caption:=copy(c,length(c)-60);
+  }
+  // Так как в данный момент есть игроки в массиве текущих игроков мира,
+  // то определяем позицию игрока в кэше
   if Length(MyWorldPlayers[room]) > 0 then
   for i := Low(MyWorldPlayers[room]) to High(MyWorldPlayers[room]) do
   begin
@@ -1537,17 +1547,22 @@ begin
     and (MyWorldPlayers[room][i].Pos.Y = pos.Y) then
     begin
       GetPlace.PicIndex := MyWorldPlayers[room][i].PicIndex;
-      //WriteLn('found player to view: ' + IntToStr(GetPlace.PicIndex));
+      {
+      c:=Caption+'i'+IntToStr(GetPlace.PicIndex);
+      Caption:=copy(c,length(c)-60);
+      }
     end;
   end;
-  
-  // check for range errors
-  if (GetPlace.PicIndex < Low(MyPictureCache))
+  // Выполняем проверку на превышение границ кэша
+  if (GetPlace.PicIndex < 1000000000) //(MyPictureCache))
   or (GetPlace.PicIndex > High(MyPictureCache)) then
   begin
-    WriteLn('ERROR: GetPlace: range error (' +
+    //WriteLn('ERROR: GetPlace: range error (' +
+    //        IntToStr(GetPlace.PicIndex) + ') of picture ' +
+    //        'on (' + IntToStr(pos.X) + ',' + IntToStr(pos.Y) + ')');
+    Caption:='ERROR: GetPlace: range error (' +
             IntToStr(GetPlace.PicIndex) + ') of picture ' +
-            'on (' + IntToStr(pos.X) + ',' + IntToStr(pos.Y) + ')');
+            'on (' + IntToStr(pos.X) + ',' + IntToStr(pos.Y) + ')';
     GetPlace.PicIndex := GetPictureCacheIndex(ERROR_PIC);
   end;
 end;
@@ -1680,7 +1695,6 @@ begin
   // элемента изображения комнаты
   w := GamePanel.ClientWidth div ROOM_WIDTH;
   h := GamePanel.ClientHeight div ROOM_HEIGHT;
-
   // TODO: check range errors
   for i := 1 to ROOM_WIDTH*ROOM_HEIGHT do
   begin
