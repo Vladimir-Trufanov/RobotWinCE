@@ -305,7 +305,6 @@ begin
   GetNumP.Y := (absnum-1) div ROOM_WIDTH + 1;
 end;
 
-
 { TMainForm }
 
 procedure TMainForm.FormCreate(Sender: TObject);
@@ -1554,15 +1553,17 @@ begin
     end;
   end;
   // Выполняем проверку на превышение границ кэша
-  if (GetPlace.PicIndex < 1000000000) //(MyPictureCache))
+  if (GetPlace.PicIndex < 1000000000)
+  //if (GetPlace.PicIndex < Low(MyPictureCache))
   or (GetPlace.PicIndex > High(MyPictureCache)) then
   begin
     //WriteLn('ERROR: GetPlace: range error (' +
     //        IntToStr(GetPlace.PicIndex) + ') of picture ' +
     //        'on (' + IntToStr(pos.X) + ',' + IntToStr(pos.Y) + ')');
-    Caption:='ERROR: GetPlace: range error (' +
+    c:='ERROR: GetPlace: range error (' +
             IntToStr(GetPlace.PicIndex) + ') of picture ' +
             'on (' + IntToStr(pos.X) + ',' + IntToStr(pos.Y) + ')';
+    CaptiError(c,MessageBar);
     GetPlace.PicIndex := GetPictureCacheIndex(ERROR_PIC);
   end;
 end;

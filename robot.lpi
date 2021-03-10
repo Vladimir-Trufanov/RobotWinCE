@@ -33,11 +33,11 @@
         <PackageName Value="LCL"/>
       </Item1>
     </RequiredPackages>
-    <Units Count="48">
+    <Units Count="53">
       <Unit0>
         <Filename Value="robot.lpr"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="3"/>
+        <EditorIndex Value="4"/>
         <CursorPos Y="10"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
@@ -50,9 +50,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="uMainForm"/>
-        <IsVisibleTab Value="True"/>
-        <TopLine Value="1556"/>
-        <CursorPos X="68" Y="1565"/>
+        <TopLine Value="94"/>
+        <CursorPos X="28" Y="1566"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -62,195 +61,195 @@
         <UnitName Value="Graphics"/>
         <TopLine Value="1837"/>
         <CursorPos X="35" Y="1431"/>
-        <UsageCount Value="28"/>
+        <UsageCount Value="27"/>
       </Unit2>
       <Unit3>
         <Filename Value="usr/local/share/lazarus/lcl/graphtype.pp"/>
         <UnitName Value="GraphType"/>
         <TopLine Value="722"/>
         <CursorPos X="20" Y="41"/>
-        <UsageCount Value="28"/>
+        <UsageCount Value="27"/>
       </Unit3>
       <Unit4>
         <Filename Value="usr/local/share/fpcsrc/rtl/objpas/sysutils/sysstrh.inc"/>
         <TopLine Value="148"/>
         <CursorPos X="60" Y="174"/>
-        <UsageCount Value="28"/>
+        <UsageCount Value="27"/>
       </Unit4>
       <Unit5>
         <Filename Value="usr/local/share/fpcsrc/rtl/objpas/strutils.pp"/>
         <TopLine Value="332"/>
         <CursorPos X="20" Y="356"/>
-        <UsageCount Value="25"/>
+        <UsageCount Value="24"/>
       </Unit5>
       <Unit6>
         <Filename Value="usr/local/share/fpcsrc/rtl/inc/mathh.inc"/>
         <TopLine Value="3"/>
         <CursorPos X="63" Y="50"/>
-        <UsageCount Value="27"/>
+        <UsageCount Value="26"/>
       </Unit6>
       <Unit7>
         <Filename Value="usr/local/share/fpcsrc/rtl/objpas/classes/classesh.inc"/>
         <TopLine Value="552"/>
         <CursorPos X="47" Y="571"/>
-        <UsageCount Value="14"/>
+        <UsageCount Value="13"/>
       </Unit7>
       <Unit8>
         <Filename Value="usr/local/share/lazarus/lcl/controls.pp"/>
         <UnitName Value="Controls"/>
         <TopLine Value="38"/>
         <CursorPos X="15" Y="43"/>
-        <UsageCount Value="21"/>
+        <UsageCount Value="20"/>
       </Unit8>
       <Unit9>
         <Filename Value="usr/local/share/lazarus/lcl/forms.pp"/>
         <UnitName Value="Forms"/>
         <TopLine Value="495"/>
         <CursorPos X="16" Y="514"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="7"/>
       </Unit9>
       <Unit10>
         <Filename Value="usr/local/share/fpcsrc/rtl/inc/systemh.inc"/>
         <TopLine Value="526"/>
         <CursorPos X="16" Y="557"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="7"/>
       </Unit10>
       <Unit11>
         <Filename Value="usr/local/share/fpcsrc/rtl/objpas/objpas.pp"/>
         <CursorPos X="33" Y="93"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="7"/>
       </Unit11>
       <Unit12>
         <Filename Value="usr/local/share/fpcsrc/fcl/image/fpimage.pp"/>
         <UnitName Value="FPimage"/>
         <TopLine Value="88"/>
         <CursorPos X="10" Y="267"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
       </Unit12>
       <Unit13>
         <Filename Value="usr/local/share/lazarus/lcl/dialogs.pp"/>
         <UnitName Value="Dialogs"/>
         <TopLine Value="429"/>
         <CursorPos X="14" Y="455"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="7"/>
       </Unit13>
       <Unit14>
         <Filename Value="usr/local/share/lazarus/lcl/include/commondialog.inc"/>
         <TopLine Value="63"/>
         <CursorPos Y="100"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="7"/>
       </Unit14>
       <Unit15>
         <Filename Value="usr/local/share/lazarus/lcl/include/promptdialog.inc"/>
         <TopLine Value="524"/>
         <CursorPos Y="559"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="7"/>
       </Unit15>
       <Unit16>
         <Filename Value="usr/local/share/lazarus/lcl/include/messagedialogs.inc"/>
         <TopLine Value="239"/>
         <CursorPos Y="276"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="7"/>
       </Unit16>
       <Unit17>
         <Filename Value="usr/local/share/fpcsrc/rtl/unix/sysunixh.inc"/>
         <TopLine Value="9"/>
         <CursorPos X="2" Y="28"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="7"/>
       </Unit17>
       <Unit18>
         <Filename Value="usr/local/share/lazarus/lcl/dynhasharray.pp"/>
         <UnitName Value="DynHashArray"/>
         <TopLine Value="321"/>
         <CursorPos Y="341"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit18>
       <Unit19>
         <Filename Value="usr/local/share/fpcsrc/rtl/unix/sysutils.pp"/>
         <TopLine Value="2"/>
         <CursorPos X="16" Y="20"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit19>
       <Unit20>
         <Filename Value="usr/local/share/fpcsrc/rtl/objpas/sysutils/sysutilh.inc"/>
         <CursorPos X="12" Y="19"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit20>
       <Unit21>
         <Filename Value="usr/local/share/fpcsrc/rtl/objpas/sysutils/diskh.inc"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit21>
       <Unit22>
         <Filename Value="usr/local/share/fpcsrc/rtl/objpas/sysutils/osutilsh.inc"/>
         <TopLine Value="19"/>
         <CursorPos Y="37"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit22>
       <Unit23>
         <Filename Value="usr/share/lazarus/lcl/dynhasharray.pp"/>
         <UnitName Value="DynHashArray"/>
         <TopLine Value="324"/>
         <CursorPos Y="341"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit23>
       <Unit24>
         <Filename Value="E:/lazarus/lcl/graphics.pp"/>
         <UnitName Value="Graphics"/>
         <TopLine Value="928"/>
         <CursorPos Y="943"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="3"/>
       </Unit24>
       <Unit25>
         <Filename Value="E:/lazarus/fpcsrc/fcl/image/fpcanvas.pp"/>
         <UnitName Value="FPCanvas"/>
         <TopLine Value="154"/>
         <CursorPos X="31" Y="253"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit25>
       <Unit26>
         <Filename Value="E:/lazarus/lcl/include/bitmapcanvas.inc"/>
         <TopLine Value="98"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit26>
       <Unit27>
         <Filename Value="E:/lazarus/lcl/include/graphic.inc"/>
         <TopLine Value="206"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit27>
       <Unit28>
         <Filename Value="E:/lazarus/lcl/include/canvas.inc"/>
         <TopLine Value="72"/>
         <CursorPos X="17" Y="89"/>
-        <UsageCount Value="3"/>
+        <UsageCount Value="2"/>
       </Unit28>
       <Unit29>
         <Filename Value="E:/lazarus/lcl/include/winapih.inc"/>
         <TopLine Value="211"/>
         <CursorPos X="10" Y="229"/>
-        <UsageCount Value="3"/>
+        <UsageCount Value="2"/>
       </Unit29>
       <Unit30>
         <Filename Value="E:/lazarus/fpcsrc/packages/extra/winunits/mmsystem.pp"/>
         <TopLine Value="2759"/>
         <CursorPos X="19" Y="2788"/>
-        <UsageCount Value="1"/>
+        <UsageCount Value="0"/>
       </Unit30>
       <Unit31>
         <Filename Value="usr/share/lazarus/lcl/controls.pp"/>
         <UnitName Value="Controls"/>
         <TopLine Value="113"/>
         <CursorPos X="25" Y="128"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="3"/>
       </Unit31>
       <Unit32>
         <Filename Value="usr/lib/fpc/src/rtl/objpas/classes/classesh.inc"/>
         <TopLine Value="93"/>
         <CursorPos X="11" Y="87"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="3"/>
       </Unit32>
       <Unit33>
         <Filename Value="umainform.lrs"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit33>
       <Unit34>
         <Filename Value="../../../../LazarusWinCE/fpc/3.2.0/source/packages/rtl-objpas/src/inc/strutils.pp"/>
@@ -258,22 +257,22 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="204"/>
         <CursorPos X="13" Y="212"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
       </Unit34>
       <Unit35>
         <Filename Value="../../../../LazarusWinCE/lcl/forms.pp"/>
         <UnitName Value="Forms"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="1492"/>
-        <CursorPos X="14" Y="1500"/>
-        <UsageCount Value="13"/>
+        <TopLine Value="19"/>
+        <CursorPos X="3" Y="750"/>
+        <UsageCount Value="14"/>
       </Unit35>
       <Unit36>
         <Filename Value="../../../../LazarusWinCE/lcl/include/application.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="58"/>
         <CursorPos X="3" Y="235"/>
-        <UsageCount Value="13"/>
+        <UsageCount Value="12"/>
       </Unit36>
       <Unit37>
         <Filename Value="../../../../LazarusWinCE/lcl/dialogs.pp"/>
@@ -281,7 +280,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="34"/>
         <CursorPos X="3" Y="63"/>
-        <UsageCount Value="13"/>
+        <UsageCount Value="12"/>
       </Unit37>
       <Unit38>
         <Filename Value="../../../../LazarusWinCE/lcl/lcltype.pp"/>
@@ -289,13 +288,13 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="771"/>
         <CursorPos X="17" Y="779"/>
-        <UsageCount Value="13"/>
+        <UsageCount Value="12"/>
       </Unit38>
       <Unit39>
         <Filename Value="../../../../LazarusWinCE/fpc/3.2.0/source/rtl/win/sysutils.pp"/>
         <UnitName Value="SysUtils"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="12"/>
+        <UsageCount Value="11"/>
       </Unit39>
       <Unit40>
         <Filename Value="../../../../LazarusWinCE/lcl/graphics.pp"/>
@@ -303,179 +302,168 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="1075"/>
         <CursorPos Y="1083"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit40>
       <Unit41>
         <Filename Value="../../../../LazarusWinCE/fpc/3.2.0/source/rtl/objpas/classes/classesh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="2205"/>
         <CursorPos X="10" Y="2213"/>
-        <UsageCount Value="14"/>
+        <UsageCount Value="13"/>
       </Unit41>
       <Unit42>
         <Filename Value="robotutils.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="RobotUtils"/>
-        <EditorIndex Value="1"/>
-        <TopLine Value="36"/>
-        <CursorPos Y="47"/>
-        <UsageCount Value="29"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="35"/>
+        <CursorPos X="3" Y="38"/>
+        <UsageCount Value="36"/>
         <Loaded Value="True"/>
       </Unit42>
       <Unit43>
         <Filename Value="../../../../Users/tve/Dropbox/tve/TVED7/TLaziPrown/ArrayFrm.lfm"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit43>
       <Unit44>
         <Filename Value="../../../../Users/tve/Dropbox/tve/TVED7/TLaziPrown/FulldnUni.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos Y="12"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit44>
       <Unit45>
         <Filename Value="RobotWin32.xml"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="52" Y="6"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
         <DefaultSyntaxHighlighter Value="XML"/>
       </Unit45>
       <Unit46>
         <Filename Value="../../../../Users/tve/Dropbox/tve/TVED7/TLaziPrown/AtUni.pas"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit46>
       <Unit47>
         <Filename Value="../../../../Users/tve/Dropbox/tve/TVED7/TLaziPrown/SubstrUni.pas"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="26"/>
         <CursorPos X="70" Y="38"/>
+        <UsageCount Value="12"/>
+      </Unit47>
+      <Unit48>
+        <Filename Value="../../../../LazarusWinCE/lcl/controls.pp"/>
+        <UnitName Value="Controls"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1508"/>
+        <CursorPos X="3" Y="1102"/>
+        <UsageCount Value="11"/>
+      </Unit48>
+      <Unit49>
+        <Filename Value="../../../../LazarusWinCE/lcl/stdctrls.pp"/>
+        <UnitName Value="StdCtrls"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="1572"/>
+        <CursorPos X="3" Y="1580"/>
         <UsageCount Value="11"/>
         <Loaded Value="True"/>
-      </Unit47>
+      </Unit49>
+      <Unit50>
+        <Filename Value="../../../../LazarusWinCE/lcl/include/wincontrol.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="5063"/>
+        <CursorPos X="3" Y="5065"/>
+        <UsageCount Value="10"/>
+      </Unit50>
+      <Unit51>
+        <Filename Value="../../../../LazarusWinCE/lcl/widgetset/wscontrols.pp"/>
+        <UnitName Value="WSControls"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="345"/>
+        <CursorPos X="7" Y="350"/>
+        <UsageCount Value="10"/>
+      </Unit51>
+      <Unit52>
+        <Filename Value="../../../../LazarusWinCE/lcl/extctrls.pp"/>
+        <UnitName Value="ExtCtrls"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="1085"/>
+        <CursorPos X="3" Y="1093"/>
+        <UsageCount Value="11"/>
+        <Loaded Value="True"/>
+      </Unit52>
     </Units>
-    <JumpHistory Count="30" HistoryIndex="28">
+    <JumpHistory Count="17" HistoryIndex="16">
       <Position1>
         <Filename Value="umainform.pas"/>
-        <Caret Line="1674" Column="30" TopLine="1661"/>
+        <Caret Line="147" TopLine="140"/>
       </Position1>
       <Position2>
         <Filename Value="umainform.pas"/>
-        <Caret Line="1677" TopLine="1663"/>
+        <Caret Line="146" TopLine="139"/>
       </Position2>
       <Position3>
         <Filename Value="umainform.pas"/>
-        <Caret Line="1684" TopLine="1670"/>
+        <Caret Line="307" TopLine="549"/>
       </Position3>
       <Position4>
         <Filename Value="umainform.pas"/>
-        <Caret Line="1682" Column="35" TopLine="1654"/>
+        <Caret Line="623" Column="41" TopLine="616"/>
       </Position4>
       <Position5>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="1682" Column="35" TopLine="1667"/>
+        <Filename Value="robotutils.pas"/>
+        <Caret Line="44" Column="27" TopLine="29"/>
       </Position5>
       <Position6>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="1694" TopLine="1681"/>
+        <Filename Value="robotutils.pas"/>
+        <Caret Line="33" Column="15" TopLine="23"/>
       </Position6>
       <Position7>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="1679" Column="24" TopLine="1675"/>
+        <Filename Value="robotutils.pas"/>
+        <Caret Line="30" Column="21" TopLine="22"/>
       </Position7>
       <Position8>
         <Filename Value="umainform.pas"/>
-        <Caret Line="1701" Column="3" TopLine="1694"/>
+        <Caret Line="1565" Column="5" TopLine="1557"/>
       </Position8>
       <Position9>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="357" Column="61" TopLine="349"/>
+        <Filename Value="robotutils.pas"/>
+        <Caret Line="21" Column="48" TopLine="13"/>
       </Position9>
       <Position10>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="359" Column="61" TopLine="351"/>
+        <Filename Value="robotutils.pas"/>
+        <Caret Line="30" Column="48" TopLine="22"/>
       </Position10>
       <Position11>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="380" Column="7" TopLine="372"/>
+        <Filename Value="robotutils.pas"/>
+        <Caret Line="18" Column="51" TopLine="13"/>
       </Position11>
       <Position12>
         <Filename Value="umainform.pas"/>
-        <Caret Line="345" TopLine="335"/>
+        <Caret Line="1565" Column="32" TopLine="88"/>
       </Position12>
       <Position13>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="344" TopLine="334"/>
+        <Filename Value="robotutils.pas"/>
+        <Caret Line="18" Column="60" TopLine="7"/>
       </Position13>
       <Position14>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="343" TopLine="333"/>
+        <Filename Value="robotutils.pas"/>
+        <Caret Line="42" Column="5" TopLine="35"/>
       </Position14>
       <Position15>
         <Filename Value="umainform.pas"/>
-        <Caret Line="189" Column="21" TopLine="186"/>
+        <Caret Line="1565" Column="32" TopLine="1550"/>
       </Position15>
       <Position16>
         <Filename Value="umainform.pas"/>
-        <Caret Line="677" Column="3" TopLine="673"/>
+        <Caret Line="1566" Column="28" TopLine="94"/>
       </Position16>
       <Position17>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="204" Column="15" TopLine="198"/>
+        <Filename Value="robotutils.pas"/>
+        <Caret Line="18" Column="69" TopLine="13"/>
       </Position17>
-      <Position18>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="1683" Column="3" TopLine="1679"/>
-      </Position18>
-      <Position19>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="1687" Column="22" TopLine="1680"/>
-      </Position19>
-      <Position20>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="1688" Column="9" TopLine="1681"/>
-      </Position20>
-      <Position21>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="1702" Column="8" TopLine="1682"/>
-      </Position21>
-      <Position22>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="1687" Column="45" TopLine="1677"/>
-      </Position22>
-      <Position23>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="222" Column="14" TopLine="215"/>
-      </Position23>
-      <Position24>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="1557" Column="3" TopLine="1548"/>
-      </Position24>
-      <Position25>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="221" Column="14" TopLine="215"/>
-      </Position25>
-      <Position26>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="1530" Column="3" TopLine="1523"/>
-      </Position26>
-      <Position27>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="1527" Column="34" TopLine="1523"/>
-      </Position27>
-      <Position28>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="1542" Column="14" TopLine="1533"/>
-      </Position28>
-      <Position29>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="1536" Column="5" TopLine="1515"/>
-      </Position29>
-      <Position30>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="54" Column="3" TopLine="46"/>
-      </Position30>
     </JumpHistory>
   </ProjectOptions>
   <CompilerOptions>

@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 978
+  Left = 918
   Height = 612
-  Top = 108
+  Top = 38
   Width = 522
   HorzScrollBar.Page = 387
   VertScrollBar.Page = 474
@@ -21,7 +21,6 @@ object MainForm: TMainForm
   OnKeyDown = FormKeyDown
   OnPaint = FormPaint
   OnResize = FormResize
-  Position = poDefaultPosOnly
   UseDockManager = True
   LCLVersion = '2.0.12.0'
   Visible = True

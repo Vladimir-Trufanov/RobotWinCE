@@ -6,7 +6,7 @@
 
 //                                                   Автор:       Труфанов В.Е.
 //                                                   Дата создания:  09.03.2021
-// Copyright © 2021 TVE                              Посл.изменение: 09.03.2021
+// Copyright © 2021 TVE                              Посл.изменение: 10.03.2021
 
 unit RobotUtils;
 
@@ -15,13 +15,33 @@ unit RobotUtils;
 interface
 
 uses
-  Classes,SysUtils,Graphics,Dialogs;
+  Classes,Controls,SysUtils,Graphics,Dialogs,Forms,ExtCtrls,StdCtrls;
 
+// Вывести сообщение об ошибке красным жирным текстом в заголовке формы приложения
+procedure CaptiError(cMessage:String; obj:TLabel);
+// Пропорционально размерам перенести изображение исходного прямоугольника
+// на целевой прямоугольник
 procedure SmudgeRect(
   DstCanvas:TCanvas; const Dest:TRect;
   SrcCanvas:TCanvas; const Source:TRect);
 
 implementation
+// Вывести сообщение об ошибке красным жирным текстом в заголовке формы приложения
+procedure CaptiError(cMessage:String; obj:TLabel);
+var
+  oFont:TFont;
+  ps:  String;
+  x,y: Integer;
+begin
+  oFont:=obj.Font;
+  obj.Font.Color:=clRed;
+  obj.Font.Style:=[fsBold];
+  obj.Caption:=cMessage;
+  //obj
+  //obj
+
+
+end;
 
 // ****************************************************************************
 // *  Пропорционально размерам перенести изображение исходного прямоугольника *
