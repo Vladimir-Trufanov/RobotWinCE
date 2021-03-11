@@ -219,7 +219,7 @@ type
     function GetPictureCacheIndex(fname: string): Integer;
     procedure ResetPictureResizedCache();
     procedure PlaySound(fname: string); // plays wave-file
-    function GetPlace(room: TRoomAbsNum; pos: TPlaceNum): TPlace; // get viewed place (with players)
+    function GetPlaceOnRoom(room: TRoomAbsNum; pos: TPlaceNum): TPlace; // get viewed place (with players)
     function GetPlace(pos: TPlaceNum): TPlace; // get viewed place (with players)
     function GetPlacePicName(pos: TPlaceNum): string; // returns picture filename
     procedure SetPlace(pos: TPlaceNum; p: TPlace); // set room place
@@ -1526,16 +1526,16 @@ end;
 // *     Определить индекс элемента изображения в кэше по заданной позиции    *
 // *           элемента в мире (для последующего отображения на экране)       *                     *
 // ****************************************************************************
-function TMainForm.GetPlace(room:TRoomAbsNum; pos:TPlaceNum): TPlace;
+function TMainForm.GetPlaceOnRoom(room:TRoomAbsNum; pos:TPlaceNum): TPlace;
 var
   i: Integer;
-  c: String;
+  cMess: String;
 begin
   // Определяем позицию элемента в кэше по заданной позиции в мире
-  GetPlace.PicIndex := MyWorld[room][GetAbs(pos)].PicIndex;
+  GetPlaceOnRoom.PicIndex := MyWorld[room][GetAbs(pos)].PicIndex;
   {
-  c:=Caption+'е'+IntToStr(GetPlace.PicIndex);
-  Caption:=copy(c,length(c)-60);
+  cMess:=Caption+'е'+IntToStr(GetPlaceOnRoom.PicIndex);
+  Caption:=copy(cMess,length(cMess)-60);
   }
   // Так как в данный момент есть игроки в массиве текущих игроков мира,
   // то определяем позицию игрока в кэше
@@ -1545,32 +1545,30 @@ begin
     if (MyWorldPlayers[room][i].Pos.X = pos.X)
     and (MyWorldPlayers[room][i].Pos.Y = pos.Y) then
     begin
-      GetPlace.PicIndex := MyWorldPlayers[room][i].PicIndex;
+      GetPlaceOnRoom.PicIndex := MyWorldPlayers[room][i].PicIndex;
       {
-      c:=Caption+'i'+IntToStr(GetPlace.PicIndex);
-      Caption:=copy(c,length(c)-60);
+      cMess:=Caption+'i'+IntToStr(GetPlaceOnRoom.PicIndex);
+      Caption:=copy(cMess,length(cMess)-60);
       }
     end;
   end;
   // Выполняем проверку на превышение границ кэша
-  if (GetPlace.PicIndex < 1000000000)
-  //if (GetPlace.PicIndex < Low(MyPictureCache))
-  or (GetPlace.PicIndex > High(MyPictureCache)) then
+  if (GetPlaceOnRoom.PicIndex < Low(MyPictureCache))
+  or (GetPlaceOnRoom.PicIndex > High(MyPictureCache)) then
   begin
-    //WriteLn('ERROR: GetPlace: range error (' +
-    //        IntToStr(GetPlace.PicIndex) + ') of picture ' +
-    //        'on (' + IntToStr(pos.X) + ',' + IntToStr(pos.Y) + ')');
-    c:='ERROR: GetPlace: range error (' +
-            IntToStr(GetPlace.PicIndex) + ') of picture ' +
-            'on (' + IntToStr(pos.X) + ',' + IntToStr(pos.Y) + ')';
-    CaptiError(c,MessageBar);
-    GetPlace.PicIndex := GetPictureCacheIndex(ERROR_PIC);
+    cMess:=
+      'Индекс изображения = '+IntToStr(GetPlaceOnRoom.PicIndex)+' для позиции '+
+      IntToStr(pos.X)+':'+IntToStr(pos.Y)+' '+
+      'выходит за границы '+
+      '['+IntToStr(Low(MyPictureCache))+','+IntToStr(High(MyPictureCache))+']';
+    CaptiError(cMess,MessageBar);
+    GetPlaceOnRoom.PicIndex := GetPictureCacheIndex(ERROR_PIC);
   end;
 end;
 
 function TMainForm.GetPlace(pos: TPlaceNum): TPlace;
 begin
-  GetPlace := GetPlace(GetAbs(MyRoomNum), pos);
+  GetPlace := GetPlaceOnRoom(GetAbs(MyRoomNum), pos);
 end;
 
 procedure TMainForm.SetPlace(pos: TPlaceNum; p: TPlace);
@@ -2241,7 +2239,7 @@ begin
     begin
       WriteLn(f, ':RAUM' + IntToStr(roomnum));
       for placenum := 1 to ROOM_WIDTH*ROOM_HEIGHT do
-        WriteLn(f, GetPictureName(GetPlace(roomnum, GetNumP(placenum)).PicIndex));
+        WriteLn(f, GetPictureName(GetPlaceOnRoom(roomnum, GetNumP(placenum)).PicIndex));
     end;
 
   finally
@@ -2467,7 +2465,7 @@ begin
     begin
       WriteLn(f, ':RAUM' + IntToStr(roomnum));
       for placenum := 1 to ROOM_WIDTH*ROOM_HEIGHT do
-        WriteLn(f, GetPictureName(GetPlace(roomnum, GetNumP(placenum)).PicIndex));
+        WriteLn(f, GetPictureName(GetPlaceOnRoom(roomnum, GetNumP(placenum)).PicIndex));
     end;
     
   finally

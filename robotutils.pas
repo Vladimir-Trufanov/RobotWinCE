@@ -17,8 +17,8 @@ interface
 uses
   Classes,Controls,SysUtils,Graphics,Dialogs,Forms,ExtCtrls,StdCtrls;
 
-// Вывести сообщение об ошибке красным жирным текстом в заголовке формы приложения
-procedure CaptiError(cMessage:String; obj:TLabel);
+// Вывести сообщение об ошибке красным жирным текстом на TLabel
+procedure CaptiError(cMessage:String; obj:TLabel; Mode:integer=1);
 // Пропорционально размерам перенести изображение исходного прямоугольника
 // на целевой прямоугольник
 procedure SmudgeRect(
@@ -26,23 +26,20 @@ procedure SmudgeRect(
   SrcCanvas:TCanvas; const Source:TRect);
 
 implementation
-// Вывести сообщение об ошибке красным жирным текстом в заголовке формы приложения
-procedure CaptiError(cMessage:String; obj:TLabel);
+
+// ****************************************************************************
+// *      Вывести сообщение об ошибке красным жирным текстом на TLabel        *
+// ****************************************************************************
+procedure CaptiError(cMessage:String; obj:TLabel; Mode:integer=1);
 var
   oFont:TFont;
-  ps:  String;
-  x,y: Integer;
 begin
   oFont:=obj.Font;
   obj.Font.Color:=clRed;
   obj.Font.Style:=[fsBold];
-  obj.Caption:=cMessage;
-  //obj
-  //obj
-
-
+  if (Mode=1) then obj.Caption:='ERROR: '+cMessage
+  else obj.Caption:=cMessage;
 end;
-
 // ****************************************************************************
 // *  Пропорционально размерам перенести изображение исходного прямоугольника *
 // *                                    на целевой                            *
