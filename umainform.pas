@@ -40,28 +40,30 @@ const
   COMPUTERCONTROL_INTERVAL = 750; // timer-interval for computer player control
 
 type
-  // Координаты текущей игры ("уровень") в игровом мире
-  TRoomNum = record                                      // world coord
+  // Двумерные координаты игровой комнаты в игровом мире
+  TRoomNum = record
     X: 1..WORLD_WIDTH;
     Y: 1..WORLD_HEIGHT;
   end;
-  // Координаты игрока в комнате
-  TPlaceNum = record                                     // room coord
+  // Абсолютные координаты (диапазон номеров комнат) в игровом мире
+  TRoomAbsNum = 1..(WORLD_WIDTH*WORLD_HEIGHT);
+  // Двумерные координаты графического элемента в игровой комнате
+  TPlaceNum = record
     X: 1..ROOM_WIDTH;
     Y: 1..ROOM_HEIGHT;
   end;
+  // Абсолютные координаты (диапазон номеров мест) в игровой комнате
+  TPlaceAbsNum = 1..(ROOM_WIDTH*ROOM_HEIGHT);
   // Позиция размещения элемента в массиве (кэше) всех элементов игры
   TPlace = record
     PicIndex: Integer; // index of TPictureCache
   end;
   // Пространство мест в комнате
-  TPlaceAbsNum = 1..(ROOM_WIDTH*ROOM_HEIGHT);      // диапазон мест
-  TRoom = array[TPlaceAbsNum] of TPlace;           // пространство мест в комнате
+  TRoom = array[TPlaceAbsNum] of TPlace;
   // Пространство комнат в игровом мире
-  TRoomAbsNum = 1..(WORLD_WIDTH*WORLD_HEIGHT);     // диапазон номеров комнат
-  TWorld = array[TRoomAbsNum] of TRoom;            // пространство комнат в мире
+  TWorld = array[TRoomAbsNum] of TRoom;
   // Пространство для предметов в рюкзаке
-  TKnapsackAbsNum = 1..(KNAPSACK_WIDTH*KNAPSACK_HEIGHT); // диапазон
+  TKnapsackAbsNum = 1..(KNAPSACK_WIDTH*KNAPSACK_HEIGHT); // абсолютные координаты
   TKnapsack = array[TKnapsackAbsNum] of TPlace;          // пространство мест
   // Позиция игрока в комнате и его индекс в кэш-массиве графических элементов
   TPlayer = record
@@ -69,16 +71,16 @@ type
     PicIndex: Integer; // index of TPictureCache
   end;
   // Пространство игроков
-  TPlayerList = array of TPlayer;                    // дин.массив игроков в комнатеm
-  TWorldPlayers = array[TRoomAbsNum] of TPlayerList; // массив всех игроков мирп
+  TPlayerList = array of TPlayer;                    // дин.массив игроков в комнате
+  TWorldPlayers = array[TRoomAbsNum] of TPlayerList; // массив всех игроков мира
   // Пространство графических элементов игры
   TPictureCacheItem = record
     FileName: string;             // Спецификация файла элемента
-    Picture: TBitmap;             // Растр элемента
+    Picture: TBitmap;             // Растр элемента (графическое изображение)
     ResizedPicture: TBitmap;      // Растр элемента с измененным размером
   end;
   TPictureCache = array of TPictureCacheItem; // Пространство элементов
-
+  // Направления движения игрока
   TMoveDirection = (mdLeft, mdRight, mdUp, mdDown);
 
   TFocus = (fcRoom, fcKnapsack);
@@ -674,9 +676,10 @@ end;
 
 function TMainForm.MoveToRoom(rnum: TRoomNum): boolean;
 begin
-  MyRoomNum := rnum;
   MoveToRoom := true;
-  if MoveToRoom then DrawRoom();
+  MyRoomNum := rnum;
+  //if MoveToRoom then
+  DrawRoom();
 end;
 
 function TMainForm.MoveToRoom(dir: TMoveDirection): boolean;
