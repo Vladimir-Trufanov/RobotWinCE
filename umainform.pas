@@ -68,23 +68,23 @@ type
   // Позиция игрока в комнате и его индекс в кэш-массиве графических элементов
   TPlayer = record
     Pos: TPlaceNum;
-    PicIndex: Integer; // index of TPictureCache
+    PicIndex: Integer; // графический индекс
   end;
   // Пространство игроков
   TPlayerList = array of TPlayer;                    // дин.массив игроков в комнате
   TWorldPlayers = array[TRoomAbsNum] of TPlayerList; // массив всех игроков мира
   // Пространство графических элементов игры
   TPictureCacheItem = record
-    FileName: string;             // Спецификация файла элемента
-    Picture: TBitmap;             // Растр элемента (графическое изображение)
-    ResizedPicture: TBitmap;      // Растр элемента с измененным размером
+    FileName: string;        // Спецификация файла элемента
+    Picture: TBitmap;        // Растр элемента (графическое изображение из файла)
+    ResizedPicture: TBitmap; // Растр элемента с измененным размером для показа на экране
   end;
   TPictureCache = array of TPictureCacheItem; // Пространство элементов
   // Направления движения игрока
   TMoveDirection = (mdLeft, mdRight, mdUp, mdDown);
-
+  // Текущий фокус действий (в комнате или в рюкзаке)
   TFocus = (fcRoom, fcKnapsack);
-
+  // Вид бриллианта
   TDiamondSet = record
     DiamondNr: Integer
   end;
@@ -156,40 +156,39 @@ type
     MyWorld: TWorld;
     // Текущее положение игроков во всех комнатах мира
     MyWorldPlayers: TWorldPlayers;
-    // Текущая комната
-    MyRoomNum: TRoomNum;           // selected room of my world
-    // Предыдущее (показываемое на экране перед сменой изображения) состояние игровой комнаты:
-    //   Room - позиционный список графических элементы на карте игровой комнаты,
-    //   Picture - изображение комнаты максимально возможного размера в пикселах
-    MyRoomPic: record              // user view
-      Room: TRoom;                 // room actually viewed
-      Picture: TBitmap;            // paint cache
+    // Номер текущей комнаты
+    MyRoomNum: TRoomNum;
+    // Показываемое на экране состояние игровой комнаты. После действий игроков
+    // и вызванных ими изменений в картине мира, происходит смена изображения
+    MyRoomPic: record
+      Room: TRoom;      // позиционный список графических элементы на карте комнаты
+      Picture: TBitmap; // изображение комнаты максимально возможного размера в пикселах
     end;
-    // !!!Текущее состояние (содержимое) рюкзака
+    // Текущее состояние (содержимое) рюкзака
     MyKnapsack: TKnapsack;         // содержимое рюкзака в игре
     MyEditorKnapsack: TKnapsack;   // содержимое рюкзака в редакторе
-    // Текущее содержимое рюкзака игрока
+    // Показываемое на экране содержимое рюкзака игрока
     MyKnapsackPic: record          // user view
       Knapsack: TKnapsack;         // knapsack actually viewed
       Selection: TKnapsackAbsNum;  // selection act viewed
-      Picture: TBitmap;            // paint cache
+      Picture: TBitmap;            // изображение рюкзака
     end;
     MyKnapsackSelection: TKnapsackAbsNum; // selected item in the knapsack
     MyFocus: TFocus;
-    // Массив загруженных графических элементов игры
-    MyPictureCache: TPictureCache; // cache of all graphics in the game
-    //
-    MyLife: Integer; // lifes
-    MyScores: Integer; // scores
-    MyDiamonds: array of TDiamondSet; // set diamoonds
-
-    MyPauseState: boolean; // true -> игра поставлена на паузу
+    // Массив всех загруженных графических элементов игры
+    MyPictureCache: TPictureCache;
+    // Статистика игры
+    MyLife: Integer;                    // оставшееся количество жизней
+    MyScores: Integer;                  // количество набранных очков
+    MyDiamonds: array of TDiamondSet;   // массив собранных бриллиантов
+    // Настройки
+    MyPauseState: boolean; // true  -> игра поставлена на паузу
     MySoundState: boolean; // false -> звук выключен
-    MyEditorMode: boolean; // true -> игра в режиме редактирования
+    MyEditorMode: boolean; // true  -> игра в режиме редактирования
 
     // gameplay
     function MoveToRoom(dir: TMoveDirection): boolean; // goto next room; return true, if succ
-    function MoveToRoom(rnum: TRoomNum): boolean; // goto another room
+    function MoveToRoom(rnum: TRoomNum): boolean;      // перейти в указанную комнату
     procedure MoveToPlace(dir: TMoveDirection); // move player
     function GetMainPlayerIndex(): Integer; // searchs the player; returns -1, if not found
     procedure KillRobots(); // kill all robots in act room
@@ -200,10 +199,10 @@ type
     procedure InitGame();
     procedure RestartGame();
     procedure UnInitGame();
-    procedure ResetRoomPic();     // зачистить изображение текущей комнаты
-    procedure ResetKnapsackPic(); // зачистить содержимое рюкзака
+    procedure ResetRoomPic();     // инициализировать изображение текущей комнаты
+    procedure ResetKnapsackPic(); // инициализировать изображение текущего рюкзака
+    procedure ResetKnapsack();    // опустошить рюкзак (заполнить изображениями фона)
     procedure ResetWorld();
-    procedure ResetKnapsack();
     procedure DrawRoom();         // updates MyRoomPic and GamePanel
     procedure DrawKnapsack(); // updates MyKnapsackPic and KnapsackPanel
     procedure DrawInfo(); // updates InfoPanel
@@ -245,7 +244,9 @@ type
     procedure SetFocus(f: TFocus);
     procedure ChangeFocus();
     procedure SetPauseState(s: boolean);
-    Procedure CopyRect(DstCanvas: TCanvas; const Dest: TRect; SrcCanvas: TCanvas; const Source: TRect);
+    procedure CopyRect(
+      DstCanvas: TCanvas; const Dest: TRect;
+      SrcCanvas: TCanvas; const Source: TRect);
   end;
 
   function RoomNum(X,Y: Integer): TRoomNum;
@@ -671,12 +672,16 @@ begin
 end;
 
 
-// ------------------------------------------------
-// gameplay
+// ----------------------------------------------------------------------------
+//                                                      gameplay - ведение игры
 
+// ****************************************************************************
+// *                     Переместиться в заданную игровую комнату             *
+// ****************************************************************************
 function TMainForm.MoveToRoom(rnum: TRoomNum): boolean;
 begin
-  MoveToRoom := true;
+  MoveToRoom := true;    // ???
+  // Отмечаем текущую игровую комнату
   MyRoomNum := rnum;
   //if MoveToRoom then
   DrawRoom();
@@ -1405,25 +1410,29 @@ end;
 // ****************************************************************************
 procedure TMainForm.RestartGame();
 begin
+  // Опустошаем рюкзак (заполняем элементы массива рюкзака ссылками на
+  // изображения фона, то есть индексами картинки фона из кэша)
   ResetKnapsack();
+  // Загружаем графические элементы мира игры и дополняем пространство игроков
+  // новым загружаемым элементом
   LoadWorld('robot.sce');
+  // Перемещаемся в начальную (первую)текущую игровую комнату
+  // и перерисовать её изображение
   MoveToRoom(RoomNum(1,1));
-
-  MyEditorMode := false;
-
-  MyKnapsackSelection := 1;
+  // Определяем начальную статистику игры
   MyLife := 3;
   MyScores := 0;
   SetLength(MyDiamonds, 0);
   DrawInfo();
-
-  SetFocus(fcRoom);
-  
-  DrawRoom();
-  DrawKnapsack();
-  
-  PlaySound('newgame.wav');
+  // Задаем начальные условия игры
+  MyEditorMode := false;    // режим редактирования выключен
+  MyKnapsackSelection := 1; // первый выбранный предмет в рюкзаке
+  SetFocus(fcRoom);         // фокус действий переводим на комнату
   SetPauseState(true);
+  // Перерисовать изображение рюкзака
+  DrawKnapsack();
+  // Озвучить начало игры
+  PlaySound('newgame.wav');
 end;
 
 procedure TMainForm.UnInitGame();
@@ -1448,7 +1457,7 @@ begin
   MyKnapsackPic.Picture.Free();
 end;
 // ****************************************************************************
-// *                   Зачистить изображение текущей комнаты                  *
+// *                 Инициализировать изображение текущей комнаты             *
 // ****************************************************************************
 procedure TMainForm.ResetRoomPic();
 var
@@ -1485,7 +1494,7 @@ begin
   //  IntToStr(w*ROOM_WIDTH);
 end;
 // ****************************************************************************
-// *                        Зачистить содержимое рюкзака                      *
+// *               Инициализировать изображение текущего рюкзака              *
 // ****************************************************************************
 procedure TMainForm.ResetKnapsackPic();
 var
@@ -1674,14 +1683,16 @@ procedure TMainForm.CopyRect(DstCanvas:TCanvas; const Dest:TRect;
   SrcCanvas:TCanvas; const Source:TRect);
 begin
 {$IFDEF win32}
-  //SmudgeRect(DstCanvas,Dest,SrcCanvas,Source);
+  // SmudgeRect(DstCanvas,Dest,SrcCanvas,Source); // перерисовываем вручную
   DstCanvas.CopyRect(Dest,SrcCanvas,Source);
 {$ELSE}
   // on something else, we have already a good copyrect ...
   DstCanvas.CopyRect(Dest, SrcCanvas, Source);
 {$ENDIF win32}
 end;
-
+// ****************************************************************************
+// *             Перерисовываем изображение текущей игровой комнаты           *
+// ****************************************************************************
 procedure TMainForm.DrawRoom();
 var
   i: Integer;
@@ -1689,65 +1700,67 @@ var
   w,h: Integer;
   ps: string;
   x,y: Integer;
+  CurrIndex: Integer; // графический индекс текущего элемента в комнате из мира игры
+  ViewIndex: Integer; // графический индекс в показываемом изображении комнаты
 begin
   // При знакомстве смотрим входы в перерисовку комнаты
   nEntry:=nEntry+1;
-  //Caption:='Вход='+IntToStr(nEntry);
+  // Caption:='Вход='+IntToStr(nEntry);
   // Определяем максимально-возможную размерность графического
   // элемента изображения комнаты
   w := GamePanel.ClientWidth div ROOM_WIDTH;
   h := GamePanel.ClientHeight div ROOM_HEIGHT;
-  // TODO: check range errors
+  // Проходим по элементам изображения комнаты и перерисовываем только
+  // изменившиеся элеметы
   for i := 1 to ROOM_WIDTH*ROOM_HEIGHT do
   begin
-    // only make updates
-    if GetPlace(GetNumP(i)).PicIndex <> MyRoomPic.Room[i].PicIndex then
+    CurrIndex:=GetPlace(GetNumP(i)).PicIndex; // ссылка на изображение текущей позиции комнаты
+    ViewIndex:=MyRoomPic.Room[i].PicIndex;    // ссылка на показываемое изображение текущего элемента
+    if  CurrIndex<>ViewIndex then
     begin
-      pic := MyPictureCache[GetPlace(GetNumP(i)).PicIndex].ResizedPicture;
+      // Если картинка графического элемента для показа на экране еще не
+      // сделана, то готовим рисунок, преобразовывая рисунок из файла
+      pic := MyPictureCache[CurrIndex].ResizedPicture;
       if pic = nil then
-      begin // we have to create a new resized cache picture
+      begin
+        // Резервируем канву для отображения рисунка элемента
         pic := TBitmap.Create();
+        // Маштабируем и переносим изображение файла на канву
         pic.Width := w;
         pic.Height := h;
         CopyRect(
-                 pic.Canvas,
-                 Rect(0,0,w,h),
-                 MyPictureCache[GetPlace(GetNumP(i)).PicIndex].Picture.Canvas,
-                 Rect(0,0,PICTURE_SIZE,PICTURE_SIZE)
-                 );
-        MyPictureCache[GetPlace(GetNumP(i)).PicIndex].ResizedPicture := pic;
+          pic.Canvas,Rect(0,0,w,h),
+          MyPictureCache[CurrIndex].Picture.Canvas,Rect(0,0,PICTURE_SIZE,PICTURE_SIZE)
+        );
+        // Привязываем созданное изображение к кэшу
+        MyPictureCache[CurrIndex].ResizedPicture := pic;
       end;
-      
-      MyRoomPic.Picture.Canvas.Draw(
-                                    (GetNumP(i).X-1)*w,
-                                    (GetNumP(i).Y-1)*h,
-                                    pic
-                                    );
+      // Расчитываем позицию и перерисовываем измененный графический элемент
+      MyRoomPic.Picture.Canvas.Draw
+        ((GetNumP(i).X-1)*w, (GetNumP(i).Y-1)*h, pic);
+      // Меняем в позиции графический индекс элемента
       MyRoomPic.Room[i] := GetPlace(GetNumP(i));
-      //WriteLn('DrawRoom: update: ' +
+      // WriteLn('DrawRoom: update: ' +
       //        '(' + IntToStr(GetNumP(i).X) + ',' +
       //              IntToStr(GetNumP(i).Y) + ')' +
       //         ' to: ' + IntToStr(MyRoomPic.Room[i]));
     end;
   end;
-
-  // draw the hole area to screen (to the GamePanel)
+  // Перерисовываем комнату на панели игры
   GamePanel.Canvas.Draw(0,0,MyRoomPic.Picture);
-
-  // draw pause-state
+  // Если игра приостановлена, то вывешиваем этикетку "Пауза"
   if (not MyEditorMode) and (MyPauseState = true) then
   begin
-    ps := 'Pause';
+    ps := 'Пауза';
     GamePanel.Canvas.Font := MainForm.Font;
     x := (GamePanel.ClientWidth - GamePanel.Canvas.TextWidth(ps)) div 2;
     y := (GamePanel.ClientHeight - GamePanel.Canvas.TextHeight(ps)) div 2;
     GamePanel.Canvas.TextOut(x,y,ps);
   end;
-
-  // draw focus
-  // TODO
 end;
-
+// ****************************************************************************
+// *                         Перерисовать изображение рюкзака                 *
+// ****************************************************************************
 procedure TMainForm.DrawKnapsack();
 var
   i: Integer;
@@ -1831,15 +1844,16 @@ begin
   // draw focus
   // TODO
 end;
-
+// ****************************************************************************
+// *                            Обновить статистику игры                      *
+// ****************************************************************************
 procedure TMainForm.DrawInfo();
 var
   s1,s2,s3: string;
 begin
-  s1 := 'Leben: ' + IntToStr(MyLife);
-  s2 := 'Punkte: ' + IntToStr(MyScores);
-  s3 := 'Diamanten: ' + IntToStr(Length(MyDiamonds));
-
+  s1 := 'Жизней: ' + IntToStr(MyLife);
+  s2 := 'Очков: ' + IntToStr(MyScores);
+  s3 := 'Бриллиантов: ' + IntToStr(Length(MyDiamonds));
   if s1 <> LifeLabel.Caption then LifeLabel.Caption := s1;
   if s2 <> ScoresLabel.Caption then ScoresLabel.Caption := s2;
   if s3 <> DiamondsLabel.Caption then DiamondsLabel.Caption := s3;
@@ -1930,7 +1944,7 @@ begin
     tmp.LoadFromFile(fname);
   except
     on error: Exception do
-    // Загрузить изображеие элемента не удалось. В этом случае загружаем
+    // Загрузить изображение элемента не удалось. В этом случае загружаем
     // изображение ошибки и возвращаем позицию (индекс) ошибки.
     // Ну, а если и ошибку не удалось загрузить, возвращаем индекс=0.
     begin
