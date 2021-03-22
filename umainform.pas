@@ -190,25 +190,24 @@ type
     function MoveToRoom(dir: TMoveDirection): boolean; // goto next room; return true, if succ
     function MoveToRoom(rnum: TRoomNum): boolean;      // перейти в указанную комнату
     procedure MoveToPlace(dir: TMoveDirection); // move player
-    function GetMainPlayerIndex(): Integer; // searchs the player; returns -1, if not found
+    function GetMainPlayerIndex(): Integer; // определить место главного игрока в списке игроков текущей комнаты
     procedure KillRobots(); // kill all robots in act room
     procedure UseKnapsackSelection();
-    procedure ControlComputerPlayers(); // make 'intelligent' movements of all robots and the king
-    
+    procedure ControlComputerPlayers(); // построить "разумные" действия для всех роботов и короля
     // background stuff
     procedure InitGame();
     procedure RestartGame();
     procedure UnInitGame();
-    procedure ResetRoomPic();     // инициализировать изображение текущей комнаты
+    procedure ResetRoomPic(); // инициализировать изображение текущей комнаты
     procedure ResetKnapsackPic(); // инициализировать изображение текущего рюкзака
-    procedure ResetKnapsack();    // опустошить рюкзак (заполнить изображениями фона)
+    procedure ResetKnapsack(); // опустошить рюкзак (заполнить изображениями фона)
     procedure ResetWorld();
     procedure DrawRoom();         // updates MyRoomPic and GamePanel
     procedure DrawKnapsack(); // updates MyKnapsackPic and KnapsackPanel
     procedure DrawInfo(); // updates InfoPanel
     procedure ShowMsg(msg: string); // printed on MessageBar
     procedure ShowMsg(msgs: array of string); // like ShowMsg; select randomly a msg
-    procedure LoadWorld(fname: string); // loads a hole world (sce-file)
+    procedure LoadWorld(fname: string); // загрузить графические элементы мира игры
     procedure SaveWorld(fname: string); // saves the hole world
     procedure LoadGame(fname: string); // loads a saved game (included world)
     procedure SaveGame(fname: string); // saves a game
@@ -743,7 +742,9 @@ begin
     DrawRoom();
   end;
 end;
-
+// ****************************************************************************
+// *    Определить место главного игрока в списке игроков текущей комнаты     *
+// ****************************************************************************
 function TMainForm.GetMainPlayerIndex(): Integer;
 var
   i: Integer;
@@ -1220,7 +1221,9 @@ begin
 
   DrawKnapsack();
 end;
-
+// ****************************************************************************
+// *           Построить "разумные" действия для всех роботов и короля        *
+// ****************************************************************************
 procedure TMainForm.ControlComputerPlayers();
 var
   f: Integer;
@@ -1230,19 +1233,25 @@ var
 begin
   if MyPauseState = true then exit; // don't do anything while pausing
   if MyEditorMode = true then exit; // don't do anything while editing
-  
+
+  // Определяем место главного игрока в списке игроков текущей комнаты,
+  // а затем его позицию в этой комнате
   f := GetMainPlayerIndex();
   if f < 0 then exit; // don't do anything if the player is not here
-  
   ppos := MyWorldPlayers[GetAbs(MyRoomNum)][f].Pos;
   
   for i := Low(MyWorldPlayers[GetAbs(MyRoomNum)]) to High(MyWorldPlayers[GetAbs(MyRoomNum)]) do
   begin
+    // Управляем позицией (действиями) короля и роботов
+    // относительно позиции главного игрока
     s := GetPictureName(MyWorldPlayers[GetAbs(MyRoomNum)][i].PicIndex);
     if (IsWild(s, 'robot*.bmp', false))
     or (s = 'konig.bmp') then
     begin
+      // Определяем позицию робота или короля (другого игрока)
       newpos := MyWorldPlayers[GetAbs(MyRoomNum)][i].Pos;
+      // Если смещение по горизотали другого игрока от главного игрока
+      // больше смещения по вертикали, то перемещаем его по горизонтвли
       if Abs(ppos.X - newpos.X) > Abs(ppos.Y - newpos.Y) then
       begin // move horiz
         if ppos.X > newpos.X then
@@ -1250,6 +1259,7 @@ begin
         else
           newpos.X := newpos.X - 1;
       end
+      // Иначе перемещаем другого игрока по вертикали
       else
       begin // move vert
         if ppos.Y > newpos.Y then
@@ -1257,29 +1267,33 @@ begin
         else
           newpos.Y := newpos.Y - 1;
       end;
-      
-      if (newpos.X = ppos.X)
-      and (newpos.Y = ppos.Y) then
+      // Если позиция другого игрока совпала с позицией главного, то
+      // уничтожаем другого игрока, а жизнь главного уменьшаем на1
+      if (newpos.X = ppos.X)and(newpos.Y = ppos.Y) then
       begin
+        // Если позиция главного игрока совпала с позицией короля, то перемещаем
+        // игрока на позицию 2x2 текущей комнаты и выводим одно из трех сообщений
         if s = 'konig.bmp' then
         begin
           PlaySound('konig.wav');
           ShowMsg([
-                   'Vor dem sollte ich aufpassen.',
-                   'Der Kцnig hat mich bekommen!',
-                   'Ich muss ihn irgendwie austricksen.'
-                   ]);
+            'Я должен остерегаться этого.',
+            'Король меня достал!',
+            'Мне нужно как-то его перехитрить.'
+          ]);
           MyWorldPlayers[GetAbs(MyRoomNum)][f].Pos := PlaceNum(2,2);
         end
+        // Если позиция главного игрока совпала с позицией робота, то уничтожаем
+        // робота, а жизнь главного уменьшаем на 1 и выводим одно из четырех сообщений
         else
         begin
           PlaySound('robot.wav');
           ShowMsg([
-                   'Ein Roboter hat mich erwischt. Nдchstes Mal besser wegrennen.',
-                   'Das war ungeschickt.',
-                   'Der hat mich erwischt.',
-                   'Sehr nervig diese Teile!'
-                   ]);
+            'Меня поймал робот. Надо будет быстрее убегать в следующий раз.',
+            'Какой я не ловкий!',
+            'Он меня достал.',
+            'Очень раздражают эти железяки!'
+          ]);
           RemovePlayer(GetAbs(MyRoomNum), i);
         end;
         RemoveLife();
