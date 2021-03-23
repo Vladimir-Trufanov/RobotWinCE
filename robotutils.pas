@@ -15,10 +15,26 @@ unit RobotUtils;
 interface
 
 uses
-  Classes,Controls,SysUtils,Graphics,Dialogs,Forms,ExtCtrls,StdCtrls;
+  Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, ExtCtrls,
+  Buttons, GraphType, Crt, StrUtils, StdCtrls, ComCtrls, Menus, LCLType
+{$IFDEF win32}
+  ,MMSystem
+{$ENDIF}
+  ;
+  {
+  LResources,
+  Buttons, GraphType, Crt, StrUtils, ComCtrls, Menus, LCLType,
 
+  Classes,Controls,SysUtils,Graphics,Dialogs,Forms,ExtCtrls,
+  {$IFDEF win32}
+    MMSystem,
+  {$ENDIF}
+  StdCtrls;
+  }
 // Вывести сообщение об ошибке красным жирным текстом на TLabel
 procedure CaptiError(cMessage:String; obj:TLabel; Mode:integer=1);
+// Озвучить событие заданным файлом
+procedure PlaySound(fname:string; MySoundState:boolean=false);
 // Пропорционально размерам перенести изображение исходного прямоугольника
 // на целевой прямоугольник
 procedure SmudgeRect(
@@ -39,6 +55,33 @@ begin
   obj.Font.Style:=[fsBold];
   if (Mode=1) then obj.Caption:='ERROR: '+cMessage
   else obj.Caption:=cMessage;
+end;
+// ****************************************************************************
+// *                        Озвучить событие заданным файлом                  *
+// ****************************************************************************
+procedure PlaySound(fname:string; MySoundState:boolean=false);
+var
+  myCharPtr: PChar;
+  iPChar: Integer;
+begin
+  // Если звук отключен, то выходим из процедуры
+  if not MySoundState then exit;
+  // Если звуковой файл не найден, то выдаем ошибку и выходим из процедуры
+  if not FileExists(fname) then
+  begin
+    WriteLn('ERROR: PlaySound: ' + fname + ' not found');
+    exit;
+  end;
+  {$IFDEF win32}
+    // Для использования функции воспроизведения звукового файла
+    // делаем преобразование string -> PChar через указатель
+    // на первый символ в строке
+    iPChar:=1;
+    myCharPtr:=addr(fname[iPChar]);
+    sndPlaySound(myCharPtr, SND_NODEFAULT or SND_ASYNC);
+  {$ELSE}
+    // TODO: play the file
+  {$ENDIF}
 end;
 // ****************************************************************************
 // *  Пропорционально размерам перенести изображение исходного прямоугольника *

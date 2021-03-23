@@ -10,7 +10,7 @@ uses
 {$IFDEF win32}
   ,MMSystem
 {$ENDIF}
-  ,RobotUtils
+  ,RobotTypes,ActionsLife,RobotUtils
   ;
   
 const
@@ -26,12 +26,6 @@ const
   ERROR_PIC = 'error.bmp';                  // ошибочный (отсутствующий) элемент
   PLAYER_PICS: array[1..3] of string =
     ('figur.bmp','robot*.bmp','konig.bmp'); // игроки в комнате
-  // Размер мира игры: 4*5 = 20 комнат
-  WORLD_WIDTH = 5;
-  WORLD_HEIGHT = 4;
-  // Размер каждой комнаты: 20*20=400 пунктов
-  ROOM_WIDTH = 20;
-  ROOM_HEIGHT = 20;
   // Число мест в рюкзаке: 10*5=50
   KNAPSACK_WIDTH = 10;
   KNAPSACK_HEIGHT = 5;
@@ -40,18 +34,6 @@ const
   COMPUTERCONTROL_INTERVAL = 750; // timer-interval for computer player control
 
 type
-  // Двумерные координаты игровой комнаты в игровом мире
-  TRoomNum = record
-    X: 1..WORLD_WIDTH;
-    Y: 1..WORLD_HEIGHT;
-  end;
-  // Абсолютные координаты (диапазон номеров комнат) в игровом мире
-  TRoomAbsNum = 1..(WORLD_WIDTH*WORLD_HEIGHT);
-  // Двумерные координаты графического элемента в игровой комнате
-  TPlaceNum = record
-    X: 1..ROOM_WIDTH;
-    Y: 1..ROOM_HEIGHT;
-  end;
   // Абсолютные координаты (диапазон номеров мест) в игровой комнате
   TPlaceAbsNum = 1..(ROOM_WIDTH*ROOM_HEIGHT);
   // Позиция размещения элемента в массиве (кэше) всех элементов игры
@@ -65,14 +47,6 @@ type
   // Пространство для предметов в рюкзаке
   TKnapsackAbsNum = 1..(KNAPSACK_WIDTH*KNAPSACK_HEIGHT); // абсолютные координаты
   TKnapsack = array[TKnapsackAbsNum] of TPlace;          // пространство мест
-  // Позиция игрока в комнате и его индекс в кэш-массиве графических элементов
-  TPlayer = record
-    Pos: TPlaceNum;
-    PicIndex: Integer; // графический индекс
-  end;
-  // Пространство игроков
-  TPlayerList = array of TPlayer;                    // дин.массив игроков в комнате
-  TWorldPlayers = array[TRoomAbsNum] of TPlayerList; // массив всех игроков мира
   // Пространство графических элементов игры
   TPictureCacheItem = record
     FileName: string;        // Спецификация файла элемента
@@ -218,7 +192,7 @@ type
     function GetPictureName(index: Integer): string; // returns filename
     function GetPictureCacheIndex(fname: string): Integer;
     procedure ResetPictureResizedCache();
-    procedure PlaySound(fname: string); // plays wave-file
+    //procedure PlaySound(fname: string); // plays wave-file
     function GetPlaceOnRoom(room: TRoomAbsNum; pos: TPlaceNum): TPlace; // get viewed place (with players)
     function GetPlace(pos: TPlaceNum): TPlace; // get viewed place (with players)
     function GetPlacePicName(pos: TPlaceNum): string; // returns picture filename
@@ -227,7 +201,7 @@ type
     procedure ResetPlace(pos: TPlaceNum);
     function AddPlayer(room: TRoomAbsNum; pos: TPlaceNum; picindex: Integer): Integer; // returns index
     function AddPlayer(room: TRoomAbsNum; pos: TPlaceNum; picname: string): Integer; // returns index
-    procedure RemovePlayer(room: TRoomAbsNum; index: Integer);
+    procedure RemovePlayer(room: TRoomAbsNum; index: Integer); // удалить уничтожаемого робота
     procedure RemovePlayer(room: TRoomAbsNum; pos: TPlaceNum);
     function MovePlayer(oldroom: TRoomAbsNum; oldindex: Integer; newroom: TRoomAbsNum; newpos: TPlaceNum): Integer; // returns new index
     function IsPlayerInRoom(picname: string): boolean;
@@ -280,7 +254,12 @@ begin
 end;
 
 function Player(picindex: Integer; pos: TPlaceNum): TPlayer;
+var
+  fname:string;
 begin
+  fname:='nn';
+  sndPlaySound(PChar(fname), SND_NODEFAULT Or SND_ASYNC);
+
   Player.PicIndex := picindex;
   Player.Pos := pos;
 end;
@@ -842,7 +821,7 @@ begin
     //         'Ich will nicht gegen die Wand laufen.',
     //         'Stop'
     //         ]);
-    PlaySound('fl.wav');
+    PlaySound('fl.wav',MySoundState);
     exit;
   end;
 
@@ -854,7 +833,7 @@ begin
              'Hierfьr braucht man die Diamanten.',
              'Der Diamantenstellplatz...'
              ]);
-    PlaySound('fl.wav');
+    PlaySound('fl.wav',MySoundState);
     exit;
   end;
   
@@ -868,7 +847,7 @@ begin
              'Das tut weh!',
              'Da sollte ich nдchstes Mal nicht mehr reinlaufen.'
              ]);
-    PlaySound('strom.wav');
+    PlaySound('strom.wav',MySoundState);
     RemoveLife();
     ResetPlace(newpos);
   end;
@@ -876,7 +855,7 @@ begin
   if IsWild(GetPlacePicName(newpos), 'tuer*.bmp', false) // dor
   then
   begin
-    PlaySound('fl.wav');
+    PlaySound('fl.wav',MySoundState);
     if not IsInKnapsack(AnsiReplaceStr(GetPlacePicName(newpos), 'tuer', 'schl')) then
     begin
       ShowMsg([
@@ -899,7 +878,7 @@ begin
              'Ich sollte mich demnдchst in Acht nehmen.',
              'Man bin ich blцd, dem Roboter direkt in die Arme gelaufen.'
              ]);
-    PlaySound('robot.bmp');
+    PlaySound('robot.wav',MySoundState);
     RemoveLife();
     RemovePlayer(GetAbs(MyRoomNum), newpos);
   end;
@@ -914,7 +893,7 @@ begin
              'Da muss ich mir etwas besseres ausdenken.',
              'Ich jage ihn wohl besser in einen Elektrozaun.'
              ]);
-    PlaySound('konig.wav');
+    PlaySound('konig.wav',MySoundState);
     RemoveLife();
     MyWorldPlayers[GetAbs(MyRoomNum)][f].Pos := PlaceNum(2,2);
     DrawRoom();
@@ -938,7 +917,7 @@ begin
              'Ob ich das zum Fundbьro bringen sollte?',
              'Ich bin ein Glьckspilz.'
              ]);
-    PlaySound('punkt.wav');
+    PlaySound('punkt.wav',MySoundState);
     AddScores(1000);
     ResetPlace(newpos);
   end;
@@ -952,7 +931,7 @@ begin
              'So ist das Roboter-Leben.',
              'Wie das wohl funktioniert?'
              ]);
-    PlaySound('rl.wav');
+    PlaySound('rl.wav',MySoundState);
     KillRobots();
     f := GetMainPlayerIndex(); // index numbering changed
     ResetPlace(newpos);
@@ -964,7 +943,7 @@ begin
   or (GetPlacePicName(newpos) = 'speicher.bmp') // saveitem
   then
   begin
-    PlaySound('einsatz.wav');
+    PlaySound('einsatz.wav',MySoundState);
     if AddToKnapsack(GetPlace(newpos).PicIndex) then
     begin
       ShowMsg([
@@ -989,7 +968,7 @@ begin
   if IsWild(GetPlacePicName(newpos), 'diamant*.bmp', false) // diamond
   then
   begin
-    PlaySound('punkt.wav');
+    PlaySound('punkt.wav',MySoundState);
     if AddToKnapsack(GetPlace(newpos).PicIndex) then
     begin
       ShowMsg([
@@ -1188,7 +1167,7 @@ begin
     DrawRoom();
   end;
   
-  PlaySound('einsatz.wav');
+  PlaySound('einsatz.wav',MySoundState);
   MyKnapsack[MyKnapsackSelection].PicIndex := GetPictureCacheIndex(BACKGROUND_PIC);
 
   // search other s in knapsack and select it; else select any other element
@@ -1239,7 +1218,7 @@ begin
   f := GetMainPlayerIndex();
   if f < 0 then exit; // don't do anything if the player is not here
   ppos := MyWorldPlayers[GetAbs(MyRoomNum)][f].Pos;
-  
+  // Просматриваем места всех игроков в текущей комнатепозиции
   for i := Low(MyWorldPlayers[GetAbs(MyRoomNum)]) to High(MyWorldPlayers[GetAbs(MyRoomNum)]) do
   begin
     // Управляем позицией (действиями) короля и роботов
@@ -1248,34 +1227,19 @@ begin
     if (IsWild(s, 'robot*.bmp', false))
     or (s = 'konig.bmp') then
     begin
-      // Определяем позицию робота или короля (другого игрока)
-      newpos := MyWorldPlayers[GetAbs(MyRoomNum)][i].Pos;
-      // Если смещение по горизотали другого игрока от главного игрока
-      // больше смещения по вертикали, то перемещаем его по горизонтвли
-      if Abs(ppos.X - newpos.X) > Abs(ppos.Y - newpos.Y) then
-      begin // move horiz
-        if ppos.X > newpos.X then
-          newpos.X := newpos.X + 1
-        else
-          newpos.X := newpos.X - 1;
-      end
-      // Иначе перемещаем другого игрока по вертикали
-      else
-      begin // move vert
-        if ppos.Y > newpos.Y then
-          newpos.Y := newpos.Y + 1
-        else
-          newpos.Y := newpos.Y - 1;
-      end;
+      // Перемещаем робота или короля и определяем его новую позицию
+      newpos:=MyWorldPlayers[GetAbs(MyRoomNum)][i].Pos;
+      newpos:=alMoveKingOrRobots(ppos,newpos);
+
       // Если позиция другого игрока совпала с позицией главного, то
-      // уничтожаем другого игрока, а жизнь главного уменьшаем на1
+      // уничтожаем другого игрока, а жизнь главного уменьшаем на 1
       if (newpos.X = ppos.X)and(newpos.Y = ppos.Y) then
       begin
         // Если позиция главного игрока совпала с позицией короля, то перемещаем
         // игрока на позицию 2x2 текущей комнаты и выводим одно из трех сообщений
         if s = 'konig.bmp' then
         begin
-          PlaySound('konig.wav');
+          PlaySound('konig.wav',MySoundState);
           ShowMsg([
             'Я должен остерегаться этого.',
             'Король меня достал!',
@@ -1284,10 +1248,10 @@ begin
           MyWorldPlayers[GetAbs(MyRoomNum)][f].Pos := PlaceNum(2,2);
         end
         // Если позиция главного игрока совпала с позицией робота, то уничтожаем
-        // робота, а жизнь главного уменьшаем на 1 и выводим одно из четырех сообщений
+        // робота, и выводим одно из четырех сообщений
         else
         begin
-          PlaySound('robot.wav');
+          PlaySound('robot.wav',MySoundState);
           ShowMsg([
             'Меня поймал робот. Надо будет быстрее убегать в следующий раз.',
             'Какой я не ловкий!',
@@ -1296,7 +1260,12 @@ begin
           ]);
           RemovePlayer(GetAbs(MyRoomNum), i);
         end;
+
+        // а жизнь главного уменьшаем на 1
         RemoveLife();
+
+
+
         DrawRoom();
         exit;
       end;
@@ -1305,7 +1274,7 @@ begin
       begin
         if s = 'konig.bmp' then
         begin
-          PlaySound('konig.wav');
+          PlaySound('konig.wav',MySoundState);
           if Length(MyDiamonds) = 3 then
           begin
             RemovePlayer(GetAbs(MyRoomNum), i);
@@ -1351,7 +1320,7 @@ begin
         end
         else // robot
         begin
-          PlaySound('rl.wav');
+          PlaySound('rl.wav',MySoundState);
           RemovePlayer(GetAbs(MyRoomNum), i);
           SetPlacePicName(newpos, BACKGROUND_PIC);
         end;
@@ -1363,9 +1332,9 @@ begin
       if GetPlace(newpos).PicIndex = GetPictureCacheIndex(BACKGROUND_PIC) then
       begin
         if s = 'konig.bmp' then
-          PlaySound('konig.wav')
+          PlaySound('konig.wav',MySoundState)
         else
-          PlaySound('rl.wav');
+          PlaySound('rl.wav',MySoundState);
         MyWorldPlayers[GetAbs(MyRoomNum)][i].Pos := newpos;
         DrawRoom();
       end
@@ -1390,9 +1359,9 @@ begin
         if GetPlace(newpos).PicIndex = GetPictureCacheIndex(BACKGROUND_PIC) then
         begin
           if s = 'konig.bmp' then
-            PlaySound('konig.wav')
+            PlaySound('konig.wav',MySoundState)
           else
-            PlaySound('rl.wav');
+            PlaySound('rl.wav',MySoundState);
           MyWorldPlayers[GetAbs(MyRoomNum)][i].Pos := newpos;
           DrawRoom();
         end;
@@ -1446,7 +1415,7 @@ begin
   // Перерисовать изображение рюкзака
   DrawKnapsack();
   // Озвучить начало игры
-  PlaySound('newgame.wav');
+  PlaySound('newgame.wav',MySoundState);
 end;
 
 procedure TMainForm.UnInitGame();
@@ -1636,9 +1605,12 @@ function TMainForm.AddPlayer(room: TRoomAbsNum; pos: TPlaceNum; picname: string)
 begin
   AddPlayer := AddPlayer(room, pos, GetPictureCacheIndex(picname));
 end;
-
+// ****************************************************************************
+// *                          Удалить уничтожаемого робота                    *
+// ****************************************************************************
 procedure TMainForm.RemovePlayer(room: TRoomAbsNum; index: Integer);
 begin
+  //
   MyWorldPlayers[room][index] := MyWorldPlayers[room][High(MyWorldPlayers[room])];
   SetLength(MyWorldPlayers[room], Length(MyWorldPlayers[room]) - 1);
 end;
@@ -2131,6 +2103,7 @@ end;
 
 function TMainForm.RemoveLife(): boolean;
 begin
+  caption:='Убрали жизнь';
   // TODO: give additional info
   if MyLife = 0 then
   begin // death
@@ -2166,24 +2139,6 @@ end;
 procedure TMainForm.ChangeFocus();
 begin
   if MyFocus = fcRoom then SetFocus(fcKnapsack) else SetFocus(fcRoom);
-end;
-
-procedure TMainForm.PlaySound(fname: string);
-begin
-  if not MySoundState then exit;
-
-  if not FileExists(fname) then
-  begin
-    WriteLn('ERROR: PlaySound: ' + fname + ' not found');
-    exit;
-  end;
-  
-{$IFDEF win32}
-  // TODO: cache sounds
-  sndPlaySound(PChar(fname), SND_NODEFAULT Or SND_ASYNC);
-{$ELSE}
-  // TODO: play the file
-{$ENDIF}
 end;
 // ****************************************************************************
 // *                 Загрузить графические элементы мира игры и               *

@@ -33,11 +33,11 @@
         <PackageName Value="LCL"/>
       </Item1>
     </RequiredPackages>
-    <Units Count="54">
+    <Units Count="58">
       <Unit0>
         <Filename Value="robot.lpr"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="3"/>
+        <EditorIndex Value="5"/>
         <CursorPos Y="16"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
@@ -51,8 +51,8 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="uMainForm"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="1278"/>
-        <CursorPos X="11" Y="1296"/>
+        <TopLine Value="2104"/>
+        <CursorPos X="27" Y="2106"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -255,11 +255,10 @@
       <Unit34>
         <Filename Value="../../../../LazarusWinCE/fpc/3.2.0/source/packages/rtl-objpas/src/inc/strutils.pp"/>
         <UnitName Value="StrUtils"/>
-        <EditorIndex Value="1"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="67"/>
         <CursorPos X="29" Y="75"/>
         <UsageCount Value="11"/>
-        <Loaded Value="True"/>
       </Unit34>
       <Unit35>
         <Filename Value="../../../../LazarusWinCE/lcl/forms.pp"/>
@@ -317,10 +316,10 @@
         <Filename Value="robotutils.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="RobotUtils"/>
-        <EditorIndex Value="2"/>
-        <TopLine Value="16"/>
-        <CursorPos X="11" Y="24"/>
-        <UsageCount Value="54"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="79"/>
+        <CursorPos Y="76"/>
+        <UsageCount Value="64"/>
         <Loaded Value="True"/>
       </Unit42>
       <Unit43>
@@ -365,10 +364,11 @@
       <Unit49>
         <Filename Value="../../../../LazarusWinCE/lcl/stdctrls.pp"/>
         <UnitName Value="StdCtrls"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="1572"/>
-        <CursorPos X="3" Y="1580"/>
-        <UsageCount Value="11"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="1575"/>
+        <CursorPos X="14" Y="1588"/>
+        <UsageCount Value="12"/>
+        <Loaded Value="True"/>
       </Unit49>
       <Unit50>
         <Filename Value="../../../../LazarusWinCE/lcl/include/wincontrol.inc"/>
@@ -400,116 +400,162 @@
         <CursorPos X="21" Y="206"/>
         <UsageCount Value="10"/>
       </Unit53>
+      <Unit54>
+        <Filename Value="actionslife.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ActionsLife"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="105"/>
+        <CursorPos X="24" Y="118"/>
+        <UsageCount Value="28"/>
+        <Loaded Value="True"/>
+      </Unit54>
+      <Unit55>
+        <Filename Value="robottypes.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="RobotTypes"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="4"/>
+        <CursorPos Y="25"/>
+        <UsageCount Value="26"/>
+        <Loaded Value="True"/>
+      </Unit55>
+      <Unit56>
+        <Filename Value="../../../../LazarusWinCE/fpc/3.2.0/source/packages/winunits-base/src/mmsystem.pp"/>
+        <UnitName Value="MMSystem"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="10" Y="181"/>
+        <UsageCount Value="11"/>
+      </Unit56>
+      <Unit57>
+        <Filename Value="../../../../LazarusWinCE/fpc/3.2.0/source/rtl/inc/systemh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="431"/>
+        <CursorPos X="3" Y="439"/>
+        <UsageCount Value="10"/>
+      </Unit57>
     </Units>
-    <JumpHistory Count="27" HistoryIndex="24">
+    <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="1231" Column="3" TopLine="728"/>
+        <Filename Value="actionslife.pas"/>
+        <Caret Line="66" Column="61" TopLine="73"/>
       </Position1>
       <Position2>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="341" Column="11" TopLine="339"/>
+        <Filename Value="robotutils.pas"/>
+        <Caret Line="18" Column="33" TopLine="61"/>
       </Position2>
       <Position3>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="195" TopLine="190"/>
+        <Filename Value="robotutils.pas"/>
+        <Caret Line="62" Column="47" TopLine="56"/>
       </Position3>
       <Position4>
         <Filename Value="umainform.pas"/>
-        <Caret Line="341" Column="3" TopLine="337"/>
+        <Caret Line="824" Column="36" TopLine="817"/>
       </Position4>
       <Position5>
         <Filename Value="umainform.pas"/>
-        <Caret Line="124" Column="15" TopLine="116"/>
+        <Caret Line="836" Column="36" TopLine="828"/>
       </Position5>
       <Position6>
         <Filename Value="umainform.pas"/>
-        <Caret Line="341" Column="3" TopLine="338"/>
+        <Caret Line="850" Column="39" TopLine="842"/>
       </Position6>
       <Position7>
         <Filename Value="umainform.pas"/>
-        <Caret Line="196" Column="15" TopLine="190"/>
+        <Caret Line="858" Column="36" TopLine="850"/>
       </Position7>
       <Position8>
         <Filename Value="umainform.pas"/>
-        <Caret Line="1231" Column="3" TopLine="1222"/>
+        <Caret Line="881" Column="41" TopLine="873"/>
       </Position8>
       <Position9>
         <Filename Value="umainform.pas"/>
-        <Caret Line="341" Column="3" TopLine="339"/>
+        <Caret Line="896" Column="39" TopLine="888"/>
       </Position9>
       <Position10>
         <Filename Value="umainform.pas"/>
-        <Caret Line="196" Column="15" TopLine="190"/>
+        <Caret Line="920" Column="39" TopLine="912"/>
       </Position10>
       <Position11>
         <Filename Value="umainform.pas"/>
-        <Caret Line="1231" Column="3" TopLine="1231"/>
+        <Caret Line="934" Column="36" TopLine="926"/>
       </Position11>
       <Position12>
         <Filename Value="umainform.pas"/>
-        <Caret Line="193" Column="14" TopLine="186"/>
+        <Caret Line="946" Column="41" TopLine="938"/>
       </Position12>
       <Position13>
         <Filename Value="umainform.pas"/>
-        <Caret Line="751" Column="3" TopLine="745"/>
+        <Caret Line="971" Column="39" TopLine="963"/>
       </Position13>
       <Position14>
         <Filename Value="umainform.pas"/>
-        <Caret Line="341" Column="3" TopLine="339"/>
+        <Caret Line="1170" Column="39" TopLine="1162"/>
       </Position14>
       <Position15>
         <Filename Value="umainform.pas"/>
-        <Caret Line="124" Column="15" TopLine="119"/>
+        <Caret Line="1242" Column="45" TopLine="1234"/>
       </Position15>
       <Position16>
         <Filename Value="umainform.pas"/>
-        <Caret Line="341" Column="3" TopLine="338"/>
+        <Caret Line="1254" Column="45" TopLine="1246"/>
       </Position16>
       <Position17>
         <Filename Value="umainform.pas"/>
-        <Caret Line="124" Column="15" TopLine="116"/>
+        <Caret Line="1277" Column="45" TopLine="1269"/>
       </Position17>
       <Position18>
         <Filename Value="umainform.pas"/>
-        <Caret Line="341" Column="3" TopLine="338"/>
+        <Caret Line="1323" Column="42" TopLine="1318"/>
       </Position18>
       <Position19>
         <Filename Value="umainform.pas"/>
-        <Caret Line="196" Column="15" TopLine="190"/>
+        <Caret Line="1335" Column="45" TopLine="1327"/>
       </Position19>
       <Position20>
         <Filename Value="umainform.pas"/>
-        <Caret Line="1231" Column="3" TopLine="1222"/>
+        <Caret Line="1337" Column="42" TopLine="1327"/>
       </Position20>
       <Position21>
         <Filename Value="umainform.pas"/>
-        <Caret Line="196" Column="24" TopLine="184"/>
+        <Caret Line="1362" Column="47" TopLine="1354"/>
       </Position21>
       <Position22>
         <Filename Value="umainform.pas"/>
-        <Caret Line="1233" Column="19" TopLine="1229"/>
+        <Caret Line="1364" Column="44" TopLine="1354"/>
       </Position22>
       <Position23>
         <Filename Value="umainform.pas"/>
-        <Caret Line="1240" Column="3" TopLine="1227"/>
+        <Caret Line="1418" Column="39" TopLine="1410"/>
       </Position23>
       <Position24>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="1284" Column="12" TopLine="1274"/>
+        <Filename Value="robotutils.pas"/>
+        <Caret Line="75" Column="21" TopLine="68"/>
       </Position24>
       <Position25>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="1286" Column="119" TopLine="1283"/>
+        <Filename Value="actionslife.pas"/>
+        <Caret Line="87" Column="41" TopLine="79"/>
       </Position25>
       <Position26>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="230" Column="15" TopLine="225"/>
+        <Filename Value="actionslife.pas"/>
+        <Caret Line="101" Column="41" TopLine="93"/>
       </Position26>
       <Position27>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="1621" TopLine="1634"/>
+        <Filename Value="robotutils.pas"/>
+        <Caret Line="80" Column="29" TopLine="71"/>
       </Position27>
+      <Position28>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="881" Column="25" TopLine="873"/>
+      </Position28>
+      <Position29>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="851" Column="5" TopLine="843"/>
+      </Position29>
+      <Position30>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="216" Column="14" TopLine="209"/>
+      </Position30>
     </JumpHistory>
   </ProjectOptions>
   <CompilerOptions>

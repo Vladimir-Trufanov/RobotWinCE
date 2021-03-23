@@ -6,7 +6,7 @@ uses
   Interfaces, // this includes the LCL widgetset
   Forms,
   // my stuff
-  uMainForm, RobotUtils;
+  uMainForm, RobotUtils, ActionsLife, RobotTypes;
 
 begin
 	Application.Title:='Robot';
