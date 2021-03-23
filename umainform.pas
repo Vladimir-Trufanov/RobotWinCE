@@ -217,6 +217,21 @@ type
     procedure SetFocus(f: TFocus);
     procedure ChangeFocus();
     procedure SetPauseState(s: boolean);
+
+    // ---------------------------------------------- Упорядоченные, отлаженные
+
+    // Проверить не произошло ли столкновение короля или робота с электрической
+    // стеной.
+    function alRuninElToKingOrRobots(
+      newpos:TPlaceNum; PictureName:string; i:integer):Boolean;
+    // Проверить не произошло ли столкновение главного игрока с королем или
+    // роботом. Если это произошло то количество жизней главного игрока
+    // уменьшается на 1. Кроме этого, столкновении с королем отбрасываем главного
+    // игрока на позицию в комнате 2x2, столкновение с роботом уничтожает робота
+    function alRuninToKingOrRobots(ppos,newpos:TPlaceNum;
+      PictureName:string; f:integer; i:integer):Boolean;
+    // Скопировать графический прямоугольник с холста на холст
+    // с изменением размера
     procedure CopyRect(
       DstCanvas: TCanvas; const Dest: TRect;
       SrcCanvas: TCanvas; const Source: TRect);
@@ -1218,11 +1233,12 @@ begin
   f := GetMainPlayerIndex();
   if f < 0 then exit; // don't do anything if the player is not here
   ppos := MyWorldPlayers[GetAbs(MyRoomNum)][f].Pos;
-  // Просматриваем места всех игроков в текущей комнатепозиции
+  // Просматриваем места всех игроков в текущей комнате
   for i := Low(MyWorldPlayers[GetAbs(MyRoomNum)]) to High(MyWorldPlayers[GetAbs(MyRoomNum)]) do
   begin
-    // Управляем позицией (действиями) короля и роботов
-    // относительно позиции главного игрока
+    // Управляем позицией короля и роботов относительно позиции главного игрока,
+    // и событиями, связанными со столкновениями игроков между собой, и
+    // с различными препятствиями
     s := GetPictureName(MyWorldPlayers[GetAbs(MyRoomNum)][i].PicIndex);
     if (IsWild(s, 'robot*.bmp', false))
     or (s = 'konig.bmp') then
@@ -1230,46 +1246,26 @@ begin
       // Перемещаем робота или короля и определяем его новую позицию
       newpos:=MyWorldPlayers[GetAbs(MyRoomNum)][i].Pos;
       newpos:=alMoveKingOrRobots(ppos,newpos);
-
-      // Если позиция другого игрока совпала с позицией главного, то
-      // уничтожаем другого игрока, а жизнь главного уменьшаем на 1
-      if (newpos.X = ppos.X)and(newpos.Y = ppos.Y) then
+      // Проверяем не произошло ли столкновение главного игрока с королем или
+      // роботом. Если это произошло, значит количество жизней главного игрока
+      // уменьшилось на 1. Если произошло столкновении с королем, то главного
+      // игрока отбросило на позицию в комнате 2x2, а если было столкновение
+      // с роботом, то робот был уничтожен.
+      // По этим причинам перерисовываем комнату
+      if alRuninToKingOrRobots(ppos,newpos,s,f,i) then
       begin
-        // Если позиция главного игрока совпала с позицией короля, то перемещаем
-        // игрока на позицию 2x2 текущей комнаты и выводим одно из трех сообщений
-        if s = 'konig.bmp' then
-        begin
-          PlaySound('konig.wav',MySoundState);
-          ShowMsg([
-            'Я должен остерегаться этого.',
-            'Король меня достал!',
-            'Мне нужно как-то его перехитрить.'
-          ]);
-          MyWorldPlayers[GetAbs(MyRoomNum)][f].Pos := PlaceNum(2,2);
-        end
-        // Если позиция главного игрока совпала с позицией робота, то уничтожаем
-        // робота, и выводим одно из четырех сообщений
-        else
-        begin
-          PlaySound('robot.wav',MySoundState);
-          ShowMsg([
-            'Меня поймал робот. Надо будет быстрее убегать в следующий раз.',
-            'Какой я не ловкий!',
-            'Он меня достал.',
-            'Очень раздражают эти железяки!'
-          ]);
-          RemovePlayer(GetAbs(MyRoomNum), i);
-        end;
-
-        // а жизнь главного уменьшаем на 1
-        RemoveLife();
-
-
-
         DrawRoom();
+        //exit;  // 23.03.2021 пока убрал
+      end;
+
+      if alRuninElToKingOrRobots(newpos,s,i) then
+      begin
+        DrawRoom();
+        ControlComputerPlayers(); // index numbering changed
         exit;
       end;
-      
+
+      {
       if GetPlacePicName(newpos) = 'wandEl.bmp' then
       begin
         if s = 'konig.bmp' then
@@ -1328,7 +1324,8 @@ begin
         ControlComputerPlayers(); // index numbering changed
         exit;
       end;
-      
+      }
+
       if GetPlace(newpos).PicIndex = GetPictureCacheIndex(BACKGROUND_PIC) then
       begin
         if s = 'konig.bmp' then
@@ -1660,21 +1657,6 @@ var
 begin
   for room := 1 to WORLD_WIDTH*WORLD_HEIGHT do
     SetLength(MyWorldPlayers[room], 0);
-end;
-// ****************************************************************************
-// *          Скопировать графический прямоугольник с холста на холст с       *
-// *                              изменением размера                          *
-// ****************************************************************************
-procedure TMainForm.CopyRect(DstCanvas:TCanvas; const Dest:TRect;
-  SrcCanvas:TCanvas; const Source:TRect);
-begin
-{$IFDEF win32}
-  // SmudgeRect(DstCanvas,Dest,SrcCanvas,Source); // перерисовываем вручную
-  DstCanvas.CopyRect(Dest,SrcCanvas,Source);
-{$ELSE}
-  // on something else, we have already a good copyrect ...
-  DstCanvas.CopyRect(Dest, SrcCanvas, Source);
-{$ENDIF win32}
 end;
 // ****************************************************************************
 // *             Перерисовываем изображение текущей игровой комнаты           *
@@ -2103,7 +2085,6 @@ end;
 
 function TMainForm.RemoveLife(): boolean;
 begin
-  caption:='Убрали жизнь';
   // TODO: give additional info
   if MyLife = 0 then
   begin // death
@@ -2479,6 +2460,155 @@ begin
     ShowSaveGameDialog := true;
   end;
 end;
+
+// -------------------------------------------------- Упорядоченные, отлаженные
+
+// ****************************************************************************
+// * Проверить не произошло ли столкновение короля или робота с электрической *
+// *   стеной. Если король столкнулся с этой стеной, а у главного игрока уже  *
+// *     есть три бриллианта, то игра заканчивается победой главного игрока.  *
+// * ------произошло то количество жизней главного игрока   *
+// * уменьшается на 1. Кроме этого, столкновении с королем отбрасываем главного
+// * игрока на позицию в комнате 2x2, столкновение с роботом уничтожает робота
+// ****************************************************************************
+function TMainForm.alRuninElToKingOrRobots(
+  newpos:TPlaceNum; PictureName:string; i:integer):Boolean;
+begin
+  Result:=False;
+  if GetPlacePicName(newpos) = 'wandEl.bmp' then
+  begin
+    // Если король сталкивается с электрической стеной
+    if PictureName = 'konig.bmp' then
+    begin
+      PlaySound('konig.wav',MySoundState);
+      // Если у главного игрока есть три бриллианта,
+      // то игра заканчивается победой
+      if Length(MyDiamonds) = 3 then
+      begin
+        RemovePlayer(GetAbs(MyRoomNum), i);
+        ShowMsg([
+          'Ура, король мертв!',
+          'Игра выиграна!',
+          'Отлично, у меня получилось!'
+        ]);
+        ShowMessage(
+          'Отлично, Вы действительно достигли цели игры '+
+          'по данным Вам правилам. '+
+          'Король этого мира роботов был побежден.'+LineEnding+LineEnding+
+
+          'И о чём это нам говорит? Выход есть всегда!'+LineEnding+
+
+          'Конечно, смысл этой игры, включая ее цель, теперь можно оспорить, '+
+          'но Вы можете сказать, что все равно цель достигнута.)'+LineEnding+LineEnding+
+
+          'Что дальше?'+LineEnding+
+
+          'Что будет дальше? Ну, жизнь продолжается и что будет дальше '+
+          'полностью зависит от вас.'+LineEnding+
+
+          'Возможно, Вы сейчас вернетесь в реальный мир, '+
+          'который считаете нормальным, и устремитесь к достижению других '+
+          'целей, которые вы там поставили.'+LineEnding+
+
+          'А может захотите исследовать другие миры, узнавать новое или '+
+          'просто скоротать свое время. В этом случае '+
+          '"Я могу порекомендовать посетить мою домашнюю страницу".'+LineEnding+LineEnding+
+
+          '- Albert Zeyer (www.az2000.de/projects)'
+        );
+      end
+      // Если у главного игрока нет трех бриллиантов,
+      // то король ломает стену и двигается дальше
+      else
+      begin
+        ShowMsg([
+          'О нет, еще не все бриллианты установлены!',
+          'Мне нужно поставить еще один бриллиант.',
+          'Так не пойдет!'
+        ]);
+      end;
+      SetPlacePicName(newpos, BACKGROUND_PIC);
+    end
+    // Если робот сталкивается с электрической стеной,
+    // то стена разрушается, а робот погибает
+    else
+    begin
+      PlaySound('rl.wav',MySoundState);
+      RemovePlayer(GetAbs(MyRoomNum), i);
+      SetPlacePicName(newpos, BACKGROUND_PIC);
+    end;
+    //DrawRoom();
+    //ControlComputerPlayers(); // index numbering changed
+    //exit;
+  end;
+end;
+// ****************************************************************************
+// *   Проверить не произошло ли столкновение главного игрока с королем или   *
+// *       роботом. Если это произошло то количество жизней главного игрока   *
+// * уменьшается на 1. Кроме этого, столкновении с королем отбрасываем главного
+// * игрока на позицию в комнате 2x2, столкновение с роботом уничтожает робота
+// ****************************************************************************
+function TMainForm.alRuninToKingOrRobots(ppos,newpos:TPlaceNum;
+  PictureName:string; f:integer; i:integer):Boolean;
+// ppos - позиция главного игрока
+// newpos - позиция другого игрока (короля или робота)
+// PictureName - имя файла графического изображения другого игрока
+// MyWorldPlayers - текущее положение игроков во всех комнатах мира
+// MyRoomNum - номер текущей комнаты
+// f - место главного игрока в списке игроков текущей комнаты
+// i - место другого игрока в списке игроков текущей комнаты
+begin
+  Result:=False;
+  // Если позиция другого игрока совпала с позицией главного, то
+  // уничтожаем другого игрока, а жизнь главного уменьшаем на 1
+  if (newpos.X = ppos.X)and(newpos.Y = ppos.Y) then
+  begin
+    // Если позиция главного игрока совпала с позицией короля, то перемещаем
+    // игрока на позицию 2x2 текущей комнаты и выводим одно из трех сообщений
+    if PictureName = 'konig.bmp'
+    then begin
+      PlaySound('konig.wav',MySoundState);
+      ShowMsg([
+        'Я должен остерегаться этого.',
+        'Король меня достал!',
+        'Мне нужно как-то его перехитрить.'
+      ]);
+      MyWorldPlayers[GetAbs(MyRoomNum)][f].Pos := PlaceNum(2,2);
+    end
+    // Если позиция главного игрока совпала с позицией робота, то уничтожаем
+    // робота, и выводим одно из четырех сообщений
+    else begin
+      PlaySound('robot.wav',MySoundState);
+      ShowMsg([
+        'Меня поймал робот. Надо будет быстрее убегать в следующий раз.',
+        'Какой я не ловкий!',
+        'Он меня достал.',
+        'Очень раздражают эти железяки!'
+      ]);
+      RemovePlayer(GetAbs(MyRoomNum),i);
+    end;
+    // А жизнь главного игрока уменьшаем на 1
+    RemoveLife();
+    Result:=True;
+  end;
+end;
+// ****************************************************************************
+// *          Скопировать графический прямоугольник с холста на холст с       *
+// *                              изменением размера                          *
+// ****************************************************************************
+procedure TMainForm.CopyRect(DstCanvas:TCanvas; const Dest:TRect;
+  SrcCanvas:TCanvas; const Source:TRect);
+begin
+{$IFDEF win32}
+  // SmudgeRect(DstCanvas,Dest,SrcCanvas,Source); // перерисовываем вручную
+  DstCanvas.CopyRect(Dest,SrcCanvas,Source);
+{$ELSE}
+  // on something else, we have already a good copyrect ...
+  DstCanvas.CopyRect(Dest, SrcCanvas, Source);
+{$ENDIF win32}
+end;
+
+
 
 initialization
   {$I umainform.lrs}
