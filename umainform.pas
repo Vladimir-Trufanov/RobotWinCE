@@ -201,8 +201,6 @@ type
     procedure ResetPlace(pos: TPlaceNum);
     function AddPlayer(room: TRoomAbsNum; pos: TPlaceNum; picindex: Integer): Integer; // returns index
     function AddPlayer(room: TRoomAbsNum; pos: TPlaceNum; picname: string): Integer; // returns index
-    procedure RemovePlayer(room: TRoomAbsNum; index: Integer); // удалить уничтожаемого робота
-    procedure RemovePlayer(room: TRoomAbsNum; pos: TPlaceNum);
     function MovePlayer(oldroom: TRoomAbsNum; oldindex: Integer; newroom: TRoomAbsNum; newpos: TPlaceNum): Integer; // returns new index
     function IsPlayerInRoom(picname: string): boolean;
     procedure ResetPlayerList();
@@ -213,7 +211,6 @@ type
     procedure ChangeKnapsackSelection(dir: TMoveDirection);
     procedure AddScores(num: Integer);
     procedure AddLife();
-    function RemoveLife(): boolean; // returns true, if still alive
     procedure SetFocus(f: TFocus);
     procedure ChangeFocus();
     procedure SetPauseState(s: boolean);
@@ -221,7 +218,11 @@ type
     // ---------------------------------------------- Упорядоченные, отлаженные
 
     // Проверить не произошло ли столкновение короля или робота с электрической
-    // стеной.
+    // стеной. Если король столкнулся с этой стеной, а у главного игрока уже
+    // есть три бриллианта, то игра заканчивается победой главного игрока. Если
+    // у главного игрока нет трех бриллиантов, то король ломает стену и
+    // двигается дальше. Если робот сталкивается с электрической стеной, то
+    // стена разрушается, а робот погибает.
     function alRuninElToKingOrRobots(
       newpos:TPlaceNum; PictureName:string; i:integer):Boolean;
     // Проверить не произошло ли столкновение главного игрока с королем или
@@ -235,6 +236,13 @@ type
     procedure CopyRect(
       DstCanvas: TCanvas; const Dest: TRect;
       SrcCanvas: TCanvas; const Source: TRect);
+    // Уменьшить количество жизней главного игрока
+    function RemoveLife(): boolean;
+    // Удалить уничтожаемого робота по его индексу в списке
+    procedure RemovePlayer(room: TRoomAbsNum; index: Integer);
+    // Удалить уничтожаемого робота по его позиции в комнате
+    procedure RemovePlayer(room: TRoomAbsNum; pos: TPlaceNum);
+
   end;
 
   function RoomNum(X,Y: Integer): TRoomNum;
@@ -1218,6 +1226,10 @@ end;
 // ****************************************************************************
 // *           Построить "разумные" действия для всех роботов и короля        *
 // ****************************************************************************
+
+// ДЕЙСТВИЯ ИГРОКОВ ПО ТАЙМЕРУ ИНОГДА ВЫЗЫВАЮТ СБОЙ И УТЕЧКУ ПАМЯТИ!
+// 24.03.2021 РАЗОБРАТЬСЯ!
+
 procedure TMainForm.ControlComputerPlayers();
 var
   f: Integer;
@@ -1255,77 +1267,20 @@ begin
       if alRuninToKingOrRobots(ppos,newpos,s,f,i) then
       begin
         DrawRoom();
-        //exit;  // 23.03.2021 пока убрал
+        exit;  // 23.03.2021 пока убрал
       end;
-
+      // Проверить не произошло ли столкновение короля или робота с электрической
+      // стеной. При этих столкновениях картина мира в комнате меняется.
+      alRuninElToKingOrRobots(newpos,s,i);
+      {
       if alRuninElToKingOrRobots(newpos,s,i) then
       begin
         DrawRoom();
-        ControlComputerPlayers(); // index numbering changed
-        exit;
-      end;
-
-      {
-      if GetPlacePicName(newpos) = 'wandEl.bmp' then
-      begin
-        if s = 'konig.bmp' then
-        begin
-          PlaySound('konig.wav',MySoundState);
-          if Length(MyDiamonds) = 3 then
-          begin
-            RemovePlayer(GetAbs(MyRoomNum), i);
-            ShowMsg([
-                     'Hurra, der Kцnig ist tot!',
-                     'Das Spiel ist gewonnen!',
-                     'Toll, ich habe es geschafft!'
-                     ]);
-            ShowMessage(
-                        'Super, du hast es wirklich geschafft, das Ziel des ' +
-                        'Spieles, d.h. der dir vorgegebenen Regeln, ist ' +
-                        'geschafft! Der Kцnig dieser Robot-Welt wurde ' +
-                        'besiegt.' + LineEnding +
-                        LineEnding +
-                        'Und was sagt uns das? Es gibt immer einen Weg! ' + LineEnding +
-                        '(Ьber den Sinn dieses Spieles inklusive seinem Ziel ' +
-                        'lдsst sich jetzt streiten, aber du kannst von dir ' +
-                        'behaupten, das Ziel trotzdem erreicht zu haben.)' + LineEnding +
-                        LineEnding +
-                        'Was kommt nun?' + LineEnding +
-                        'Tja, das Leben geht weiter; was als nдchstes kommt, ' +
-                        'bleibt rein dir ьberlassen.' + LineEnding +
-                        'Vielleicht tauchst du jetzt mal wieder in deine ' +
-                        'von dir als normal angesehene Welt ab, um dort andere ' +
-                        'von dir selbst gestellten Ziele zu erreichen.' + LineEnding +
-                        'Vielleicht hast du aber auch Lust, noch andere ' +
-                        'Welten zu erforschen, Neues zu lernen und vor allem ' +
-                        'einfach nur deine Zeit zu vertreiben. In diesem Fall ' +
-                        'kann ich dir einen Besuch meiner Homepage empfehlen.' + LineEnding +
-                        LineEnding +
-                        '- Albert Zeyer (www.az2000.de/projects)'
-                        );
-          end
-          else // not all diamonds set
-          begin
-            ShowMsg([
-                     'Oh nein, es sind noch nicht alle Diamanten gesetzt!',
-                     'Ich muss wohl noch ein Diamanten setzen.',
-                     'So wird das nichts.'
-                     ]);
-          end;
-          SetPlacePicName(newpos, BACKGROUND_PIC);
-        end
-        else // robot
-        begin
-          PlaySound('rl.wav',MySoundState);
-          RemovePlayer(GetAbs(MyRoomNum), i);
-          SetPlacePicName(newpos, BACKGROUND_PIC);
-        end;
-        DrawRoom();
+        //
         ControlComputerPlayers(); // index numbering changed
         exit;
       end;
       }
-
       if GetPlace(newpos).PicIndex = GetPictureCacheIndex(BACKGROUND_PIC) then
       begin
         if s = 'konig.bmp' then
@@ -1601,30 +1556,6 @@ end;
 function TMainForm.AddPlayer(room: TRoomAbsNum; pos: TPlaceNum; picname: string): Integer;
 begin
   AddPlayer := AddPlayer(room, pos, GetPictureCacheIndex(picname));
-end;
-// ****************************************************************************
-// *                          Удалить уничтожаемого робота                    *
-// ****************************************************************************
-procedure TMainForm.RemovePlayer(room: TRoomAbsNum; index: Integer);
-begin
-  //
-  MyWorldPlayers[room][index] := MyWorldPlayers[room][High(MyWorldPlayers[room])];
-  SetLength(MyWorldPlayers[room], Length(MyWorldPlayers[room]) - 1);
-end;
-
-procedure TMainForm.RemovePlayer(room: TRoomAbsNum; pos: TPlaceNum);
-var
-  i: Integer;
-begin
-  for i := Low(MyWorldPlayers[room]) to High(MyWorldPlayers[room]) do
-  begin
-    if (MyWorldPlayers[room][i].Pos.X = pos.X)
-    and (MyWorldPlayers[room][i].Pos.Y = pos.Y) then
-    begin
-      RemovePlayer(room, i);
-      exit;
-    end;
-  end;
 end;
 
 function TMainForm.MovePlayer(oldroom: TRoomAbsNum; oldindex: Integer; newroom: TRoomAbsNum; newpos: TPlaceNum): Integer; // returns new index
@@ -2083,30 +2014,6 @@ begin
   DrawInfo();
 end;
 
-function TMainForm.RemoveLife(): boolean;
-begin
-  // TODO: give additional info
-  if MyLife = 0 then
-  begin // death
-    ShowMsg([
-             'Ich bin tot.',
-             'Der Sensemann kommt.',
-             'Das letzte Leben verabschiedet sich.'
-             ]);
-    ShowMessage(
-                'Ich bin sicher, in anderen Welten wдre jetzt wirklich Ende, ' +
-                'geschweige dessen, dass du ьberhaupt mehrere Leben hast!'
-                );
-    RemoveLife := false;
-  end
-  else
-  begin
-    MyLife := MyLife - 1;
-    DrawInfo();
-    RemoveLife := true;
-  end;
-end;
-
 procedure TMainForm.SetFocus(f: TFocus);
 begin
   if MyFocus <> f then
@@ -2467,9 +2374,9 @@ end;
 // * Проверить не произошло ли столкновение короля или робота с электрической *
 // *   стеной. Если король столкнулся с этой стеной, а у главного игрока уже  *
 // *     есть три бриллианта, то игра заканчивается победой главного игрока.  *
-// * ------произошло то количество жизней главного игрока   *
-// * уменьшается на 1. Кроме этого, столкновении с королем отбрасываем главного
-// * игрока на позицию в комнате 2x2, столкновение с роботом уничтожает робота
+// *   Если у главного игрока нет трех бриллиантов, то король ломает стену и  *
+// *     двигается дальше. Если робот сталкивается с электрической стеной,    *
+// *                то стена разрушается, а робот погибает.                   *
 // ****************************************************************************
 function TMainForm.alRuninElToKingOrRobots(
   newpos:TPlaceNum; PictureName:string; i:integer):Boolean;
@@ -2537,9 +2444,9 @@ begin
       RemovePlayer(GetAbs(MyRoomNum), i);
       SetPlacePicName(newpos, BACKGROUND_PIC);
     end;
-    //DrawRoom();
-    //ControlComputerPlayers(); // index numbering changed
-    //exit;
+    DrawRoom();
+    ControlComputerPlayers(); // index numbering changed
+    exit;
   end;
 end;
 // ****************************************************************************
@@ -2607,8 +2514,56 @@ begin
   DstCanvas.CopyRect(Dest, SrcCanvas, Source);
 {$ENDIF win32}
 end;
-
-
+// ****************************************************************************
+// *                 Уменьшить количество жизней главного игрока              *
+// ****************************************************************************
+function TMainForm.RemoveLife(): boolean;
+begin
+  if MyLife = 0 then
+  begin // death
+    ShowMsg([
+      'Я мертв!',
+      'Пришла старуха с косой.',
+      'Прощай последняя жизнь.'
+    ]);
+    ShowMessage(
+      'Я уверен, что в других мирах это действительно было бы концом,'+LineEnding+
+      'а здесь Вы, все-таки, живете, играете и радуетесь жизни!'
+    );
+    RemoveLife:=false;
+  end
+  else
+  begin
+    MyLife:=MyLife-1;
+    DrawInfo();
+    RemoveLife:=true;
+  end;
+end;
+// ****************************************************************************
+// *             Удалить уничтожаемого робота по его индексу в списке         *
+// ****************************************************************************
+procedure TMainForm.RemovePlayer(room: TRoomAbsNum; index: Integer);
+begin
+  MyWorldPlayers[room][index] := MyWorldPlayers[room][High(MyWorldPlayers[room])];
+  SetLength(MyWorldPlayers[room], Length(MyWorldPlayers[room]) - 1);
+end;
+// ****************************************************************************
+// *            Удалить уничтожаемого робота по его позиции в комнате         *
+// ****************************************************************************
+procedure TMainForm.RemovePlayer(room: TRoomAbsNum; pos: TPlaceNum);
+var
+  i: Integer;
+begin
+  for i := Low(MyWorldPlayers[room]) to High(MyWorldPlayers[room]) do
+  begin
+    if (MyWorldPlayers[room][i].Pos.X = pos.X)
+    and (MyWorldPlayers[room][i].Pos.Y = pos.Y) then
+    begin
+      RemovePlayer(room, i);
+      exit;
+    end;
+  end;
+end;
 
 initialization
   {$I umainform.lrs}
