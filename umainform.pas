@@ -2452,44 +2452,30 @@ begin
       if alRuninElToKingOrRobots(newpos,s,i) then
       begin
         DrawRoom();
-        ControlComputerPlayers(); // index numbering changed
+        //26.03.2021 ControlComputerPlayers(); // index numbering changed
         exit;  // делаем exit, чтобы уменьшить время обработки тика таймера
                // пока нет критической секции
 			end;
-      //
+      // Если в новой позиции "земля", то отмечаем перемещение игрока в
+      // новую позицию и перерисовываем комнату
 			if GetPlace(newpos).PicIndex = GetPictureCacheIndex(BACKGROUND_PIC) then
       begin
-        if s = 'konig.bmp' then
-          PlaySound('konig.wav',MySoundState)
-        else
-          PlaySound('rl.wav',MySoundState);
+        if s = 'konig.bmp' then PlaySound('konig.wav',MySoundState)
+        else PlaySound('rl.wav',MySoundState);
         MyWorldPlayers[GetAbs(MyRoomNum)][i].Pos := newpos;
         DrawRoom();
       end
-      else // wall or something else
+      // При встрече с остальными препятствиями перемещаем короля или робота
+      // в другом направлении от сближения с главным игроком,
+      // чтобы обойти препятствие
+      else
       begin
-        // try other direction
         newpos := MyWorldPlayers[GetAbs(MyRoomNum)][i].Pos;
-        if Abs(ppos.X - newpos.X) <= Abs(ppos.Y - newpos.Y) then
-        begin // move horiz
-          if ppos.X > newpos.X then
-            newpos.X := newpos.X + 1
-          else
-            newpos.X := newpos.X - 1;
-        end
-        else
-        begin // move vert
-          if ppos.Y > newpos.Y then
-            newpos.Y := newpos.Y + 1
-          else
-            newpos.Y := newpos.Y - 1;
-        end;
+        newpos:=alMoveKingOrRobotsBack(ppos,newpos);
         if GetPlace(newpos).PicIndex = GetPictureCacheIndex(BACKGROUND_PIC) then
         begin
-          if s = 'konig.bmp' then
-            PlaySound('konig.wav',MySoundState)
-          else
-            PlaySound('rl.wav',MySoundState);
+          if s = 'konig.bmp' then PlaySound('konig.wav',MySoundState)
+          else PlaySound('rl.wav',MySoundState);
           MyWorldPlayers[GetAbs(MyRoomNum)][i].Pos := newpos;
           DrawRoom();
         end;
