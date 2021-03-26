@@ -216,7 +216,7 @@ object MainForm: TMainForm
     end
   end
   object ComputerPlayer: TTimer
-    Interval = 500
+    Interval = 550
     OnTimer = ComputerPlayerTimer
     Left = 441
     Top = 270

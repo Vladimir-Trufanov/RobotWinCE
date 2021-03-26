@@ -167,7 +167,6 @@ type
     function GetMainPlayerIndex(): Integer; // определить место главного игрока в списке игроков текущей комнаты
     procedure KillRobots(); // kill all robots in act room
     procedure UseKnapsackSelection();
-    procedure ControlComputerPlayers(); // построить "разумные" действия для всех роботов и короля
     // background stuff
     procedure InitGame();
     procedure RestartGame();
@@ -231,6 +230,8 @@ type
     // игрока на позицию в комнате 2x2, столкновение с роботом уничтожает робота
     function alRuninToKingOrRobots(ppos,newpos:TPlaceNum;
       PictureName:string; f:integer; i:integer):Boolean;
+    // Построить "разумные" действия для всех роботов и короля по тику таймера                               *
+    procedure ControlComputerPlayers();
     // Скопировать графический прямоугольник с холста на холст
     // с изменением размера
     procedure CopyRect(
@@ -1222,104 +1223,6 @@ begin
   end;
 
   DrawKnapsack();
-end;
-// ****************************************************************************
-// *           Построить "разумные" действия для всех роботов и короля        *
-// ****************************************************************************
-
-// ДЕЙСТВИЯ ИГРОКОВ ПО ТАЙМЕРУ ИНОГДА ВЫЗЫВАЮТ СБОЙ И УТЕЧКУ ПАМЯТИ!
-// 24.03.2021 РАЗОБРАТЬСЯ!
-
-procedure TMainForm.ControlComputerPlayers();
-var
-  f: Integer;
-  i: Integer;
-  ppos, newpos: TPlaceNum;
-  s: string;
-begin
-  if MyPauseState = true then exit; // don't do anything while pausing
-  if MyEditorMode = true then exit; // don't do anything while editing
-
-  // Определяем место главного игрока в списке игроков текущей комнаты,
-  // а затем его позицию в этой комнате
-  f := GetMainPlayerIndex();
-  if f < 0 then exit; // don't do anything if the player is not here
-  ppos := MyWorldPlayers[GetAbs(MyRoomNum)][f].Pos;
-  // Просматриваем места всех игроков в текущей комнате
-  for i := Low(MyWorldPlayers[GetAbs(MyRoomNum)]) to High(MyWorldPlayers[GetAbs(MyRoomNum)]) do
-  begin
-    // Управляем позицией короля и роботов относительно позиции главного игрока,
-    // и событиями, связанными со столкновениями игроков между собой, и
-    // с различными препятствиями
-    s := GetPictureName(MyWorldPlayers[GetAbs(MyRoomNum)][i].PicIndex);
-    if (IsWild(s, 'robot*.bmp', false))
-    or (s = 'konig.bmp') then
-    begin
-      // Перемещаем робота или короля и определяем его новую позицию
-      newpos:=MyWorldPlayers[GetAbs(MyRoomNum)][i].Pos;
-      newpos:=alMoveKingOrRobots(ppos,newpos);
-      // Проверяем не произошло ли столкновение главного игрока с королем или
-      // роботом. Если это произошло, значит количество жизней главного игрока
-      // уменьшилось на 1. Если произошло столкновении с королем, то главного
-      // игрока отбросило на позицию в комнате 2x2, а если было столкновение
-      // с роботом, то робот был уничтожен.
-      // По этим причинам перерисовываем комнату
-      if alRuninToKingOrRobots(ppos,newpos,s,f,i) then
-      begin
-        DrawRoom();
-        exit;  // 23.03.2021 пока убрал
-      end;
-      // Проверить не произошло ли столкновение короля или робота с электрической
-      // стеной. При этих столкновениях картина мира в комнате меняется.
-      alRuninElToKingOrRobots(newpos,s,i);
-      {
-      if alRuninElToKingOrRobots(newpos,s,i) then
-      begin
-        DrawRoom();
-        //
-        ControlComputerPlayers(); // index numbering changed
-        exit;
-      end;
-      }
-      if GetPlace(newpos).PicIndex = GetPictureCacheIndex(BACKGROUND_PIC) then
-      begin
-        if s = 'konig.bmp' then
-          PlaySound('konig.wav',MySoundState)
-        else
-          PlaySound('rl.wav',MySoundState);
-        MyWorldPlayers[GetAbs(MyRoomNum)][i].Pos := newpos;
-        DrawRoom();
-      end
-      else // wall or something else
-      begin
-        // try other direction
-        newpos := MyWorldPlayers[GetAbs(MyRoomNum)][i].Pos;
-        if Abs(ppos.X - newpos.X) <= Abs(ppos.Y - newpos.Y) then
-        begin // move horiz
-          if ppos.X > newpos.X then
-            newpos.X := newpos.X + 1
-          else
-            newpos.X := newpos.X - 1;
-        end
-        else
-        begin // move vert
-          if ppos.Y > newpos.Y then
-            newpos.Y := newpos.Y + 1
-          else
-            newpos.Y := newpos.Y - 1;
-        end;
-        if GetPlace(newpos).PicIndex = GetPictureCacheIndex(BACKGROUND_PIC) then
-        begin
-          if s = 'konig.bmp' then
-            PlaySound('konig.wav',MySoundState)
-          else
-            PlaySound('rl.wav',MySoundState);
-          MyWorldPlayers[GetAbs(MyRoomNum)][i].Pos := newpos;
-          DrawRoom();
-        end;
-      end;
-    end;
-  end;
 end;
 // ****************************************************************************
 // *                             Инициировать игру                            *
@@ -2444,9 +2347,7 @@ begin
       RemovePlayer(GetAbs(MyRoomNum), i);
       SetPlacePicName(newpos, BACKGROUND_PIC);
     end;
-    DrawRoom();
-    ControlComputerPlayers(); // index numbering changed
-    exit;
+    Result:=True;
   end;
 end;
 // ****************************************************************************
@@ -2497,6 +2398,103 @@ begin
     // А жизнь главного игрока уменьшаем на 1
     RemoveLife();
     Result:=True;
+  end;
+end;
+// ****************************************************************************
+// *           Построить "разумные" действия для всех роботов и короля        *
+// *                            по тику таймера                               *
+// ****************************************************************************
+//            ДЕЙСТВИЯ ИГРОКОВ ПО ТАЙМЕРУ ИНОГДА ВЫЗЫВАЮТ СБОЙ И УТЕЧКУ ПАМЯТИ!
+//                                                      24.03.2021 РАЗОБРАТЬСЯ!
+// МОЖЕТ ПУСТЬ РИСУЕТ ТОЛЬКО ОДИН ТАЙМЕР!!!
+// ЗАСЕЧЬ ВРЕМЯ РИСОВАНИЯ И КОНТРОЛЛИРОВАТЬ ЕГО НА РАЗНЫХ ПРОЦЕССОРАХ.
+procedure TMainForm.ControlComputerPlayers();
+var
+  f: Integer;
+  i: Integer;
+  ppos, newpos: TPlaceNum;
+  s: string;
+begin
+  if MyPauseState = true then exit; // don't do anything while pausing
+  if MyEditorMode = true then exit; // don't do anything while editing
+  // Определяем место главного игрока в списке игроков текущей комнаты,
+  // а затем его позицию в этой комнате
+  f := GetMainPlayerIndex();
+  if f < 0 then exit; // don't do anything if the player is not here
+  ppos := MyWorldPlayers[GetAbs(MyRoomNum)][f].Pos;
+  // Просматриваем места всех игроков в текущей комнате
+  for i := Low(MyWorldPlayers[GetAbs(MyRoomNum)]) to High(MyWorldPlayers[GetAbs(MyRoomNum)]) do
+  begin
+    // Управляем позицией короля и роботов относительно позиции главного игрока,
+    // и событиями, связанными со столкновениями игроков между собой, и
+    // с различными препятствиями
+    s := GetPictureName(MyWorldPlayers[GetAbs(MyRoomNum)][i].PicIndex);
+    if (IsWild(s, 'robot*.bmp', false))
+    or (s = 'konig.bmp') then
+    begin
+      // Перемещаем робота или короля и определяем его новую позицию
+      newpos:=MyWorldPlayers[GetAbs(MyRoomNum)][i].Pos;
+      newpos:=alMoveKingOrRobots(ppos,newpos);
+      // Проверяем не произошло ли столкновение главного игрока с королем или
+      // роботом. Если это произошло, значит количество жизней главного игрока
+      // уменьшилось на 1. Если произошло столкновении с королем, то главного
+      // игрока отбросило на позицию в комнате 2x2, а если было столкновение
+      // с роботом, то робот был уничтожен.
+      // По этим причинам перерисовываем комнату
+      if alRuninToKingOrRobots(ppos,newpos,s,f,i) then
+      begin
+        DrawRoom();
+        exit;  // делаем exit, чтобы уменьшить время обработки тика таймера
+               // пока нет критической секции
+      end;
+      // Проверить не произошло ли столкновение короля или робота с электрической
+      // стеной. При этих столкновениях картина мира в комнате меняется.
+      if alRuninElToKingOrRobots(newpos,s,i) then
+      begin
+        DrawRoom();
+        ControlComputerPlayers(); // index numbering changed
+        exit;  // делаем exit, чтобы уменьшить время обработки тика таймера
+               // пока нет критической секции
+			end;
+      //
+			if GetPlace(newpos).PicIndex = GetPictureCacheIndex(BACKGROUND_PIC) then
+      begin
+        if s = 'konig.bmp' then
+          PlaySound('konig.wav',MySoundState)
+        else
+          PlaySound('rl.wav',MySoundState);
+        MyWorldPlayers[GetAbs(MyRoomNum)][i].Pos := newpos;
+        DrawRoom();
+      end
+      else // wall or something else
+      begin
+        // try other direction
+        newpos := MyWorldPlayers[GetAbs(MyRoomNum)][i].Pos;
+        if Abs(ppos.X - newpos.X) <= Abs(ppos.Y - newpos.Y) then
+        begin // move horiz
+          if ppos.X > newpos.X then
+            newpos.X := newpos.X + 1
+          else
+            newpos.X := newpos.X - 1;
+        end
+        else
+        begin // move vert
+          if ppos.Y > newpos.Y then
+            newpos.Y := newpos.Y + 1
+          else
+            newpos.Y := newpos.Y - 1;
+        end;
+        if GetPlace(newpos).PicIndex = GetPictureCacheIndex(BACKGROUND_PIC) then
+        begin
+          if s = 'konig.bmp' then
+            PlaySound('konig.wav',MySoundState)
+          else
+            PlaySound('rl.wav',MySoundState);
+          MyWorldPlayers[GetAbs(MyRoomNum)][i].Pos := newpos;
+          DrawRoom();
+        end;
+      end;
+    end;
   end;
 end;
 // ****************************************************************************

@@ -33,7 +33,7 @@ function alMoveKingOrRobots(ppos,newpos:TPlaceNum):TPlaceNum;
 // newpos - позиция другого игрока (короля или робота)
 begin
   // Если смещение по горизотали другого игрока от главного игрока
-  // больше смещения по вертикали, то перемещаем его по горизонтвли
+  // больше смещения по вертикали, то перемещаем его по горизонтали
   if Abs(ppos.X - newpos.X) > Abs(ppos.Y - newpos.Y)
   then begin // move horiz
     if ppos.X > newpos.X
