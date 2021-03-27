@@ -67,9 +67,16 @@ type
   { TMainForm }
 
   TMainForm = class(TForm)
+				DiamondsLabel: TLabel;
     GamePanel: TPanel;
-    KnapsackPanel: TPanel;
-    InfoPanel: TPanel;
+		InfoPanel: TPanel;
+		KnapsackPanel: TPanel;
+		MenuItem1: TMenuItem;
+		MenuItem2: TMenuItem;
+		MenuItem3: TMenuItem;
+		MenuItem4: TMenuItem;
+		MessageBar: TLabel;
+		LifeLabel: TLabel;
     mnuEditorSave: TMenuItem;
     mnuEditorMode: TMenuItem;
     mnuEditorLoad: TMenuItem;
@@ -81,8 +88,6 @@ type
     mnuHelpControl: TMenuItem;
     mnuHelp: TMenuItem;
     mnuHelpDescription: TMenuItem;
-    MessageBar: TLabel;
-    LifeLabel: TLabel;
     MainMenu: TMainMenu;
     mnuGameEnd: TMenuItem;
     mnuGameLoad: TMenuItem;
@@ -90,11 +95,13 @@ type
     mnuGame: TMenuItem;
     OpenGameDialog: TOpenDialog;
     OpenWorldDialog: TOpenDialog;
+		pnlOther: TPanel;
+		pnlMenu: TPanel;
+		PopupMenu1: TPopupMenu;
     SaveGameDialog: TSaveDialog;
     SaveWorldDialog: TSaveDialog;
-    ScoresLabel: TLabel;
-    DiamondsLabel: TLabel;
     ComputerPlayer: TTimer;
+		ScoresLabel: TLabel;
     // event handlers
     procedure ComputerPlayerTimer(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -111,6 +118,7 @@ type
     procedure KnapsackPanelClick(Sender: TObject);
     procedure KnapsackPanelMouseDown(Sender: TOBject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+		procedure MenuItem1Click(Sender: TObject);
 		procedure MessageBarClick(Sender: TObject);
     procedure mnuEditorLoadClick(Sender: TObject);
     procedure mnuEditorModeClick(Sender: TObject);
@@ -566,6 +574,11 @@ begin
     MyKnapsackSelection := (ky-1)*KNAPSACK_WIDTH + kx;
     DrawKnapsack();
   end;
+end;
+
+procedure TMainForm.MenuItem1Click(Sender: TObject);
+begin
+
 end;
 
 procedure TMainForm.MessageBarClick(Sender: TObject);
