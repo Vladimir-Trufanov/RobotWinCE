@@ -6,8 +6,9 @@ interface
 
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  Buttons, GraphType, Crt, StrUtils, StdCtrls, ComCtrls, Menus, LCLType
-{$IFDEF win32}
+  Buttons, GraphType, Crt, StrUtils, StdCtrls, ComCtrls, Menus, LCLType, LCLIntf
+
+  {$IFDEF win32}
   ,MMSystem
 {$ENDIF}
   ,RobotTypes,ActionsLife,RobotUtils
@@ -97,6 +98,7 @@ type
     // event handlers
     procedure ComputerPlayerTimer(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+		procedure FormDblClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormPaint(Sender: TObject);
@@ -260,6 +262,10 @@ var
 
 implementation
 
+var
+  gpWidth: integer=426;
+  gpHeight: integer=426;
+
 function RoomNum(X,Y: Integer): TRoomNum;
 begin
   RoomNum.X := X;
@@ -320,11 +326,11 @@ begin
   // ! BiDiMode=bdLeftToRight - обычное чтение слева-направо
   BorderStyle:=bsSizeable; // установили обычное окно Windows
   // ! DesignTimePPI:=120; // через DPI изменили размер элементов???
-  Height:=618;             // высота формы от строки заголовка до нижней границы
+  //Height:=618;             // высота формы от строки заголовка до нижней границы
   KeyPreview:=true;        // обеспечили приход на форму всех событий от клавиш
-  Left:=636;               // расстояние от левой границы рабочего стола
+  //Left:=636;               // расстояние от левой границы рабочего стола
   Position:=poDefaultPosOnly;  // Windows определяет начальную позицию формы, ее размеры не изменяются
-  Width:=485;
+  //Width:=485;
   // Иициируем игру
   InitGame();
   // Устанавливаем фонты сообщений по жизням, игровым очкам, найденным алмазам
@@ -336,6 +342,48 @@ begin
   KnapsackPanel.OnPaint := @FormPaint;
   // Инициируем начальное построение элементов формы
   FormResize(MainForm);
+end;
+
+procedure TMainForm.FormDblClick(Sender: TObject);
+var
+  nWidth: integer;
+  nHeight: integer;
+  nwBorder: integer;
+  nhBorder: integer;
+  nwFScreen: integer;
+  nhFScreen: integer;
+  nwTrack: integer;
+  nhTrack: integer;
+
+begin
+
+
+  nWidth:=GetSystemMetrics(SM_CXSCREEN);
+  nHeight:=GetSystemMetrics(SM_CYSCREEN);
+  caption:=IntToStr(nWidth)+'x'+IntToStr(nHeight)+'  ';
+
+  nwBorder:=GetSystemMetrics(SM_CXBORDER);
+  nhBorder:=GetSystemMetrics(SM_CYBORDER);
+  caption:=caption+'Border: '+IntToStr(nwBorder)+'x'+IntToStr(nhBorder)+'  ';
+
+  nwFScreen:=GetSystemMetrics(SM_CXFULLSCREEN);
+  nhFScreen:=GetSystemMetrics(SM_CYFULLSCREEN);
+  caption:=caption+'FScreen: '+IntToStr(nwFScreen)+'x'+IntToStr(nhFScreen)+'  ';
+
+  nwTrack:=GetSystemMetrics(SM_CXMAXTRACK);
+  nhTrack:=GetSystemMetrics(SM_CYMAXTRACK);
+  caption:=caption+'Track: '+IntToStr(nwTrack)+'x'+IntToStr(nhTrack)+'  ';
+
+  GamePanel.Height:=500;
+
+  GamePanel.Width:=GamePanel.Height;
+  ResetRoomPic();
+  ResetPictureResizedCache();
+  DrawRoom();
+
+  gpWidth:=GamePanel.Width;
+  gpHeight:=GamePanel.Height;
+  ShowMessage(IntToStr(gpWidth)+' '+IntToStr(gpHeight));
 end;
 
 procedure TMainForm.ComputerPlayerTimer(Sender: TObject);
@@ -423,6 +471,7 @@ end;
 
 procedure TMainForm.FormResize(Sender: TObject);
 begin
+  GamePanel.Width:=GamePanel.Height;
   ResetRoomPic();
   ResetPictureResizedCache();
   DrawRoom();
