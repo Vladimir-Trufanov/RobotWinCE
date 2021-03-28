@@ -6,8 +6,8 @@ object MainForm: TMainForm
   HorzScrollBar.Page = 387
   VertScrollBar.Page = 474
   AutoSize = True
-  Caption = 'Robot 1.7'
-  ClientHeight = 567
+  Caption = 'Robot WinCE 1.8'
+  ClientHeight = 592
   ClientWidth = 1038
   Color = clWhite
   DesignTimePPI = 120
@@ -16,19 +16,19 @@ object MainForm: TMainForm
   Font.Name = '-adobe-helvetica-medium-r-normal-*-*-*-*-*-*-*-iso8859-15'
   Font.Pitch = fpVariable
   KeyPreview = True
-  Menu = MainMenu
   OnCreate = FormCreate
   OnDblClick = FormDblClick
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnPaint = FormPaint
   OnResize = FormResize
+  PopupMenu = mmMenu
   UseDockManager = True
   LCLVersion = '2.0.12.0'
   Visible = True
   object GamePanel: TPanel
     Left = 0
-    Height = 544
+    Height = 569
     Top = 0
     Width = 516
     Anchors = [akTop, akLeft, akBottom]
@@ -47,11 +47,11 @@ object MainForm: TMainForm
   end
   object pnlOther: TPanel
     Left = 560
-    Height = 534
+    Height = 559
     Top = 8
     Width = 464
     Anchors = [akTop, akRight, akBottom]
-    ClientHeight = 534
+    ClientHeight = 559
     ClientWidth = 464
     Color = clSkyBlue
     ParentColor = False
@@ -59,7 +59,7 @@ object MainForm: TMainForm
     object MessageBar: TLabel
       Left = 0
       Height = 19
-      Top = 511
+      Top = 536
       Width = 464
       Anchors = [akLeft, akRight, akBottom]
       AutoSize = False
@@ -170,74 +170,8 @@ object MainForm: TMainForm
       Width = 128
       Color = clScrollBar
       ParentColor = False
-      PopupMenu = PopupMenu1
+      PopupMenu = mmMenu
       TabOrder = 2
-    end
-  end
-  object MainMenu: TMainMenu
-    Left = 56
-    Top = 112
-    object mnuGame: TMenuItem
-      Caption = 'Spiel'
-      object mnuGameNew: TMenuItem
-        Caption = 'Neues Spiel'
-        OnClick = mnuGameNewClick
-      end
-      object mnuGameLoad: TMenuItem
-        Caption = 'Spiel laden'
-        OnClick = mnuGameLoadClick
-      end
-      object mnuGameEnd: TMenuItem
-        Caption = 'Spiel beenden'
-        OnClick = mnuGameEndClick
-      end
-    end
-    object mnuHelp: TMenuItem
-      Caption = 'Hilfe'
-      object mnuHelpDescription: TMenuItem
-        Caption = 'Spielbeschreibung'
-        OnClick = mnuHelpDescriptionClick
-      end
-      object mnuHelpControl: TMenuItem
-        Caption = 'Bedienung'
-        OnClick = mnuHelpControlClick
-      end
-      object mnuHelpAbout: TMenuItem
-        Caption = 'Ueber mich'
-        OnClick = mnuHelpAboutClick
-      end
-    end
-    object mnuOptions: TMenuItem
-      Caption = 'Optionen'
-      object mnuOptionsPause: TMenuItem
-        Caption = 'Pause'
-        Checked = True
-        ShowAlwaysCheckable = True
-        OnClick = mnuOptionsPauseClick
-      end
-      object mnuOptionsSound: TMenuItem
-        Caption = 'Sound'
-        ShowAlwaysCheckable = True
-        OnClick = mnuOptionsSoundClick
-      end
-    end
-    object mnuEditor: TMenuItem
-      Caption = 'Editor'
-      object mnuEditorMode: TMenuItem
-        Caption = 'Editiermodus'
-        ShowAlwaysCheckable = True
-        OnClick = mnuEditorModeClick
-      end
-      object mnuEditorLoad: TMenuItem
-        Caption = 'Welt laden'
-        Enabled = False
-        OnClick = mnuEditorLoadClick
-      end
-      object mnuEditorSave: TMenuItem
-        Caption = 'Welt speichern'
-        Enabled = False
-        OnClick = mnuEditorSaveClick
-      end
     end
   end
   object ComputerPlayer: TTimer
@@ -280,21 +214,69 @@ object MainForm: TMainForm
     Left = 56
     Top = 368
   end
-  object PopupMenu1: TPopupMenu
-    Left = 608
-    Top = 184
-    object MenuItem1: TMenuItem
-      Caption = 'Spiel'
-      OnClick = MenuItem1Click
+  object mmMenu: TPopupMenu
+    Left = 56
+    Top = 112
+    object mmiSpiel: TMenuItem
+      Caption = 'Игра'
+      OnClick = mmiSpielClick
+      object mmiNeuesSpiel: TMenuItem
+        Caption = 'Новая игра'
+        OnClick = mmiNeuesSpielClick
+      end
+      object mmiSpielLaden: TMenuItem
+        Caption = 'Загрузить игру'
+        OnClick = mmiSpielLadenClick
+      end
+      object mmiSpielBeenden: TMenuItem
+        Caption = 'Выйти из игры'
+        OnClick = mmiSpielBeendenClick
+      end
     end
-    object MenuItem2: TMenuItem
-      Caption = 'Hilfe'
+    object mmiHilfe: TMenuItem
+      Caption = 'Помощь'
+      object mmiHelpDescription: TMenuItem
+        Caption = 'Описание игры'
+        OnClick = mmiHelpDescriptionClick
+      end
+      object mmiHelpControl: TMenuItem
+        Caption = 'Управление игрой'
+        OnClick = mmiHelpControlClick
+      end
+      object mmiHelpAbout: TMenuItem
+        Caption = 'Об игре'
+        OnClick = mmiHelpAboutClick
+      end
     end
-    object MenuItem3: TMenuItem
-      Caption = 'Optionen'
+    object mmiOptions: TMenuItem
+      Caption = 'Опции'
+      OnClick = mmiOptionsClick
+      object mmiOptionsPause: TMenuItem
+        Caption = 'Пауза'
+        Checked = True
+        OnClick = mmiOptionsPauseClick
+      end
+      object mmiOptionsSound: TMenuItem
+        Caption = 'Звук'
+        OnClick = mmiOptionsSoundClick
+      end
     end
-    object MenuItem4: TMenuItem
-      Caption = 'Editor'
+    object mmiEditor: TMenuItem
+      Caption = 'Редактор'
+      object mmiEditorMode: TMenuItem
+        Caption = 'Режим редактирования'
+        OnClick = mmiEditorModeClick
+      end
+      object mmiEditorLoad: TMenuItem
+        Caption = 'Загрузить мир'
+        Enabled = False
+        OnClick = mmiEditorLoadClick
+      end
+      object mmiEditorSave: TMenuItem
+        Caption = 'Спасти мир'
+        Enabled = False
+        OnClick = mmiEditorSaveClick
+      end
     end
   end
 end

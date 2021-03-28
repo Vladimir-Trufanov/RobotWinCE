@@ -71,33 +71,28 @@ type
     GamePanel: TPanel;
 		InfoPanel: TPanel;
 		KnapsackPanel: TPanel;
-		MenuItem1: TMenuItem;
-		MenuItem2: TMenuItem;
-		MenuItem3: TMenuItem;
-		MenuItem4: TMenuItem;
+		mmiEditorSave: TMenuItem;
+		mmiEditorLoad: TMenuItem;
+		mmiEditorMode: TMenuItem;
+		mmiOptionsSound: TMenuItem;
+		mmiOptionsPause: TMenuItem;
+		mmiHelpAbout: TMenuItem;
+		mmiHelpControl: TMenuItem;
+		mmiHelpDescription: TMenuItem;
+		mmiSpielBeenden: TMenuItem;
+		mmiSpielLaden: TMenuItem;
+		mmiNeuesSpiel: TMenuItem;
+		mmiSpiel: TMenuItem;
+		mmiHilfe: TMenuItem;
+		mmiOptions: TMenuItem;
+		mmiEditor: TMenuItem;
 		MessageBar: TLabel;
 		LifeLabel: TLabel;
-    mnuEditorSave: TMenuItem;
-    mnuEditorMode: TMenuItem;
-    mnuEditorLoad: TMenuItem;
-    mnuEditor: TMenuItem;
-    mnuOptionsPause: TMenuItem;
-    mnuOptionsSound: TMenuItem;
-    mnuOptions: TMenuItem;
-    mnuHelpAbout: TMenuItem;
-    mnuHelpControl: TMenuItem;
-    mnuHelp: TMenuItem;
-    mnuHelpDescription: TMenuItem;
-    MainMenu: TMainMenu;
-    mnuGameEnd: TMenuItem;
-    mnuGameLoad: TMenuItem;
-    mnuGameNew: TMenuItem;
-    mnuGame: TMenuItem;
     OpenGameDialog: TOpenDialog;
     OpenWorldDialog: TOpenDialog;
 		pnlOther: TPanel;
 		pnlMenu: TPanel;
-		PopupMenu1: TPopupMenu;
+		mmMenu: TPopupMenu;
     SaveGameDialog: TSaveDialog;
     SaveWorldDialog: TSaveDialog;
     ComputerPlayer: TTimer;
@@ -118,19 +113,20 @@ type
     procedure KnapsackPanelClick(Sender: TObject);
     procedure KnapsackPanelMouseDown(Sender: TOBject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
-		procedure MenuItem1Click(Sender: TObject);
+		procedure mmiEditorLoadClick(Sender: TObject);
+		procedure mmiEditorModeClick(Sender: TObject);
+		procedure mmiEditorSaveClick(Sender: TObject);
+		procedure mmiOptionsClick(Sender: TObject);
+		procedure mmiHelpAboutClick(Sender: TObject);
+		procedure mmiHelpControlClick(Sender: TObject);
+		procedure mmiHelpDescriptionClick(Sender: TObject);
+		procedure mmiNeuesSpielClick(Sender: TObject);
+		procedure mmiOptionsPauseClick(Sender: TObject);
+		procedure mmiOptionsSoundClick(Sender: TObject);
+		procedure mmiSpielBeendenClick(Sender: TObject);
+		procedure mmiSpielClick(Sender: TObject);
 		procedure MessageBarClick(Sender: TObject);
-    procedure mnuEditorLoadClick(Sender: TObject);
-    procedure mnuEditorModeClick(Sender: TObject);
-    procedure mnuEditorSaveClick(Sender: TObject);
-    procedure mnuGameEndClick(Sender: TObject);
-    procedure mnuGameLoadClick(Sender: TObject);
-    procedure mnuGameNewClick(Sender: TObject);
-    procedure mnuHelpAboutClick(Sender: TObject);
-    procedure mnuHelpControlClick(Sender: TObject);
-    procedure mnuHelpDescriptionClick(Sender: TObject);
-    procedure mnuOptionsPauseClick(Sender: TObject);
-    procedure mnuOptionsSoundClick(Sender: TObject);
+		procedure mmiSpielLadenClick(Sender: TObject);
   private
     { private declarations }
   public
@@ -576,17 +572,7 @@ begin
   end;
 end;
 
-procedure TMainForm.MenuItem1Click(Sender: TObject);
-begin
-
-end;
-
-procedure TMainForm.MessageBarClick(Sender: TObject);
-begin
-
-end;
-
-procedure TMainForm.mnuEditorLoadClick(Sender: TObject);
+procedure TMainForm.mmiEditorLoadClick(Sender: TObject);
 begin
   // TODO: own function ShowLoadWorldDialog
   if OpenWorldDialog.Execute() then
@@ -594,53 +580,50 @@ begin
     LoadWorld(OpenWorldDialog.FileName);
 end;
 
-procedure TMainForm.mnuEditorModeClick(Sender: TObject);
-var
-  i: Integer;
-begin
-  // TODO: SetEditorMode
-
-  MyEditorMode := not MyEditorMode;
-  mnuEditorMode.Checked := MyEditorMode;
-  
-  mnuEditorSave.Enabled := MyEditorMode;
-  mnuEditorLoad.Enabled := MyEditorMode;
-  
-  if MyEditorMode = true then
+procedure TMainForm.mmiEditorModeClick(Sender: TObject);
+  var
+    i: Integer;
   begin
-    // load everything into MyEditorKnapsack
-    // TODO: dynamic loading of dir content
-    MyEditorKnapsack[1].PicIndex := GetPictureCacheIndex('hinter.bmp');
-    MyEditorKnapsack[5].PicIndex := GetPictureCacheIndex('aetz.bmp');
-    MyEditorKnapsack[6].PicIndex := GetPictureCacheIndex('leben.bmp');
-    MyEditorKnapsack[7].PicIndex := GetPictureCacheIndex('speicher.bmp');
-    MyEditorKnapsack[8].PicIndex := GetPictureCacheIndex('kill.bmp');
-    MyEditorKnapsack[9].PicIndex := GetPictureCacheIndex('figur.bmp');
-    MyEditorKnapsack[10].PicIndex := GetPictureCacheIndex('konig.bmp');
-    for i := 1 to 9 do
+    MyEditorMode := not MyEditorMode;
+    mmiEditorMode.Checked := MyEditorMode;
+    mmiEditorSave.Enabled := MyEditorMode;
+    mmiEditorLoad.Enabled := MyEditorMode;
+    if MyEditorMode = true then
     begin
-      MyEditorKnapsack[i+10].PicIndex := GetPictureCacheIndex('robot' + IntToStr(i) + '.bmp');
-      MyEditorKnapsack[i+20].PicIndex := GetPictureCacheIndex('schl' + IntToStr(i) + '.bmp');
-      MyEditorKnapsack[i+30].PicIndex := GetPictureCacheIndex('tuer' + IntToStr(i) + '.bmp');
-    end;
-    for i := 1 to 3 do
-    begin
-      MyEditorKnapsack[i+1].PicIndex := GetPictureCacheIndex('wand' + IntToStr(i) + '.bmp');
-      MyEditorKnapsack[i+40].PicIndex := GetPictureCacheIndex('diamant' + IntToStr(i) + '.bmp');
-      MyEditorKnapsack[i+43].PicIndex := GetPictureCacheIndex('code' + IntToStr(i) + '.bmp');
-      MyEditorKnapsack[i+46].PicIndex := GetPictureCacheIndex('punkt' + IntToStr(i) + '.bmp');
-    end;
-    MyEditorKnapsack[50].PicIndex := GetPictureCacheIndex('punkt4.bmp');
-    MyEditorKnapsack[40].PicIndex := GetPictureCacheIndex('punkt5.bmp');
-  end
-  else // MyEditorMode = false
-    SetPauseState(true);
+      // load everything into MyEditorKnapsack
+      // TODO: dynamic loading of dir content
+      MyEditorKnapsack[1].PicIndex := GetPictureCacheIndex('hinter.bmp');
+      MyEditorKnapsack[5].PicIndex := GetPictureCacheIndex('aetz.bmp');
+      MyEditorKnapsack[6].PicIndex := GetPictureCacheIndex('leben.bmp');
+      MyEditorKnapsack[7].PicIndex := GetPictureCacheIndex('speicher.bmp');
+      MyEditorKnapsack[8].PicIndex := GetPictureCacheIndex('kill.bmp');
+      MyEditorKnapsack[9].PicIndex := GetPictureCacheIndex('figur.bmp');
+      MyEditorKnapsack[10].PicIndex := GetPictureCacheIndex('konig.bmp');
+      for i := 1 to 9 do
+      begin
+        MyEditorKnapsack[i+10].PicIndex := GetPictureCacheIndex('robot' + IntToStr(i) + '.bmp');
+        MyEditorKnapsack[i+20].PicIndex := GetPictureCacheIndex('schl' + IntToStr(i) + '.bmp');
+        MyEditorKnapsack[i+30].PicIndex := GetPictureCacheIndex('tuer' + IntToStr(i) + '.bmp');
+      end;
+      for i := 1 to 3 do
+      begin
+        MyEditorKnapsack[i+1].PicIndex := GetPictureCacheIndex('wand' + IntToStr(i) + '.bmp');
+        MyEditorKnapsack[i+40].PicIndex := GetPictureCacheIndex('diamant' + IntToStr(i) + '.bmp');
+        MyEditorKnapsack[i+43].PicIndex := GetPictureCacheIndex('code' + IntToStr(i) + '.bmp');
+        MyEditorKnapsack[i+46].PicIndex := GetPictureCacheIndex('punkt' + IntToStr(i) + '.bmp');
+      end;
+      MyEditorKnapsack[50].PicIndex := GetPictureCacheIndex('punkt4.bmp');
+      MyEditorKnapsack[40].PicIndex := GetPictureCacheIndex('punkt5.bmp');
+    end
+    else // MyEditorMode = false
+      SetPauseState(true);
 
-  DrawRoom();
-  DrawKnapsack();
+    DrawRoom();
+    DrawKnapsack();
+
 end;
 
-procedure TMainForm.mnuEditorSaveClick(Sender: TObject);
+procedure TMainForm.mmiEditorSaveClick(Sender: TObject);
 begin
   // TODO: own function ShowSaveWorldDialog
   if SaveWorldDialog.Execute() then
@@ -649,26 +632,17 @@ begin
     SaveWorld(SaveWorldDialog.FileName);
     ShowMessage('Gespeichert.');
   end;
+
 end;
 
-procedure TMainForm.mnuGameEndClick(Sender: TObject);
+procedure TMainForm.mmiOptionsClick(Sender: TObject);
 begin
-  MainForm.Close();
+
 end;
 
-procedure TMainForm.mnuGameLoadClick(Sender: TObject);
+procedure TMainForm.mmiHelpAboutClick(Sender: TObject);
 begin
-  ShowLoadGameDialog();
-end;
-
-procedure TMainForm.mnuGameNewClick(Sender: TObject);
-begin
-  RestartGame();
-end;
-
-procedure TMainForm.mnuHelpAboutClick(Sender: TObject);
-begin
-  ShowMessage(
+    ShowMessage(
               'Ich wurde programmiert von mir, Albert Zeyer.' + LineEnding +
               LineEnding +
               'Updates und weitere Informationen zu mir:' + LineEnding +
@@ -678,9 +652,9 @@ begin
               );
 end;
 
-procedure TMainForm.mnuHelpControlClick(Sender: TObject);
+procedure TMainForm.mmiHelpControlClick(Sender: TObject);
 begin
-  ShowMessage(
+    ShowMessage(
               'Mit den Pfeiltasten gibst du deinem Kцrper die Anweisung, ' +
               'in die entsprechende Richtung zu gehen. Dieser sammelt dabei ' +
               'automatisch aufsammelbare Gegenstдnde auf (vorausgesetzt, es ' +
@@ -699,7 +673,7 @@ begin
               );
 end;
 
-procedure TMainForm.mnuHelpDescriptionClick(Sender: TObject);
+procedure TMainForm.mmiHelpDescriptionClick(Sender: TObject);
 begin
   ShowMessage(
               'In diesem Spiel geht es darum, das Spiel durchzuspielen und ' +
@@ -723,18 +697,41 @@ begin
               );
 end;
 
-procedure TMainForm.mnuOptionsPauseClick(Sender: TObject);
+procedure TMainForm.mmiNeuesSpielClick(Sender: TObject);
 begin
-  SetPauseState(not mnuOptionsPause.Checked);
+  RestartGame();
 end;
 
-procedure TMainForm.mnuOptionsSoundClick(Sender: TObject);
+procedure TMainForm.mmiOptionsPauseClick(Sender: TObject);
 begin
-  // TODO: SetSoundState procedure
+  SetPauseState(not mmiOptionsPause.Checked);
+end;
+
+procedure TMainForm.mmiOptionsSoundClick(Sender: TObject);
+begin
   MySoundState := not MySoundState;
-  mnuOptionsSound.Checked := MySoundState;
+  mmiOptionsSound.Checked := MySoundState;
 end;
 
+procedure TMainForm.mmiSpielBeendenClick(Sender: TObject);
+begin
+  MainForm.Close();
+end;
+
+procedure TMainForm.mmiSpielClick(Sender: TObject);
+begin
+
+end;
+
+procedure TMainForm.MessageBarClick(Sender: TObject);
+begin
+
+end;
+
+procedure TMainForm.mmiSpielLadenClick(Sender: TObject);
+begin
+  ShowLoadGameDialog();
+end;
 
 // ----------------------------------------------------------------------------
 //                                                      gameplay - ведение игры
@@ -1757,7 +1754,7 @@ begin
   if (s <> MyPauseState) then
   begin
     MyPauseState := s;
-    mnuOptionsPause.Checked := s;
+    mmiOptionsPause.Checked := s;
     DrawRoom();
   end;
 end;
