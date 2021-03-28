@@ -69,7 +69,7 @@ type
 				DiamondsLabel: TLabel;
     GamePanel: TPanel;
 		InfoPanel: TPanel;
-		KnapsackPanel: TPanel;
+		KnapsackPanel1: TPanel;
 		mmiEditorSave: TMenuItem;
 		mmiEditorLoad: TMenuItem;
 		mmiEditorMode: TMenuItem;
@@ -89,6 +89,7 @@ type
 		LifeLabel: TLabel;
     OpenGameDialog: TOpenDialog;
     OpenWorldDialog: TOpenDialog;
+		KnapsackPanel: TPanel;
 		pnlLead: TPanel;
 		mmMenu: TPopupMenu;
     SaveGameDialog: TSaveDialog;
@@ -108,8 +109,10 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure GamePanelMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
+		procedure GamePanelPaint(Sender: TObject);
 		procedure InfoPanelClick(Sender: TObject);
-    procedure KnapsackPanelMouseDown(Sender: TOBject; Button: TMouseButton;
+		procedure KnapsackPanel1Click(Sender: TObject);
+    procedure KnapsackPanel1MouseDown(Sender: TOBject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
 		procedure mmiEditorLoadClick(Sender: TObject);
 		procedure mmiEditorModeClick(Sender: TObject);
@@ -123,6 +126,7 @@ type
 		procedure mmiOptionsSoundClick(Sender: TObject);
 		procedure mmiSpielBeendenClick(Sender: TObject);
 		procedure mmiSpielLadenClick(Sender: TObject);
+		procedure KnapsackPanelClick(Sender: TObject);
   private
     { private declarations }
   public
@@ -163,6 +167,7 @@ type
     MyEditorMode: boolean; // true  -> игра в режиме редактирования
 
     // gameplay
+    procedure proba();
     function MoveToRoom(dir: TMoveDirection): boolean; // goto next room; return true, if succ
     function MoveToRoom(rnum: TRoomNum): boolean;      // перейти в указанную комнату
     procedure MoveToPlace(dir: TMoveDirection); // move player
@@ -178,7 +183,7 @@ type
     procedure ResetKnapsack(); // опустошить рюкзак (заполнить изображениями фона)
     procedure ResetWorld();
     procedure DrawRoom();         // updates MyRoomPic and GamePanel
-    procedure DrawKnapsack(); // updates MyKnapsackPic and KnapsackPanel
+    procedure DrawKnapsack(); // updates MyKnapsackPic and KnapsackPanel1
     procedure DrawInfo(); // updates InfoPanel
     procedure ShowMsg(msg: string); // printed on MessageBar
     procedure ShowMsg(msgs: array of string); // like ShowMsg; select randomly a msg
@@ -318,6 +323,52 @@ end;
 
 { TMainForm }
 
+procedure TMainForm.proba();
+var
+  x,y: integer;
+  ps: string;
+
+  w, h: Integer;    // Ширина и высота прямоугольника
+  cx, cy: Integer;  // центр формы
+  R: TRect;         // запись, содержащая координаты левого, верхнего, правого, нижнего углов прямоугольника
+begin
+  with GamePanel do begin
+   // Высчитываем центр формы
+   cx := Width div 2;
+   cy := Height div 2;
+
+   // Рассчитываем размер прямоугольника
+   w := Width div 2;
+   h := Height div 2;
+
+   // Рассчитываем углы прямоугольника
+   R.Left := cx - w div 2;
+   R.Top := cy - h div 2;
+   R.Right := cx + w div 2;
+   R.Bottom := cy + h div 2;
+
+   // Устанавливаем цвет заливки
+   Canvas.Brush.Color := clRed;
+   Canvas.Brush.Style := bsSolid;
+
+   // Устанавливаем цвет границы
+   Canvas.Pen.Color := clBlue;
+   Canvas.Pen.Width := 5;
+   Canvas.Pen.Style := psSolid;
+
+   // Рисуем прямоугольник
+   Canvas.Rectangle(R);
+
+
+   ps := 'Пауза';
+   Canvas.Font := MainForm.Font;
+   x := (ClientWidth - Canvas.TextWidth(ps)) div 2;
+   y := (ClientHeight - Canvas.TextHeight(ps)) div 2;
+   Canvas.TextOut(x,y,ps);
+
+   end;
+end;
+
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
   nEntry:=0;
@@ -348,13 +399,15 @@ begin
   LifeLabel.Font := MainForm.Font;
   ScoresLabel.Font := MainForm.Font;
   DiamondsLabel.Font := MainForm.Font;
+  {
   // Иициируем игру
   InitGame();
   //
   GamePanel.OnPaint := @FormPaint;
-  KnapsackPanel.OnPaint := @FormPaint;
+  KnapsackPanel1.OnPaint := @FormPaint;
   // Инициируем начальное построение элементов формы
   FormResize(MainForm);
+  }
 end;
 
 procedure TMainForm.FormDblClick(Sender: TObject);
@@ -424,12 +477,13 @@ end;
 procedure TMainForm.FormClick(Sender: TObject);
 begin
   Color:=clAqua;
-  FormDblClick(Self);
+  //proba();
+  //FormDblClick(Self);
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
-  UnInitGame();
+  //UnInitGame();
 end;
 
 procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word;
@@ -503,8 +557,8 @@ end;
 
 procedure TMainForm.FormPaint(Sender: TObject);
 begin
-  DrawRoom();
-  DrawKnapsack();
+  //DrawRoom();
+  //DrawKnapsack();
 end;
 
 procedure TMainForm.FormResize(Sender: TObject);
@@ -586,20 +640,32 @@ begin
   GamePanelMouseDown(Sender, Button, Shift, X, Y);
 end;
 
-procedure TMainForm.InfoPanelClick(Sender: TObject);
+procedure TMainForm.GamePanelPaint(Sender: TObject);
 begin
-  ShowMessage('Привет!');
+  caption:='GamePanelPaint запустилась!';
+  //proba();
 end;
 
-procedure TMainForm.KnapsackPanelMouseDown(Sender: TOBject;
+procedure TMainForm.InfoPanelClick(Sender: TObject);
+begin
+    proba();
+end;
+
+procedure TMainForm.KnapsackPanel1Click(Sender: TObject);
+begin
+  proba();
+end;
+
+procedure TMainForm.KnapsackPanel1MouseDown(Sender: TOBject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 var
   kx,ky: Integer;
   w,h: Integer;
 begin
+  {
   // TODO: own procedure for selection
-  w := KnapsackPanel.ClientWidth div KNAPSACK_WIDTH;
-  h := KnapsackPanel.ClientHeight div KNAPSACK_HEIGHT;
+  w := KnapsackPanel1.ClientWidth div KNAPSACK_WIDTH;
+  h := KnapsackPanel1.ClientHeight div KNAPSACK_HEIGHT;
   kx := X div w + 1;
   ky := Y div h + 1;
   if (kx >= 1) and (kx <= KNAPSACK_WIDTH)
@@ -608,6 +674,7 @@ begin
     MyKnapsackSelection := (ky-1)*KNAPSACK_WIDTH + kx;
     DrawKnapsack();
   end;
+  }
 end;
 
 procedure TMainForm.mmiEditorLoadClick(Sender: TObject);
@@ -759,6 +826,12 @@ end;
 procedure TMainForm.mmiSpielLadenClick(Sender: TObject);
 begin
   ShowLoadGameDialog();
+end;
+
+procedure TMainForm.KnapsackPanelClick(Sender: TObject);
+begin
+  ShowMessage('Привет!');
+  //proba();
 end;
 
 // ----------------------------------------------------------------------------
@@ -1721,11 +1794,11 @@ begin
     end;
   end;
   
-  // draw the hole area to screen (to the KnapsackPanel)
-  w := KnapsackPanel.ClientWidth div KNAPSACK_WIDTH;
-  h := KnapsackPanel.ClientHeight div KNAPSACK_HEIGHT;
+  // draw the hole area to screen (to the KnapsackPanel1)
+  w := KnapsackPanel1.ClientWidth div KNAPSACK_WIDTH;
+  h := KnapsackPanel1.ClientHeight div KNAPSACK_HEIGHT;
   CopyRect(
-           KnapsackPanel.Canvas,
+           KnapsackPanel1.Canvas,
            Rect(0,0,w*KNAPSACK_WIDTH,h*KNAPSACK_HEIGHT),
            MyKnapsackPic.Picture.Canvas,
            Rect(0,0,MyKnapsackPic.Picture.Width,MyKnapsackPic.Picture.Height)
@@ -1734,11 +1807,11 @@ begin
   // draw selection
   x := (MyKnapsackSelection-1) mod KNAPSACK_WIDTH;
   y := (MyKnapsackSelection-1) div KNAPSACK_WIDTH;
-  //KnapsackPanel.Canvas.Color := clBlack;
-  KnapsackPanel.Canvas.Line(x*w,y*h,x*w,(y+1)*h-1);
-  KnapsackPanel.Canvas.Line(x*w,y*h,(x+1)*w-1,y*h);
-  KnapsackPanel.Canvas.Line((x+1)*w-1,y*h,(x+1)*w-1,(y+1)*h-1);
-  KnapsackPanel.Canvas.Line(x*w,(y+1)*h-1,(x+1)*w-1,(y+1)*h-1);
+  //KnapsackPanel1.Canvas.Color := clBlack;
+  KnapsackPanel1.Canvas.Line(x*w,y*h,x*w,(y+1)*h-1);
+  KnapsackPanel1.Canvas.Line(x*w,y*h,(x+1)*w-1,y*h);
+  KnapsackPanel1.Canvas.Line((x+1)*w-1,y*h,(x+1)*w-1,(y+1)*h-1);
+  KnapsackPanel1.Canvas.Line(x*w,(y+1)*h-1,(x+1)*w-1,(y+1)*h-1);
   
   // draw focus
   // TODO

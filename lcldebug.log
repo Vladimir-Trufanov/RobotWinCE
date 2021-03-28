@@ -39,3 +39,6 @@ WARNING: TButton.Destroy with LCLRefCount>0. Hint: Maybe the component is proces
   $00035F58
   $0003D588
 WARNING: TPanel.Destroy with LCLRefCount>0. Hint: Maybe the component is processing an event?
+WARNING: TPanel.Destroy with LCLRefCount>0. Hint: Maybe the component is processing an event?
+WARNING: TPanel.Destroy with LCLRefCount>0. Hint: Maybe the component is processing an event?
+WARNING: TPanel.Destroy with LCLRefCount>0. Hint: Maybe the component is processing an event?

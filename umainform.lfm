@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 585
+  Left = 596
   Height = 456
-  Top = 125
+  Top = 28
   Width = 794
   HorzScrollBar.Page = 387
   VertScrollBar.Page = 474
@@ -45,6 +45,7 @@ object MainForm: TMainForm
     TabOrder = 0
     OnMouseDown = GamePanelMouseDown
     OnMouseMove = GamePanelMouseMove
+    OnPaint = GamePanelPaint
   end
   object pnlLead: TPanel
     Left = 456
@@ -75,9 +76,9 @@ object MainForm: TMainForm
       Transparent = False
     end
     object InfoPanel: TPanel
-      Left = 56
+      Left = 104
       Height = 126
-      Top = 48
+      Top = 8
       Width = 216
       Anchors = [akTop, akRight]
       BevelOuter = bvNone
@@ -93,14 +94,14 @@ object MainForm: TMainForm
       TabOrder = 0
       OnClick = InfoPanelClick
       object LifeLabel: TLabel
-        Left = 112
+        Left = 92
         Height = 28
         Hint = 'Anzahl verbleibender Leben bis zum Tod (GameOver)'
         Top = 10
-        Width = 98
+        Width = 118
         Alignment = taRightJustify
         Anchors = [akTop, akRight]
-        Caption = 'Leben: 0'
+        Caption = 'Жизней: 0'
         Font.CharSet = ANSI_CHARSET
         Font.Height = 30
         Font.Name = '-adobe-helvetica-medium-r-normal-*-*-*-*-*-*-*-iso8859-15'
@@ -111,14 +112,14 @@ object MainForm: TMainForm
         ShowHint = True
       end
       object ScoresLabel: TLabel
-        Left = 103
+        Left = 112
         Height = 28
         Hint = 'Anzahl Punkte'
         Top = 50
-        Width = 107
+        Width = 98
         Alignment = taRightJustify
         Anchors = [akTop, akRight]
-        Caption = 'Punkte: 0'
+        Caption = 'Очков: 0'
         Font.CharSet = ANSI_CHARSET
         Font.Height = 30
         Font.Name = '-adobe-helvetica-medium-r-normal-*-*-*-*-*-*-*-iso8859-15'
@@ -129,14 +130,14 @@ object MainForm: TMainForm
         ShowHint = True
       end
       object DiamondsLabel: TLabel
-        Left = 59
+        Left = 28
         Height = 28
         Hint = 'Anzahl gesetzter Diamanten (von 3)'
         Top = 89
-        Width = 151
+        Width = 182
         Alignment = taRightJustify
         Anchors = [akTop, akRight]
-        Caption = 'Diamanten: 0'
+        Caption = 'Бриллиантов: 0'
         Font.CharSet = ANSI_CHARSET
         Font.Height = 30
         Font.Name = '-adobe-helvetica-medium-r-normal-*-*-*-*-*-*-*-iso8859-15'
@@ -147,10 +148,10 @@ object MainForm: TMainForm
         ShowHint = True
       end
     end
-    object KnapsackPanel: TPanel
-      Left = 16
+    object KnapsackPanel1: TPanel
+      Left = 24
       Height = 155
-      Top = 224
+      Top = 256
       Width = 294
       Anchors = [akTop, akRight]
       BevelOuter = bvNone
@@ -162,7 +163,19 @@ object MainForm: TMainForm
       ParentColor = False
       ParentFont = False
       TabOrder = 1
-      OnMouseDown = KnapsackPanelMouseDown
+      OnClick = KnapsackPanel1Click
+      OnMouseDown = KnapsackPanel1MouseDown
+    end
+    object KnapsackPanel: TPanel
+      Left = 104
+      Height = 63
+      Top = 160
+      Width = 213
+      BevelOuter = bvNone
+      Color = clOlive
+      ParentColor = False
+      TabOrder = 2
+      OnClick = KnapsackPanelClick
     end
   end
   object ComputerPlayer: TTimer
