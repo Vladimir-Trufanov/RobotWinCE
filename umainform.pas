@@ -90,7 +90,7 @@ type
 		LifeLabel: TLabel;
     OpenGameDialog: TOpenDialog;
     OpenWorldDialog: TOpenDialog;
-		pnlOther: TPanel;
+		pnlLead: TPanel;
 		mmMenu: TPopupMenu;
     SaveGameDialog: TSaveDialog;
     SaveWorldDialog: TSaveDialog;
@@ -320,6 +320,22 @@ end;
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
   nEntry:=0;
+  // Выстраиваем форму и ее элементы в начальных условиях
+  Width:=794;
+  Height:=456;
+  // Выстраиваем квадрат игровой панели
+  GamePanel.Top:=8;
+  GamePanel.Left:=8;
+  GamePanel.Width:=440;
+  GamePanel.Height:=440;
+  // Выстраиваем информационную панель управления
+  pnlLead.Top:=8;
+  pnlLead.Left:=GamePanel.Top+GamePanel.Top+GamePanel.Width;
+  pnlLead.Width:=Width-GamePanel.Top-GamePanel.Top-GamePanel.Top-GamePanel.Width;
+  pnlLead.Height:=GamePanel.Height;
+
+
+  {
   // Выполняем настройки формы
   // ! Anchors=[akTop,akLeft] - привязываемся к левому-верхнему углу экрана
   // ! BiDiMode=bdLeftToRight - обычное чтение слева-направо
@@ -331,6 +347,7 @@ begin
   Position:=poDefaultPosOnly;  // Windows определяет начальную позицию формы,
                                // ее размеры не изменяются
   //Width:=485;
+  }
   // Иициируем игру
   InitGame();
   // Устанавливаем фонты сообщений по жизням, игровым очкам, найденным алмазам
@@ -357,7 +374,15 @@ var
   nCYCAP: integer;
 
 begin
+  ShowMessage(
+    'TopLeft: '+IntToStr(Top)+'x'+IntToStr(Left)+LineEnding+
+    'WidthHeight: '+IntToStr(Width)+'x'+IntToStr(Height)+LineEnding+
 
+    'GamePanel: Top='+IntToStr(GamePanel.Top)+', Left='+IntToStr(GamePanel.Left)+
+    ', Width='+IntToStr(GamePanel.Width)+', Height='+IntToStr(GamePanel.Height)+LineEnding
+  );
+
+    {
 
   nWidth:=GetSystemMetrics(SM_CXSCREEN);
   nHeight:=GetSystemMetrics(SM_CYSCREEN);
@@ -379,6 +404,7 @@ begin
   nCYCAP:=GetSystemMetrics(SM_CYCAPTION);
   caption:=caption+'CYCAP: '+IntToStr(nCYCAP)+'  ';
 
+
   GamePanel.Height:=630;
   GamePanel.Width:=GamePanel.Height;
   ResetRoomPic();
@@ -388,6 +414,7 @@ begin
   gpWidth:=GamePanel.Width;
   gpHeight:=GamePanel.Height;
   ShowMessage(IntToStr(gpWidth)+' '+IntToStr(gpHeight));
+  }
 end;
 
 procedure TMainForm.ComputerPlayerTimer(Sender: TObject);
@@ -477,12 +504,17 @@ end;
 
 procedure TMainForm.FormResize(Sender: TObject);
 begin
-  {
-  GamePanel.Width:=GamePanel.Height;
+  //GamePanel.Width:=GamePanel.Height;
+
+  // Выстраиваем информационную панель управления
+  pnlLead.Left:=GamePanel.Top+GamePanel.Top+GamePanel.Width;
+  pnlLead.Width:=Width-GamePanel.Top-GamePanel.Top-GamePanel.Top-GamePanel.Width;
+  pnlLead.Height:=GamePanel.Height;
+
+
   ResetRoomPic();
   ResetPictureResizedCache();
   DrawRoom();
-  }
 end;
 
 procedure TMainForm.GamePanelMouseDown(Sender: TOBject; Button: TMouseButton;
