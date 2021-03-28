@@ -5,7 +5,6 @@ object MainForm: TMainForm
   Width = 794
   HorzScrollBar.Page = 387
   VertScrollBar.Page = 474
-  BorderStyle = bsSingle
   Caption = 'Robot WinCE 1.8'
   ClientHeight = 456
   ClientWidth = 794
@@ -16,6 +15,7 @@ object MainForm: TMainForm
   Font.Name = '-adobe-helvetica-medium-r-normal-*-*-*-*-*-*-*-iso8859-15'
   Font.Pitch = fpVariable
   KeyPreview = True
+  OnClick = FormClick
   OnCreate = FormCreate
   OnDblClick = FormDblClick
   OnDestroy = FormDestroy
@@ -91,6 +91,7 @@ object MainForm: TMainForm
       ParentColor = False
       ParentFont = False
       TabOrder = 0
+      OnClick = InfoPanelClick
       object LifeLabel: TLabel
         Left = 112
         Height = 28

@@ -19,3 +19,23 @@
   $0003D588
 WARNING: TButton.Destroy with LCLRefCount>0. Hint: Maybe the component is processing an event?
 WARNING: TButton.Destroy with LCLRefCount>0. Hint: Maybe the component is processing an event?
+[FORMS.PP] ExceptionOccurred 
+  Sender=EAccessViolation
+  Exception=Access violation
+  Stack trace:
+  $0004139C
+  $000417B8
+  $00041BC4
+  $0003FF14
+  $00171A58
+  $0002CDC8
+  $00177A28
+  $0017573C
+  $00175590
+  $00162BD8
+  $0017C520
+  $000307B8
+  $0002E2C8
+  $00035F58
+  $0003D588
+WARNING: TPanel.Destroy with LCLRefCount>0. Hint: Maybe the component is processing an event?

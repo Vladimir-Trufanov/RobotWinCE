@@ -3,7 +3,7 @@
   <CompilerOptions>
     <Version Value="11"/>
     <Target>
-      <Filename Value="robot"/>
+      <Filename Value="RobotWin32"/>
     </Target>
     <SearchPaths>
       <SrcPath Value="$(LazarusDir)/lcl;$(LazarusDir)/lcl/interfaces/$(LCLWidgetType)"/>
@@ -19,6 +19,9 @@
           <GraphicApplication Value="True"/>
         </Win32>
       </Options>
+      <Debugging>
+        <UseHeaptrc Value="True"/>
+      </Debugging>
     </Linking>
     <Other>
       <Verbosity>

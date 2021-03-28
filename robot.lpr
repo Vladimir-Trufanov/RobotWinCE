@@ -9,7 +9,7 @@ uses
   uMainForm, RobotUtils, ActionsLife, RobotTypes;
 
 begin
-	Application.Title:='Robot';
+			Application.Title:='Robot';
   Application.Initialize;
   Application.CreateForm(TMainForm, MainForm);
   Application.Run;

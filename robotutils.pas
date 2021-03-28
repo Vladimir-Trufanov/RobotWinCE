@@ -16,10 +16,11 @@ interface
 
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  Buttons, GraphType, Crt, StrUtils, StdCtrls, ComCtrls, Menus, LCLType
+  Buttons, GraphType, StrUtils, StdCtrls, ComCtrls, Menus, LCLType
 {$IFDEF win32}
   ,MMSystem
 {$ENDIF}
+  // ,Crt
   ;
   {
   LResources,

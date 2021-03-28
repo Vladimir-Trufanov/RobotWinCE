@@ -6,11 +6,10 @@ interface
 
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  Buttons, GraphType, Crt, StrUtils, StdCtrls, ComCtrls, Menus, LCLType, LCLIntf
-
+  Buttons, GraphType, StrUtils, StdCtrls, ComCtrls, Menus, LCLType, LCLIntf
   {$IFDEF win32}
-  ,MMSystem
-{$ENDIF}
+  ,MMSystem,Crt
+  {$ENDIF}
   ,RobotTypes,ActionsLife,RobotUtils
   ;
   
@@ -98,6 +97,7 @@ type
 		ScoresLabel: TLabel;
     // event handlers
     procedure ComputerPlayerTimer(Sender: TObject);
+		procedure FormClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
 		procedure FormDblClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -108,6 +108,7 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure GamePanelMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
+		procedure InfoPanelClick(Sender: TObject);
     procedure KnapsackPanelMouseDown(Sender: TOBject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
 		procedure mmiEditorLoadClick(Sender: TObject);
@@ -287,7 +288,7 @@ var
   fname:string;
 begin
   fname:='nn';
-  sndPlaySound(PChar(fname), SND_NODEFAULT Or SND_ASYNC);
+  // sndPlaySound(PChar(fname), SND_NODEFAULT Or SND_ASYNC);
 
   Player.PicIndex := picindex;
   Player.Pos := pos;
@@ -320,6 +321,13 @@ end;
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
   nEntry:=0;
+  {$IFDEF wince}
+    Top:=0; Left:=0;
+    BorderIcons:=[biSystemMenu];
+    WindowState:=wsFullScreen;
+  {$ELSE}
+    Top:=32; Left:=32;
+  {$ENDIF}
   // Выстраиваем форму и ее элементы в начальных условиях
   Width:=794;
   Height:=456;
@@ -334,26 +342,14 @@ begin
   pnlLead.Width:=Width-GamePanel.Top-GamePanel.Top-GamePanel.Top-GamePanel.Width;
   pnlLead.Height:=GamePanel.Height;
 
-
-  {
-  // Выполняем настройки формы
-  // ! Anchors=[akTop,akLeft] - привязываемся к левому-верхнему углу экрана
-  // ! BiDiMode=bdLeftToRight - обычное чтение слева-направо
-  //BorderStyle:=bsSizeable; // установили обычное окно Windows
-  // ! DesignTimePPI:=120; // через DPI изменили размер элементов???
-  //Height:=618;             // высота формы от строки заголовка до нижней границы
-  //KeyPreview:=true;        // обеспечили приход на форму всех событий от клавиш
-  //Left:=636;               // расстояние от левой границы рабочего стола
-  Position:=poDefaultPosOnly;  // Windows определяет начальную позицию формы,
-                               // ее размеры не изменяются
-  //Width:=485;
-  }
-  // Иициируем игру
-  InitGame();
+  KeyPreview:=true;        // обеспечили приход на форму всех событий от клавиш
+  BorderStyle:=bsSizeable; // установили обычное окно Windows
   // Устанавливаем фонты сообщений по жизням, игровым очкам, найденным алмазам
   LifeLabel.Font := MainForm.Font;
   ScoresLabel.Font := MainForm.Font;
   DiamondsLabel.Font := MainForm.Font;
+  // Иициируем игру
+  InitGame();
   //
   GamePanel.OnPaint := @FormPaint;
   KnapsackPanel.OnPaint := @FormPaint;
@@ -374,6 +370,9 @@ var
   nCYCAP: integer;
 
 begin
+  Color:=clRed;
+
+
   ShowMessage(
     'TopLeft: '+IntToStr(Top)+'x'+IntToStr(Left)+LineEnding+
     'WidthHeight: '+IntToStr(Width)+'x'+IntToStr(Height)+LineEnding+
@@ -420,6 +419,12 @@ end;
 procedure TMainForm.ComputerPlayerTimer(Sender: TObject);
 begin
   //ControlComputerPlayers();
+end;
+
+procedure TMainForm.FormClick(Sender: TObject);
+begin
+  Color:=clAqua;
+  FormDblClick(Self);
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
@@ -506,6 +511,7 @@ procedure TMainForm.FormResize(Sender: TObject);
 begin
   //GamePanel.Width:=GamePanel.Height;
 
+  {
   // Выстраиваем информационную панель управления
   pnlLead.Left:=GamePanel.Top+GamePanel.Top+GamePanel.Width;
   pnlLead.Width:=Width-GamePanel.Top-GamePanel.Top-GamePanel.Top-GamePanel.Width;
@@ -515,6 +521,7 @@ begin
   ResetRoomPic();
   ResetPictureResizedCache();
   DrawRoom();
+  }
 end;
 
 procedure TMainForm.GamePanelMouseDown(Sender: TOBject; Button: TMouseButton;
@@ -577,6 +584,11 @@ begin
   else
     exit;
   GamePanelMouseDown(Sender, Button, Shift, X, Y);
+end;
+
+procedure TMainForm.InfoPanelClick(Sender: TObject);
+begin
+  ShowMessage('Привет!');
 end;
 
 procedure TMainForm.KnapsackPanelMouseDown(Sender: TOBject;
@@ -1441,11 +1453,21 @@ end;
 procedure TMainForm.ResetKnapsack();
 var
   i: Integer;
+  tmp: TBitmap;
 begin
+  //caption:=BACKGROUND_PIC;
+  //
+  //tmp := TBitmap.Create();
+  //tmp.LoadFromFile(BACKGROUND_PIC);
+  //tmp.LoadFromFile('dva.bmp');
+
+
+
   for i := 1 to KNAPSACK_WIDTH*KNAPSACK_HEIGHT do
   begin
     MyKnapsack[i].PicIndex := GetPictureCacheIndex(BACKGROUND_PIC);
   end;
+
 end;
 // ****************************************************************************
 // *     Определить индекс элемента изображения в кэше по заданной позиции    *
