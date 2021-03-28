@@ -1,15 +1,15 @@
 object MainForm: TMainForm
-  Left = 477
-  Height = 592
-  Top = 129
+  Left = 536
+  Height = 650
+  Top = 74
   Width = 1038
   HorzScrollBar.Page = 387
   VertScrollBar.Page = 474
   AutoSize = True
   Caption = 'Robot WinCE 1.8'
-  ClientHeight = 592
+  ClientHeight = 650
   ClientWidth = 1038
-  Color = clWhite
+  Color = clYellow
   DesignTimePPI = 120
   Font.CharSet = ANSI_CHARSET
   Font.Height = 30
@@ -28,9 +28,9 @@ object MainForm: TMainForm
   Visible = True
   object GamePanel: TPanel
     Left = 0
-    Height = 569
-    Top = 0
-    Width = 516
+    Height = 600
+    Top = 25
+    Width = 600
     Anchors = [akTop, akLeft, akBottom]
     BevelOuter = bvNone
     Color = clSilver
@@ -41,26 +41,25 @@ object MainForm: TMainForm
     ParentColor = False
     ParentFont = False
     TabOrder = 0
-    OnClick = GamePanelClick
     OnMouseDown = GamePanelMouseDown
     OnMouseMove = GamePanelMouseMove
   end
   object pnlOther: TPanel
-    Left = 560
-    Height = 559
-    Top = 8
-    Width = 464
+    Left = 640
+    Height = 617
+    Top = 0
+    Width = 392
     Anchors = [akTop, akRight, akBottom]
-    ClientHeight = 559
-    ClientWidth = 464
+    ClientHeight = 617
+    ClientWidth = 392
     Color = clSkyBlue
     ParentColor = False
     TabOrder = 1
     object MessageBar: TLabel
       Left = 0
       Height = 19
-      Top = 536
-      Width = 464
+      Top = 594
+      Width = 392
       Anchors = [akLeft, akRight, akBottom]
       AutoSize = False
       Caption = 'Robot 1.7'
@@ -74,7 +73,7 @@ object MainForm: TMainForm
       Transparent = False
     end
     object InfoPanel: TPanel
-      Left = 192
+      Left = 168
       Height = 126
       Top = 0
       Width = 216
@@ -146,10 +145,10 @@ object MainForm: TMainForm
       end
     end
     object KnapsackPanel: TPanel
-      Left = 152
+      Left = 96
       Height = 155
       Top = 136
-      Width = 310
+      Width = 294
       Anchors = [akTop, akRight]
       BevelOuter = bvNone
       Color = clGray
@@ -160,18 +159,7 @@ object MainForm: TMainForm
       ParentColor = False
       ParentFont = False
       TabOrder = 1
-      OnClick = KnapsackPanelClick
       OnMouseDown = KnapsackPanelMouseDown
-    end
-    object pnlMenu: TPanel
-      Left = 8
-      Height = 154
-      Top = 136
-      Width = 128
-      Color = clScrollBar
-      ParentColor = False
-      PopupMenu = mmMenu
-      TabOrder = 2
     end
   end
   object ComputerPlayer: TTimer
@@ -219,7 +207,6 @@ object MainForm: TMainForm
     Top = 112
     object mmiSpiel: TMenuItem
       Caption = 'Игра'
-      OnClick = mmiSpielClick
       object mmiNeuesSpiel: TMenuItem
         Caption = 'Новая игра'
         OnClick = mmiNeuesSpielClick

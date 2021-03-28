@@ -91,7 +91,6 @@ type
     OpenGameDialog: TOpenDialog;
     OpenWorldDialog: TOpenDialog;
 		pnlOther: TPanel;
-		pnlMenu: TPanel;
 		mmMenu: TPopupMenu;
     SaveGameDialog: TSaveDialog;
     SaveWorldDialog: TSaveDialog;
@@ -105,12 +104,10 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormPaint(Sender: TObject);
     procedure FormResize(Sender: TObject);
-    procedure GamePanelClick(Sender: TObject);
     procedure GamePanelMouseDown(Sender: TOBject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure GamePanelMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
-    procedure KnapsackPanelClick(Sender: TObject);
     procedure KnapsackPanelMouseDown(Sender: TOBject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
 		procedure mmiEditorLoadClick(Sender: TObject);
@@ -124,8 +121,6 @@ type
 		procedure mmiOptionsPauseClick(Sender: TObject);
 		procedure mmiOptionsSoundClick(Sender: TObject);
 		procedure mmiSpielBeendenClick(Sender: TObject);
-		procedure mmiSpielClick(Sender: TObject);
-		procedure MessageBarClick(Sender: TObject);
 		procedure mmiSpielLadenClick(Sender: TObject);
   private
     { private declarations }
@@ -328,12 +323,13 @@ begin
   // Выполняем настройки формы
   // ! Anchors=[akTop,akLeft] - привязываемся к левому-верхнему углу экрана
   // ! BiDiMode=bdLeftToRight - обычное чтение слева-направо
-  BorderStyle:=bsSizeable; // установили обычное окно Windows
+  //BorderStyle:=bsSizeable; // установили обычное окно Windows
   // ! DesignTimePPI:=120; // через DPI изменили размер элементов???
   //Height:=618;             // высота формы от строки заголовка до нижней границы
-  KeyPreview:=true;        // обеспечили приход на форму всех событий от клавиш
+  //KeyPreview:=true;        // обеспечили приход на форму всех событий от клавиш
   //Left:=636;               // расстояние от левой границы рабочего стола
-  Position:=poDefaultPosOnly;  // Windows определяет начальную позицию формы, ее размеры не изменяются
+  Position:=poDefaultPosOnly;  // Windows определяет начальную позицию формы,
+                               // ее размеры не изменяются
   //Width:=485;
   // Иициируем игру
   InitGame();
@@ -358,13 +354,15 @@ var
   nhFScreen: integer;
   nwTrack: integer;
   nhTrack: integer;
+  nCYCAP: integer;
 
 begin
 
 
   nWidth:=GetSystemMetrics(SM_CXSCREEN);
   nHeight:=GetSystemMetrics(SM_CYSCREEN);
-  caption:=IntToStr(nWidth)+'x'+IntToStr(nHeight)+'  ';
+  caption:=IntToStr(Width)+'x'+IntToStr(Height)+' => '+
+  IntToStr(nWidth)+'x'+IntToStr(nHeight)+'  ';
 
   nwBorder:=GetSystemMetrics(SM_CXBORDER);
   nhBorder:=GetSystemMetrics(SM_CYBORDER);
@@ -378,8 +376,10 @@ begin
   nhTrack:=GetSystemMetrics(SM_CYMAXTRACK);
   caption:=caption+'Track: '+IntToStr(nwTrack)+'x'+IntToStr(nhTrack)+'  ';
 
-  GamePanel.Height:=500;
+  nCYCAP:=GetSystemMetrics(SM_CYCAPTION);
+  caption:=caption+'CYCAP: '+IntToStr(nCYCAP)+'  ';
 
+  GamePanel.Height:=630;
   GamePanel.Width:=GamePanel.Height;
   ResetRoomPic();
   ResetPictureResizedCache();
@@ -392,7 +392,7 @@ end;
 
 procedure TMainForm.ComputerPlayerTimer(Sender: TObject);
 begin
-  ControlComputerPlayers();
+  //ControlComputerPlayers();
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
@@ -403,6 +403,7 @@ end;
 procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
+  {
   if Key = Ord('P') then
     SetPauseState(not MyPauseState)
   else
@@ -465,6 +466,7 @@ begin
       MoveToRoom(mdDown);
     end;
   end;
+  }
 end;
 
 procedure TMainForm.FormPaint(Sender: TObject);
@@ -475,15 +477,12 @@ end;
 
 procedure TMainForm.FormResize(Sender: TObject);
 begin
+  {
   GamePanel.Width:=GamePanel.Height;
   ResetRoomPic();
   ResetPictureResizedCache();
   DrawRoom();
-end;
-
-procedure TMainForm.GamePanelClick(Sender: TObject);
-begin
-
+  }
 end;
 
 procedure TMainForm.GamePanelMouseDown(Sender: TOBject; Button: TMouseButton;
@@ -546,11 +545,6 @@ begin
   else
     exit;
   GamePanelMouseDown(Sender, Button, Shift, X, Y);
-end;
-
-procedure TMainForm.KnapsackPanelClick(Sender: TObject);
-begin
-
 end;
 
 procedure TMainForm.KnapsackPanelMouseDown(Sender: TOBject;
@@ -716,16 +710,6 @@ end;
 procedure TMainForm.mmiSpielBeendenClick(Sender: TObject);
 begin
   MainForm.Close();
-end;
-
-procedure TMainForm.mmiSpielClick(Sender: TObject);
-begin
-
-end;
-
-procedure TMainForm.MessageBarClick(Sender: TObject);
-begin
-
 end;
 
 procedure TMainForm.mmiSpielLadenClick(Sender: TObject);

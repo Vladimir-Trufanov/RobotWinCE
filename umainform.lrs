@@ -1,110 +1,106 @@
 { This is an automatically generated lazarus resource file }
 
 LazarusResources.Add('TMainForm','FORMDATA',[
-  'TPF0'#9'TMainForm'#8'MainForm'#4'Left'#3#221#1#6'Height'#3'P'#2#3'Top'#3#129
-  +#0#5'Width'#3#14#4#18'HorzScrollBar.Page'#3#131#1#18'VertScrollBar.Page'#3
-  +#218#1#8'AutoSize'#9#7'Caption'#6#15'Robot WinCE 1.8'#12'ClientHeight'#3'P'#2
-  +#11'ClientWidth'#3#14#4#5'Color'#7#7'clWhite'#13'DesignTimePPI'#2'x'#12'Font'
-  +'.CharSet'#7#12'ANSI_CHARSET'#11'Font.Height'#2#30#9'Font.Name'#6'9-adobe-he'
+  'TPF0'#9'TMainForm'#8'MainForm'#4'Left'#3#24#2#6'Height'#3#138#2#3'Top'#2'J'#5
+  +'Width'#3#14#4#18'HorzScrollBar.Page'#3#131#1#18'VertScrollBar.Page'#3#218#1
+  +#8'AutoSize'#9#7'Caption'#6#15'Robot WinCE 1.8'#12'ClientHeight'#3#138#2#11
+  +'ClientWidth'#3#14#4#5'Color'#7#8'clYellow'#13'DesignTimePPI'#2'x'#12'Font.C'
+  +'harSet'#7#12'ANSI_CHARSET'#11'Font.Height'#2#30#9'Font.Name'#6'9-adobe-helv'
+  +'etica-medium-r-normal-*-*-*-*-*-*-*-iso8859-15'#10'Font.Pitch'#7#10'fpVaria'
+  +'ble'#10'KeyPreview'#9#8'OnCreate'#7#10'FormCreate'#10'OnDblClick'#7#12'Form'
+  +'DblClick'#9'OnDestroy'#7#11'FormDestroy'#9'OnKeyDown'#7#11'FormKeyDown'#7'O'
+  +'nPaint'#7#9'FormPaint'#8'OnResize'#7#10'FormResize'#9'PopupMenu'#7#6'mmMenu'
+  +#14'UseDockManager'#9#10'LCLVersion'#6#8'2.0.12.0'#7'Visible'#9#0#6'TPanel'#9
+  +'GamePanel'#4'Left'#2#0#6'Height'#3'X'#2#3'Top'#2#25#5'Width'#3'X'#2#7'Ancho'
+  +'rs'#11#5'akTop'#6'akLeft'#8'akBottom'#0#10'BevelOuter'#7#6'bvNone'#5'Color'
+  +#7#8'clSilver'#12'Font.CharSet'#7#12'ANSI_CHARSET'#11'Font.Height'#2#30#9'Fo'
+  +'nt.Name'#6'9-adobe-helvetica-medium-r-normal-*-*-*-*-*-*-*-iso8859-15'#10'F'
+  +'ont.Pitch'#7#10'fpVariable'#11'ParentColor'#8#10'ParentFont'#8#8'TabOrder'#2
+  +#0#11'OnMouseDown'#7#18'GamePanelMouseDown'#11'OnMouseMove'#7#18'GamePanelMo'
+  +'useMove'#0#0#6'TPanel'#8'pnlOther'#4'Left'#3#128#2#6'Height'#3'i'#2#3'Top'#2
+  +#0#5'Width'#3#136#1#7'Anchors'#11#5'akTop'#7'akRight'#8'akBottom'#0#12'Clien'
+  +'tHeight'#3'i'#2#11'ClientWidth'#3#136#1#5'Color'#7#9'clSkyBlue'#11'ParentCo'
+  +'lor'#8#8'TabOrder'#2#1#0#6'TLabel'#10'MessageBar'#4'Left'#2#0#6'Height'#2#19
+  +#3'Top'#3'R'#2#5'Width'#3#136#1#7'Anchors'#11#6'akLeft'#7'akRight'#8'akBotto'
+  +'m'#0#8'AutoSize'#8#7'Caption'#6#9'Robot 1.7'#5'Color'#7#8'clSilver'#12'Font'
+  +'.CharSet'#7#12'ANSI_CHARSET'#11'Font.Height'#2#15#9'Font.Name'#6'9-adobe-he'
   +'lvetica-medium-r-normal-*-*-*-*-*-*-*-iso8859-15'#10'Font.Pitch'#7#10'fpVar'
-  +'iable'#10'KeyPreview'#9#8'OnCreate'#7#10'FormCreate'#10'OnDblClick'#7#12'Fo'
-  +'rmDblClick'#9'OnDestroy'#7#11'FormDestroy'#9'OnKeyDown'#7#11'FormKeyDown'#7
-  +'OnPaint'#7#9'FormPaint'#8'OnResize'#7#10'FormResize'#9'PopupMenu'#7#6'mmMen'
-  +'u'#14'UseDockManager'#9#10'LCLVersion'#6#8'2.0.12.0'#7'Visible'#9#0#6'TPane'
-  +'l'#9'GamePanel'#4'Left'#2#0#6'Height'#3'9'#2#3'Top'#2#0#5'Width'#3#4#2#7'An'
-  +'chors'#11#5'akTop'#6'akLeft'#8'akBottom'#0#10'BevelOuter'#7#6'bvNone'#5'Col'
-  +'or'#7#8'clSilver'#12'Font.CharSet'#7#12'ANSI_CHARSET'#11'Font.Height'#2#30#9
-  +'Font.Name'#6'9-adobe-helvetica-medium-r-normal-*-*-*-*-*-*-*-iso8859-15'#10
-  +'Font.Pitch'#7#10'fpVariable'#11'ParentColor'#8#10'ParentFont'#8#8'TabOrder'
-  +#2#0#7'OnClick'#7#14'GamePanelClick'#11'OnMouseDown'#7#18'GamePanelMouseDown'
-  +#11'OnMouseMove'#7#18'GamePanelMouseMove'#0#0#6'TPanel'#8'pnlOther'#4'Left'#3
-  +'0'#2#6'Height'#3'/'#2#3'Top'#2#8#5'Width'#3#208#1#7'Anchors'#11#5'akTop'#7
-  +'akRight'#8'akBottom'#0#12'ClientHeight'#3'/'#2#11'ClientWidth'#3#208#1#5'Co'
-  +'lor'#7#9'clSkyBlue'#11'ParentColor'#8#8'TabOrder'#2#1#0#6'TLabel'#10'Messag'
-  +'eBar'#4'Left'#2#0#6'Height'#2#19#3'Top'#3#24#2#5'Width'#3#208#1#7'Anchors'
-  +#11#6'akLeft'#7'akRight'#8'akBottom'#0#8'AutoSize'#8#7'Caption'#6#9'Robot 1.'
-  +'7'#5'Color'#7#8'clSilver'#12'Font.CharSet'#7#12'ANSI_CHARSET'#11'Font.Heigh'
-  +'t'#2#15#9'Font.Name'#6'9-adobe-helvetica-medium-r-normal-*-*-*-*-*-*-*-iso8'
-  +'859-15'#10'Font.Pitch'#7#10'fpVariable'#11'ParentColor'#8#10'ParentFont'#8
-  +#11'Transparent'#8#0#0#6'TPanel'#9'InfoPanel'#4'Left'#3#192#0#6'Height'#2'~'
-  +#3'Top'#2#0#5'Width'#3#216#0#7'Anchors'#11#5'akTop'#7'akRight'#0#10'BevelOut'
-  +'er'#7#6'bvNone'#12'ClientHeight'#2'~'#11'ClientWidth'#3#216#0#5'Color'#7#6
-  +'clAqua'#12'Font.CharSet'#7#12'ANSI_CHARSET'#11'Font.Height'#2#30#9'Font.Nam'
-  +'e'#6'9-adobe-helvetica-medium-r-normal-*-*-*-*-*-*-*-iso8859-15'#10'Font.Pi'
-  +'tch'#7#10'fpVariable'#11'ParentColor'#8#10'ParentFont'#8#8'TabOrder'#2#0#0#6
-  +'TLabel'#9'LifeLabel'#4'Left'#2'p'#6'Height'#2#28#4'Hint'#6'1Anzahl verbleib'
-  +'ender Leben bis zum Tod (GameOver)'#3'Top'#2#10#5'Width'#2'b'#9'Alignment'#7
-  +#14'taRightJustify'#7'Anchors'#11#5'akTop'#7'akRight'#0#7'Caption'#6#8'Leben'
-  +': 0'#12'Font.CharSet'#7#12'ANSI_CHARSET'#11'Font.Height'#2#30#9'Font.Name'#6
-  +'9-adobe-helvetica-medium-r-normal-*-*-*-*-*-*-*-iso8859-15'#10'Font.Pitch'#7
-  +#10'fpVariable'#11'ParentColor'#8#10'ParentFont'#8#14'ParentShowHint'#8#8'Sh'
-  +'owHint'#9#0#0#6'TLabel'#11'ScoresLabel'#4'Left'#2'g'#6'Height'#2#28#4'Hint'
-  +#6#13'Anzahl Punkte'#3'Top'#2'2'#5'Width'#2'k'#9'Alignment'#7#14'taRightJust'
-  +'ify'#7'Anchors'#11#5'akTop'#7'akRight'#0#7'Caption'#6#9'Punkte: 0'#12'Font.'
-  +'CharSet'#7#12'ANSI_CHARSET'#11'Font.Height'#2#30#9'Font.Name'#6'9-adobe-hel'
-  +'vetica-medium-r-normal-*-*-*-*-*-*-*-iso8859-15'#10'Font.Pitch'#7#10'fpVari'
-  +'able'#11'ParentColor'#8#10'ParentFont'#8#14'ParentShowHint'#8#8'ShowHint'#9
-  +#0#0#6'TLabel'#13'DiamondsLabel'#4'Left'#2';'#6'Height'#2#28#4'Hint'#6'"Anza'
-  +'hl gesetzter Diamanten (von 3)'#3'Top'#2'Y'#5'Width'#3#151#0#9'Alignment'#7
-  +#14'taRightJustify'#7'Anchors'#11#5'akTop'#7'akRight'#0#7'Caption'#6#12'Diam'
-  +'anten: 0'#12'Font.CharSet'#7#12'ANSI_CHARSET'#11'Font.Height'#2#30#9'Font.N'
-  +'ame'#6'9-adobe-helvetica-medium-r-normal-*-*-*-*-*-*-*-iso8859-15'#10'Font.'
-  +'Pitch'#7#10'fpVariable'#11'ParentColor'#8#10'ParentFont'#8#14'ParentShowHin'
-  +'t'#8#8'ShowHint'#9#0#0#0#6'TPanel'#13'KnapsackPanel'#4'Left'#3#152#0#6'Heig'
-  +'ht'#3#155#0#3'Top'#3#136#0#5'Width'#3'6'#1#7'Anchors'#11#5'akTop'#7'akRight'
-  +#0#10'BevelOuter'#7#6'bvNone'#5'Color'#7#6'clGray'#12'Font.CharSet'#7#12'ANS'
+  +'iable'#11'ParentColor'#8#10'ParentFont'#8#11'Transparent'#8#0#0#6'TPanel'#9
+  +'InfoPanel'#4'Left'#3#168#0#6'Height'#2'~'#3'Top'#2#0#5'Width'#3#216#0#7'Anc'
+  +'hors'#11#5'akTop'#7'akRight'#0#10'BevelOuter'#7#6'bvNone'#12'ClientHeight'#2
+  +'~'#11'ClientWidth'#3#216#0#5'Color'#7#6'clAqua'#12'Font.CharSet'#7#12'ANSI_'
+  +'CHARSET'#11'Font.Height'#2#30#9'Font.Name'#6'9-adobe-helvetica-medium-r-nor'
+  +'mal-*-*-*-*-*-*-*-iso8859-15'#10'Font.Pitch'#7#10'fpVariable'#11'ParentColo'
+  +'r'#8#10'ParentFont'#8#8'TabOrder'#2#0#0#6'TLabel'#9'LifeLabel'#4'Left'#2'p'
+  +#6'Height'#2#28#4'Hint'#6'1Anzahl verbleibender Leben bis zum Tod (GameOver)'
+  +#3'Top'#2#10#5'Width'#2'b'#9'Alignment'#7#14'taRightJustify'#7'Anchors'#11#5
+  +'akTop'#7'akRight'#0#7'Caption'#6#8'Leben: 0'#12'Font.CharSet'#7#12'ANSI_CHA'
+  +'RSET'#11'Font.Height'#2#30#9'Font.Name'#6'9-adobe-helvetica-medium-r-normal'
+  +'-*-*-*-*-*-*-*-iso8859-15'#10'Font.Pitch'#7#10'fpVariable'#11'ParentColor'#8
+  +#10'ParentFont'#8#14'ParentShowHint'#8#8'ShowHint'#9#0#0#6'TLabel'#11'Scores'
+  +'Label'#4'Left'#2'g'#6'Height'#2#28#4'Hint'#6#13'Anzahl Punkte'#3'Top'#2'2'#5
+  +'Width'#2'k'#9'Alignment'#7#14'taRightJustify'#7'Anchors'#11#5'akTop'#7'akRi'
+  +'ght'#0#7'Caption'#6#9'Punkte: 0'#12'Font.CharSet'#7#12'ANSI_CHARSET'#11'Fon'
+  +'t.Height'#2#30#9'Font.Name'#6'9-adobe-helvetica-medium-r-normal-*-*-*-*-*-*'
+  +'-*-iso8859-15'#10'Font.Pitch'#7#10'fpVariable'#11'ParentColor'#8#10'ParentF'
+  +'ont'#8#14'ParentShowHint'#8#8'ShowHint'#9#0#0#6'TLabel'#13'DiamondsLabel'#4
+  +'Left'#2';'#6'Height'#2#28#4'Hint'#6'"Anzahl gesetzter Diamanten (von 3)'#3
+  +'Top'#2'Y'#5'Width'#3#151#0#9'Alignment'#7#14'taRightJustify'#7'Anchors'#11#5
+  +'akTop'#7'akRight'#0#7'Caption'#6#12'Diamanten: 0'#12'Font.CharSet'#7#12'ANS'
   +'I_CHARSET'#11'Font.Height'#2#30#9'Font.Name'#6'9-adobe-helvetica-medium-r-n'
   +'ormal-*-*-*-*-*-*-*-iso8859-15'#10'Font.Pitch'#7#10'fpVariable'#11'ParentCo'
-  +'lor'#8#10'ParentFont'#8#8'TabOrder'#2#1#7'OnClick'#7#18'KnapsackPanelClick'
-  +#11'OnMouseDown'#7#22'KnapsackPanelMouseDown'#0#0#6'TPanel'#7'pnlMenu'#4'Lef'
-  +'t'#2#8#6'Height'#3#154#0#3'Top'#3#136#0#5'Width'#3#128#0#5'Color'#7#11'clSc'
-  +'rollBar'#11'ParentColor'#8#9'PopupMenu'#7#6'mmMenu'#8'TabOrder'#2#2#0#0#0#6
-  +'TTimer'#14'ComputerPlayer'#8'Interval'#3'&'#2#7'OnTimer'#7#19'ComputerPlaye'
-  +'rTimer'#4'Left'#2'8'#3'Top'#3#176#0#0#0#11'TOpenDialog'#14'OpenGameDialog'#5
-  +'Title'#6#18'Spielstand '#209#134'ffnen'#10'DefaultExt'#6#4'.spi'#6'Filter'#6
-  +'3Robot Spielst'#208#180'nde (*.spi)|*.spi|alle Dateien (*)|*'#11'FilterInde'
-  +'x'#2#0#7'Options'#11#15'ofFileMustExist'#14'ofEnableSizing'#12'ofViewDetail'
-  +#0#4'Left'#2'8'#3'Top'#3#240#0#0#0#11'TSaveDialog'#14'SaveGameDialog'#5'Titl'
-  ,'e'#6#20'Spielstand speichern'#10'DefaultExt'#6#4'.spi'#6'Filter'#6'3Robot S'
-  +'pielst'#208#180'nde (*.spi)|*.spi|alle Dateien (*)|*'#11'FilterIndex'#2#0#4
-  +'Left'#2'8'#3'Top'#3'0'#1#0#0#11'TSaveDialog'#15'SaveWorldDialog'#5'Title'#6
-  +#14'Welt speichern'#10'DefaultExt'#6#4'.sce'#6'Filter'#6'-Robot Welten (*.sc'
-  +'e)|*.sce|alle Dateien (*)|*'#11'FilterIndex'#2#0#4'Left'#2'8'#3'Top'#3#176#1
-  +#0#0#11'TOpenDialog'#15'OpenWorldDialog'#5'Title'#6#10'Welt laden'#10'Defaul'
-  +'tExt'#6#4'.sce'#6'Filter'#6'-Robot Welten (*.sce)|*.sce|alle Dateien (*)|*'
-  +#11'FilterIndex'#2#0#7'Options'#11#15'ofFileMustExist'#14'ofEnableSizing'#12
-  +'ofViewDetail'#0#4'Left'#2'8'#3'Top'#3'p'#1#0#0#10'TPopupMenu'#6'mmMenu'#4'L'
-  +'eft'#2'8'#3'Top'#2'p'#0#9'TMenuItem'#8'mmiSpiel'#7'Caption'#6#8#208#152#208
-  +#179#209#128#208#176#7'OnClick'#7#13'mmiSpielClick'#0#9'TMenuItem'#13'mmiNeu'
-  +'esSpiel'#7'Caption'#6#19#208#157#208#190#208#178#208#176#209#143' '#208#184
-  +#208#179#209#128#208#176#7'OnClick'#7#18'mmiNeuesSpielClick'#0#0#9'TMenuItem'
-  +#13'mmiSpielLaden'#7'Caption'#6#27#208#151#208#176#208#179#209#128#209#131
-  +#208#183#208#184#209#130#209#140' '#208#184#208#179#209#128#209#131#7'OnClic'
-  +'k'#7#18'mmiSpielLadenClick'#0#0#9'TMenuItem'#15'mmiSpielBeenden'#7'Caption'
-  +#6#24#208#146#209#139#208#185#209#130#208#184' '#208#184#208#183' '#208#184
-  +#208#179#209#128#209#139#7'OnClick'#7#20'mmiSpielBeendenClick'#0#0#0#9'TMenu'
-  +'Item'#8'mmiHilfe'#7'Caption'#6#12#208#159#208#190#208#188#208#190#209#137
-  +#209#140#0#9'TMenuItem'#18'mmiHelpDescription'#7'Caption'#6#25#208#158#208
-  +#191#208#184#209#129#208#176#208#189#208#184#208#181' '#208#184#208#179#209
-  +#128#209#139#7'OnClick'#7#23'mmiHelpDescriptionClick'#0#0#9'TMenuItem'#14'mm'
-  +'iHelpControl'#7'Caption'#6#31#208#163#208#191#209#128#208#176#208#178#208
-  +#187#208#181#208#189#208#184#208#181' '#208#184#208#179#209#128#208#190#208
-  +#185#7'OnClick'#7#19'mmiHelpControlClick'#0#0#9'TMenuItem'#12'mmiHelpAbout'#7
-  +'Caption'#6#13#208#158#208#177' '#208#184#208#179#209#128#208#181#7'OnClick'
-  +#7#17'mmiHelpAboutClick'#0#0#0#9'TMenuItem'#10'mmiOptions'#7'Caption'#6#10
-  +#208#158#208#191#209#134#208#184#208#184#7'OnClick'#7#15'mmiOptionsClick'#0#9
-  +'TMenuItem'#15'mmiOptionsPause'#7'Caption'#6#10#208#159#208#176#209#131#208
-  +#183#208#176#7'Checked'#9#7'OnClick'#7#20'mmiOptionsPauseClick'#0#0#9'TMenuI'
-  +'tem'#15'mmiOptionsSound'#7'Caption'#6#8#208#151#208#178#209#131#208#186#7'O'
-  +'nClick'#7#20'mmiOptionsSoundClick'#0#0#0#9'TMenuItem'#9'mmiEditor'#7'Captio'
-  +'n'#6#16#208#160#208#181#208#180#208#176#208#186#209#130#208#190#209#128#0#9
-  +'TMenuItem'#13'mmiEditorMode'#7'Caption'#6''''#208#160#208#181#208#182#208
-  +#184#208#188' '#209#128#208#181#208#180#208#176#208#186#209#130#208#184#209
-  +#128#208#190#208#178#208#176#208#189#208#184#209#143#7'OnClick'#7#18'mmiEdit'
-  +'orModeClick'#0#0#9'TMenuItem'#13'mmiEditorLoad'#7'Caption'#6#25#208#151#208
-  +#176#208#179#209#128#209#131#208#183#208#184#209#130#209#140' '#208#188#208
-  +#184#209#128#7'Enabled'#8#7'OnClick'#7#18'mmiEditorLoadClick'#0#0#9'TMenuIte'
-  +'m'#13'mmiEditorSave'#7'Caption'#6#19#208#161#208#191#208#176#209#129#209#130
-  +#208#184' '#208#188#208#184#209#128#7'Enabled'#8#7'OnClick'#7#18'mmiEditorSa'
-  +'veClick'#0#0#0#0#0
+  +'lor'#8#10'ParentFont'#8#14'ParentShowHint'#8#8'ShowHint'#9#0#0#0#6'TPanel'
+  +#13'KnapsackPanel'#4'Left'#2'`'#6'Height'#3#155#0#3'Top'#3#136#0#5'Width'#3
+  +'&'#1#7'Anchors'#11#5'akTop'#7'akRight'#0#10'BevelOuter'#7#6'bvNone'#5'Color'
+  +#7#6'clGray'#12'Font.CharSet'#7#12'ANSI_CHARSET'#11'Font.Height'#2#30#9'Font'
+  +'.Name'#6'9-adobe-helvetica-medium-r-normal-*-*-*-*-*-*-*-iso8859-15'#10'Fon'
+  +'t.Pitch'#7#10'fpVariable'#11'ParentColor'#8#10'ParentFont'#8#8'TabOrder'#2#1
+  +#11'OnMouseDown'#7#22'KnapsackPanelMouseDown'#0#0#0#6'TTimer'#14'ComputerPla'
+  +'yer'#8'Interval'#3'&'#2#7'OnTimer'#7#19'ComputerPlayerTimer'#4'Left'#2'8'#3
+  +'Top'#3#176#0#0#0#11'TOpenDialog'#14'OpenGameDialog'#5'Title'#6#18'Spielstan'
+  +'d '#209#134'ffnen'#10'DefaultExt'#6#4'.spi'#6'Filter'#6'3Robot Spielst'#208
+  +#180'nde (*.spi)|*.spi|alle Dateien (*)|*'#11'FilterIndex'#2#0#7'Options'#11
+  +#15'ofFileMustExist'#14'ofEnableSizing'#12'ofViewDetail'#0#4'Left'#2'8'#3'To'
+  +'p'#3#240#0#0#0#11'TSaveDialog'#14'SaveGameDialog'#5'Title'#6#20'Spielstand '
+  +'speichern'#10'DefaultExt'#6#4'.spi'#6'Filter'#6'3Robot Spielst'#208#180'nde'
+  +' (*.spi)|*.spi|alle Dateien (*)|*'#11'FilterIndex'#2#0#4'Left'#2'8'#3'Top'#3
+  +'0'#1#0#0#11'TSaveDialog'#15'SaveWorldDialog'#5'Title'#6#14'Welt speichern'
+  ,#10'DefaultExt'#6#4'.sce'#6'Filter'#6'-Robot Welten (*.sce)|*.sce|alle Datei'
+  +'en (*)|*'#11'FilterIndex'#2#0#4'Left'#2'8'#3'Top'#3#176#1#0#0#11'TOpenDialo'
+  +'g'#15'OpenWorldDialog'#5'Title'#6#10'Welt laden'#10'DefaultExt'#6#4'.sce'#6
+  +'Filter'#6'-Robot Welten (*.sce)|*.sce|alle Dateien (*)|*'#11'FilterIndex'#2
+  +#0#7'Options'#11#15'ofFileMustExist'#14'ofEnableSizing'#12'ofViewDetail'#0#4
+  +'Left'#2'8'#3'Top'#3'p'#1#0#0#10'TPopupMenu'#6'mmMenu'#4'Left'#2'8'#3'Top'#2
+  +'p'#0#9'TMenuItem'#8'mmiSpiel'#7'Caption'#6#8#208#152#208#179#209#128#208#176
+  +#0#9'TMenuItem'#13'mmiNeuesSpiel'#7'Caption'#6#19#208#157#208#190#208#178#208
+  +#176#209#143' '#208#184#208#179#209#128#208#176#7'OnClick'#7#18'mmiNeuesSpie'
+  +'lClick'#0#0#9'TMenuItem'#13'mmiSpielLaden'#7'Caption'#6#27#208#151#208#176
+  +#208#179#209#128#209#131#208#183#208#184#209#130#209#140' '#208#184#208#179
+  +#209#128#209#131#7'OnClick'#7#18'mmiSpielLadenClick'#0#0#9'TMenuItem'#15'mmi'
+  +'SpielBeenden'#7'Caption'#6#24#208#146#209#139#208#185#209#130#208#184' '#208
+  +#184#208#183' '#208#184#208#179#209#128#209#139#7'OnClick'#7#20'mmiSpielBeen'
+  +'denClick'#0#0#0#9'TMenuItem'#8'mmiHilfe'#7'Caption'#6#12#208#159#208#190#208
+  +#188#208#190#209#137#209#140#0#9'TMenuItem'#18'mmiHelpDescription'#7'Caption'
+  +#6#25#208#158#208#191#208#184#209#129#208#176#208#189#208#184#208#181' '#208
+  +#184#208#179#209#128#209#139#7'OnClick'#7#23'mmiHelpDescriptionClick'#0#0#9
+  +'TMenuItem'#14'mmiHelpControl'#7'Caption'#6#31#208#163#208#191#209#128#208
+  +#176#208#178#208#187#208#181#208#189#208#184#208#181' '#208#184#208#179#209
+  +#128#208#190#208#185#7'OnClick'#7#19'mmiHelpControlClick'#0#0#9'TMenuItem'#12
+  +'mmiHelpAbout'#7'Caption'#6#13#208#158#208#177' '#208#184#208#179#209#128#208
+  +#181#7'OnClick'#7#17'mmiHelpAboutClick'#0#0#0#9'TMenuItem'#10'mmiOptions'#7
+  +'Caption'#6#10#208#158#208#191#209#134#208#184#208#184#7'OnClick'#7#15'mmiOp'
+  +'tionsClick'#0#9'TMenuItem'#15'mmiOptionsPause'#7'Caption'#6#10#208#159#208
+  +#176#209#131#208#183#208#176#7'Checked'#9#7'OnClick'#7#20'mmiOptionsPauseCli'
+  +'ck'#0#0#9'TMenuItem'#15'mmiOptionsSound'#7'Caption'#6#8#208#151#208#178#209
+  +#131#208#186#7'OnClick'#7#20'mmiOptionsSoundClick'#0#0#0#9'TMenuItem'#9'mmiE'
+  +'ditor'#7'Caption'#6#16#208#160#208#181#208#180#208#176#208#186#209#130#208
+  +#190#209#128#0#9'TMenuItem'#13'mmiEditorMode'#7'Caption'#6''''#208#160#208
+  +#181#208#182#208#184#208#188' '#209#128#208#181#208#180#208#176#208#186#209
+  +#130#208#184#209#128#208#190#208#178#208#176#208#189#208#184#209#143#7'OnCli'
+  +'ck'#7#18'mmiEditorModeClick'#0#0#9'TMenuItem'#13'mmiEditorLoad'#7'Caption'#6
+  +#25#208#151#208#176#208#179#209#128#209#131#208#183#208#184#209#130#209#140
+  +' '#208#188#208#184#209#128#7'Enabled'#8#7'OnClick'#7#18'mmiEditorLoadClick'
+  +#0#0#9'TMenuItem'#13'mmiEditorSave'#7'Caption'#6#19#208#161#208#191#208#176
+  +#209#129#209#130#208#184' '#208#188#208#184#209#128#7'Enabled'#8#7'OnClick'#7
+  +#18'mmiEditorSaveClick'#0#0#0#0#0
 ]);
