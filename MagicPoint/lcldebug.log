@@ -1,0 +1,4 @@
+WARNING: TListView.Destroy with LCLRefCount>0. Hint: Maybe the component is processing an event?
+WARNING: TfrmMagicPoint.Destroy with LCLRefCount>0. Hint: Maybe the component is processing an event?
+WARNING: TListView.Destroy with LCLRefCount>0. Hint: Maybe the component is processing an event?
+WARNING: TfrmMagicPoint.Destroy with LCLRefCount>0. Hint: Maybe the component is processing an event?

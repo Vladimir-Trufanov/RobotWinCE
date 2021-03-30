@@ -66,6 +66,7 @@ type
   { TMainForm }
 
   TMainForm = class(TForm)
+				BitBtn1: TBitBtn;
 				DiamondsLabel: TLabel;
     GamePanel: TPanel;
 		InfoPanel: TPanel;
@@ -375,6 +376,7 @@ begin
   {$IFDEF wince}
     Top:=0; Left:=0;
     BorderIcons:=[biSystemMenu];
+    BorderStyle:=bsNone;
     WindowState:=wsFullScreen;
   {$ELSE}
     Top:=32; Left:=32;
@@ -642,7 +644,7 @@ end;
 
 procedure TMainForm.GamePanelPaint(Sender: TObject);
 begin
-  caption:='GamePanelPaint запустилась!';
+  //caption:='GamePanelPaint запустилась!';
   //proba();
 end;
 

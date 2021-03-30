@@ -8,3 +8,13 @@
 /KwinLab/Robot18/lib/arm-wince
 /KwinLab/Robot18/backup
 /KwinLab/Robot18/lib/i386-win32
+/Proba/*.ppu
+/Proba/*.o
+/Proba/*.res
+/Proba/*.lps
+/Proba/lib/i386-win32
+/Proba/backup
+/Proba/*.a
+/Proba/*.compiled
+/Proba/*.exe
+/MagicPoint/*.exe

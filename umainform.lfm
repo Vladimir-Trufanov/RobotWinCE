@@ -1,11 +1,12 @@
 object MainForm: TMainForm
-  Left = 596
+  Left = 620
   Height = 456
-  Top = 28
+  Top = 141
   Width = 794
   HorzScrollBar.Page = 387
   VertScrollBar.Page = 474
-  Caption = 'Robot WinCE 1.8'
+  BorderIcons = []
+  BorderStyle = bsNone
   ClientHeight = 456
   ClientWidth = 794
   Color = clYellow
@@ -53,16 +54,17 @@ object MainForm: TMainForm
     Top = 8
     Width = 332
     Anchors = [akTop, akRight, akBottom]
-    ClientHeight = 440
-    ClientWidth = 332
+    BorderStyle = bsSingle
+    ClientHeight = 436
+    ClientWidth = 328
     Color = clSkyBlue
     ParentColor = False
     TabOrder = 1
     object MessageBar: TLabel
       Left = 0
       Height = 19
-      Top = 417
-      Width = 332
+      Top = 413
+      Width = 328
       Anchors = [akLeft, akRight, akBottom]
       AutoSize = False
       Caption = 'Robot 1.7'
@@ -76,7 +78,7 @@ object MainForm: TMainForm
       Transparent = False
     end
     object InfoPanel: TPanel
-      Left = 104
+      Left = 100
       Height = 126
       Top = 8
       Width = 216
@@ -149,7 +151,7 @@ object MainForm: TMainForm
       end
     end
     object KnapsackPanel1: TPanel
-      Left = 24
+      Left = 20
       Height = 155
       Top = 256
       Width = 294
@@ -176,6 +178,15 @@ object MainForm: TMainForm
       ParentColor = False
       TabOrder = 2
       OnClick = KnapsackPanelClick
+    end
+    object BitBtn1: TBitBtn
+      Left = 32
+      Height = 32
+      Top = 24
+      Width = 32
+      Kind = bkClose
+      ModalResult = 11
+      TabOrder = 3
     end
   end
   object ComputerPlayer: TTimer
